@@ -17,7 +17,7 @@ COPY ./moneyetdystopie-back/pom.xml ./pom.xml
 RUN mvn dependency:go-offline -B
 
 COPY ./moneyetdystopie-back/src ./src
-COPY --from=node ./app/dist ./src/front
+COPY --from=node /app/dist/ ./src/main/resources/static/
 RUN mvn package && cp ./target/moneyetdystopie-back-*.jar app.jar
 
 # Run Back
