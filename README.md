@@ -34,6 +34,7 @@ docker build -t moneyetdystopie
 ```
 
 Pour lancer le serveur :
+
 ```console
 docker run -it --rm -p 42000:8080 moneyetdystopie
 ```
@@ -41,4 +42,9 @@ docker run -it --rm -p 42000:8080 moneyetdystopie
 Le serveur est alors accessible ici :
 ```console
 http://localhost:42000/index.html
+```
+
+Pour lancer le docker-compose : 
+```console
+docker-compose up
 ```

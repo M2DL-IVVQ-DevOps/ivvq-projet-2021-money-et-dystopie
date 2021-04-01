@@ -6,8 +6,8 @@ COPY ./moneyetdystopie-front/package*.json /app/
 WORKDIR /app
 RUN npm install
 
-COPY moneyetdystopie-front/src ./src
-WORKDIR ./src
+COPY moneyetdystopie-front/src ./front
+WORKDIR /app/front
 RUN npm run build
 
 # Build Back
@@ -16,8 +16,8 @@ WORKDIR /app
 COPY ./moneyetdystopie-back/pom.xml ./pom.xml
 RUN mvn dependency:go-offline -B
 
-COPY ./moneyetdystopie-back/src ./src
-COPY --from=node /app/dist/ ./src/main/resources/static/
+COPY ./moneyetdystopie-back/src ./back
+COPY --from=node /app/dist/ ./back/main/resources/static/
 RUN mvn package && cp ./target/moneyetdystopie-back-*.jar app.jar
 
 # Run Back

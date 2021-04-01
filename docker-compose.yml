@@ -1,0 +1,5 @@
+services:
+  website:
+    build: .
+    ports:
+      - "43000:8080"
