@@ -1,13 +1,18 @@
 <template>
-  <div id="app">
-    <IconPanier></IconPanier>
+  <div id="app" :class="{'catalogue': utilisateur, 'connexionCreationCompte': !utilisateur}">
     <h1>Achète de l'argent avec ton argent !</h1>
-    <img alt="Vue logo" src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif">
-    <Menu></Menu>
-    <Articles
-            :ajouterDansPanier="ajouterDansPanier"
-            :articlesData="articlesData"
-    ></Articles>
+    <section v-if="utilisateur">
+      <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
+      <IconPanier></IconPanier>
+      <Menu></Menu>
+      <Articles
+              :ajouterDansPanier="ajouterDansPanier"
+              :articlesData="articlesData"
+      />
+    </section>
+    <section v-else>
+      <ConnexionCreationCompte :connexion="connexionCompte" :creation="creationCompte"></ConnexionCreationCompte>
+    </section>
   </div>
 </template>
 
@@ -15,31 +20,78 @@
   import Articles from './components/Articles.vue';
   import Menu from './components/Menu.vue';
   import IconPanier from "./components/IconPanier";
+  import ConnexionCreationCompte from "./components/connexionCreationCompte/ConnexionCreationCompte";
 
   export default {
     name: 'App',
     components: {
+      ConnexionCreationCompte,
       IconPanier,
       Articles,
       Menu
     },
+    mounted: function () {
+      this.$nextTick(function () {
+        this.utilisateur = null;
+      })
+    },
     methods: {
+      connexionCompte(){
+        this.utilisateur = {
+          mail: 'monMail',
+          mdp: 'azert',
+          nom: 'FRANZESE',
+          prenom: 'Alessandra',
+          commercant: {
+            nomBoutique: 'Le crochet de Nina',
+          },
+          acheteur:{
+            pseudo: 'Rozen',
+            adresse: '54 rue jenesaisou, TOULOUSE',
+            commande: {
+              id: '2152',
+              etat: 'EN_COURS',
+              articles: []
+            }
+          }
+        };
+      },
+      creationCompte(){
+        this.utilisateur = {
+          mail: 'monMail',
+          mdp: 'azert',
+          nom: 'FRANZESE',
+          prenom: 'Alessandra',
+          commercant: {
+            nomBoutique: 'Le crochet de Nina',
+          },
+          acheteur:{
+            pseudo: 'Rozen',
+            adresse: '54 rue jenesaisou, TOULOUSE',
+            commande: {
+              id: '2152',
+              etat: 'EN_COURS',
+              articles: []
+            }
+          }
+        };
+      },
       ajouterDansPanier(idElement, quantiteSelection) {
-        let elementSelectionneDejaPanier = this.user.panier.find(elt => elt.id == idElement);
+        let elementSelectionneDejaPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
         let elementSelectionne = this.articlesData.find(elt => elt.id == idElement);
 
         switch (quantiteSelection) {
           case 0 :
             if(elementSelectionneDejaPanier != null){
               elementSelectionne.quantite += elementSelectionneDejaPanier.quantite;
-              this.user.panier.splice(this.user.panier.indexOf(elt=>elt.id == idElement), 1);
+              this.utilisateur.acheteur.commande.articles.splice(this.utilisateur.acheteur.commande.articles.indexOf(elt=>elt.id == idElement), 1);
             }
             break;
           default:
             if(elementSelectionneDejaPanier != null){
               elementSelectionneDejaPanier.quantite += quantiteSelection;
             }else {
-              this.user.panier = [...this.user.panier, {id: idElement, quantite: quantiteSelection}];
+              this.utilisateur.acheteur.commande.articles = [...this.utilisateur.acheteur.commande.articles, {id: idElement, quantite: quantiteSelection}];
             }
             elementSelectionne.quantite -= quantiteSelection;
             break;
@@ -48,9 +100,7 @@
     },
     data: function () {
       return {
-        user: {
-          panier : []
-        },
+        utilisateur: null,
         articlesData : [{
           id : 1,
           price : 10,
@@ -106,8 +156,11 @@
     text-align: center;
     padding: 50px 0;
   }
-  body{
+  .catalogue{
     background-color: #24212b;
+  }
+  .connexionCreationCompte{
+    background-color: #242b45;
   }
   h1{
     color: white;
@@ -116,5 +169,9 @@
     font-size: 7em;
     width: 40%;
     line-height: 1em;
+  }
+  h2{
+    color: white;
+    font-size: 2em;
   }
 </style>
