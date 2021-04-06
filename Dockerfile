@@ -18,7 +18,7 @@ RUN mvn dependency:go-offline -B
 
 COPY moneyetdystopie-back/src /back/src
 COPY --from=node /front/dist/ /back/src/main/resources/static/
-RUN mvn package && cp /back/target/moneyetdystopie-back-*.jar app.jar
+RUN mvn package -DskipTests && cp /back/target/moneyetdystopie-back-*.jar app.jar
 
 # Run Back
 FROM openjdk:11-jre
