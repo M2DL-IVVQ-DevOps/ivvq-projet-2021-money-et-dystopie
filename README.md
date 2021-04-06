@@ -26,25 +26,20 @@ Le projet consiste en un site marchant sur lequel il est possible d'acheter de l
 
 # Lancement du projet
 
-Le projet est conteneurisé avec Docker, et dans le futur à travers Docker-compose.
+Le projet est conteneurisé avec Docker, et peut-être lancé à l'aide de Docker-compose.
 
 Pour compiler le projet :
 ```console
-docker build -t moneyetdystopie
+docker-compose build
 ```
 
 Pour lancer le serveur :
 
 ```console
-docker run -it --rm -p 42000:8080 moneyetdystopie
+docker-compose up
 ```
 
 Le serveur est alors accessible ici :
 ```console
 http://localhost:42000/index.html
-```
-
-Pour lancer le docker-compose : 
-```console
-docker-compose up
 ```
