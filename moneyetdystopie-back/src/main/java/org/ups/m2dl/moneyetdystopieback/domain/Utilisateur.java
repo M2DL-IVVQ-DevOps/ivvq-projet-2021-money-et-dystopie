@@ -2,8 +2,10 @@ package org.ups.m2dl.moneyetdystopieback.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @Entity
 public class Utilisateur {
@@ -41,6 +43,9 @@ public class Utilisateur {
      */
     @OneToOne(mappedBy = "compteUtilisateur")
     private Acheteur compteAcheteur;
+
+    @OneToMany(mappedBy = "utilisateur")
+    private List<Token> tokensList;
 
     public Utilisateur() {
     }
@@ -84,5 +89,29 @@ public class Utilisateur {
 
     public void setMotDePasse(String motDePasse) {
         this.motDePasse = motDePasse;
+    }
+
+    public Commercant getCompteCommercant() {
+        return compteCommercant;
+    }
+
+    public void setCompteCommercant(Commercant compteCommercant) {
+        this.compteCommercant = compteCommercant;
+    }
+
+    public Acheteur getCompteAcheteur() {
+        return compteAcheteur;
+    }
+
+    public void setCompteAcheteur(Acheteur compteAcheteur) {
+        this.compteAcheteur = compteAcheteur;
+    }
+
+    public List<Token> getTokensList() {
+        return tokensList;
+    }
+
+    public void setTokensList(List<Token> tokensList) {
+        this.tokensList = tokensList;
     }
 }
