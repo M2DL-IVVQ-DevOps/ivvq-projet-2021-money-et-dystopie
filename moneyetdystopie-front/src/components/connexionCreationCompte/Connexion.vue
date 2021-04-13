@@ -39,7 +39,6 @@
         props: ['connexion'],
         methods: {
             connexionCompte(){
-                console.log("coucou");
                this.connexion();
             },
             checkForm: function (e) {

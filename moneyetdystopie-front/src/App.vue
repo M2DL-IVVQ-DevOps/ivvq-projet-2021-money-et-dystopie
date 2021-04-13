@@ -1,15 +1,28 @@
 <template>
-  <div id="app" :class="{'catalogue': utilisateur, 'connexionCreationCompte': !utilisateur}">
+  <div id="app" class="size-app" :class="{'catalogue': utilisateur, 'connexionCreationCompte': !utilisateur}">
     <h1>Achète de l'argent avec ton argent !</h1>
+
     <section v-if="utilisateur">
-      <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
-      <IconPanier></IconPanier>
-      <Menu></Menu>
-      <Articles
-              :ajouterDansPanier="ajouterDansPanier"
-              :articlesData="articlesData"
-      />
+      <div v-if="navigation === 'CATALOGUE'">
+        <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
+        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Articles
+                :changeDansPanier="ajouterDansPanier"
+                :articlesData="articlesData"
+                :navigation="navigation"
+        />
+      </div>
+      <div v-if="navigation === 'PANIER'">
+        <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
+        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Articles
+                :changeDansPanier="retirerDansPanier"
+                :articlesData="utilisateur.acheteur.commande.articles"
+                :navigation="navigation"
+        />
+      </div>
     </section>
+
     <section v-else>
       <ConnexionCreationCompte :connexion="connexionCompte" :creation="creationCompte"></ConnexionCreationCompte>
     </section>
@@ -19,14 +32,12 @@
 <script>
   import Articles from './components/Articles.vue';
   import Menu from './components/Menu.vue';
-  import IconPanier from "./components/IconPanier";
   import ConnexionCreationCompte from "./components/connexionCreationCompte/ConnexionCreationCompte";
 
   export default {
     name: 'App',
     components: {
       ConnexionCreationCompte,
-      IconPanier,
       Articles,
       Menu
     },
@@ -36,6 +47,9 @@
       })
     },
     methods: {
+      changeNavigation(nav){
+        this.navigation = nav;
+      },
       connexionCompte(){
         this.utilisateur = {
           mail: 'monMail',
@@ -77,29 +91,47 @@
         };
       },
       ajouterDansPanier(idElement, quantiteSelection) {
-        let elementSelectionneDejaPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
+        let elementDansPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
         let elementSelectionne = this.articlesData.find(elt => elt.id == idElement);
 
         switch (quantiteSelection) {
           case 0 :
-            if(elementSelectionneDejaPanier != null){
-              elementSelectionne.quantite += elementSelectionneDejaPanier.quantite;
+            if(elementDansPanier != null){
+              elementSelectionne.quantite += elementDansPanier.quantite;
               this.utilisateur.acheteur.commande.articles.splice(this.utilisateur.acheteur.commande.articles.indexOf(elt=>elt.id == idElement), 1);
             }
             break;
           default:
-            if(elementSelectionneDejaPanier != null){
-              elementSelectionneDejaPanier.quantite += quantiteSelection;
+            if(elementDansPanier != null){
+              elementDansPanier.quantite += quantiteSelection;
             }else {
-              this.utilisateur.acheteur.commande.articles = [...this.utilisateur.acheteur.commande.articles, {id: idElement, quantite: quantiteSelection}];
+              this.utilisateur.acheteur.commande.articles = [...this.utilisateur.acheteur.commande.articles, {...elementSelectionne, quantite: quantiteSelection}];
             }
             elementSelectionne.quantite -= quantiteSelection;
+            break;
+        }
+      },
+      retirerDansPanier(idElement, quantiteRestante) {
+        let elementDansPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
+        let elementSelectionne = this.articlesData.find(elt => elt.id == idElement);
+        let quantiteRetire;
+
+        switch (quantiteRestante) {
+          case 0 :
+            elementSelectionne.quantite += elementDansPanier.quantite;
+            this.utilisateur.acheteur.commande.articles.splice(this.utilisateur.acheteur.commande.articles.indexOf(elt=>elt.id == idElement), 1);
+            break;
+          default:
+            quantiteRetire = elementDansPanier.quantite - quantiteRestante;
+            elementDansPanier.quantite = quantiteRestante;
+            elementSelectionne.quantite += quantiteRetire;
             break;
         }
       }
     },
     data: function () {
       return {
+        navigation: 'CATALOGUE',
         utilisateur: null,
         articlesData : [{
           id : 1,
@@ -173,5 +205,11 @@
   h2{
     color: white;
     font-size: 2em;
+  }
+  .cursor{
+    cursor: pointer;
+  }
+  .size-app{
+    min-height: 100%;
   }
 </style>

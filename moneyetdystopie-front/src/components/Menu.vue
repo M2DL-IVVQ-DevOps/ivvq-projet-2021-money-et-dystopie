@@ -4,12 +4,12 @@
             <li class="scene_nav_item">
                 <div v-for="(onglet,index) in maxScene"
                      :key="index">
-                    <div @click="scene = index" class="scene_nav_button"
+                    <div @click="selectionMenu(index, onglet.navigation)" class="scene_nav_button"
                             :class="{'o-active': scene === index}">
                         <div v-if="scene===index" class="texte" :class="{'revert': index%2 != 0}">
                             {{onglet.name}}
                         </div>
-                        <img class="icon" v-else :src="onglet.icon" :class="{'revert': index%2 != 0}"/>
+                        <img class="icon" v-else :src="getImage(onglet.icon)" :class="{'revert': index%2 != 0}"/>
                     </div>
                 </div>
             </li>
@@ -22,23 +22,35 @@
         name : 'Menu',
         data () {
             return {
-                scene: 'Accueil',
+                scene: 'CATALOGUE',
                 maxScene: [
                     {
-                        name:'Accueil',
-                        icon:'https://www.flaticon.com/svg/vstatic/svg/4440/4440481.svg?token=exp=1617542091~hmac=541b36c8151965f238f11b650fb5558b'
+                        name:'Catalogue',
+                        icon:'dollar',
+                        navigation: 'CATALOGUE'
                     },{
                         name:'Mon panier',
-                        icon:'https://www.flaticon.com/svg/vstatic/svg/478/478542.svg?token=exp=1617542040~hmac=9433acc44e5591967147e6b1b67d5e8e'
-                }
+                        icon:'panier',
+                        navigation: 'PANIER'
+                    }
                 ]
             }
         },
-
+        props: ['changeNavigation'],
         mounted () {
             setTimeout(() => {
                 this.scene = this.maxScene - 3
             }, 1000)
+        },
+        methods: {
+            getImage(img){
+                var images = require.context('../assets/', false, /\.svg$/)
+                return images('./' + img + ".svg")
+            },
+            selectionMenu(index, nav){
+                this.scene = index;
+                this.changeNavigation(nav);
+            }
         }
     }
 </script>
@@ -70,7 +82,7 @@
         display: block;
         width: 140px;
         height: 140px;
-        padding: 65px 0 0 0;
+        padding: 52px 0 0 0;
         border: none;
         background: #9a96b2;
         outline: none;
@@ -97,7 +109,12 @@
     }
 
     .icon{
-        width: 55px;
+        width: 45px;
+    }
+
+    .texte{
+        padding-bottom: 7px;
+        margin-top: 7px;
     }
 
 </style>

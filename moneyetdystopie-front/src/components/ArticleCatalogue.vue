@@ -11,10 +11,10 @@
         </md-card-content>
 
         <md-card-actions>
-            <md-field clas="cardAction">
-                <select v-model="quantiteSelection" >
-                    <option :value="index-1" v-for="index in articleData.quantite+1" :key="index" >{{index-1}}</option>
-                </select>
+            <md-field class="cardAction">
+                <md-select v-model="quantiteSelection" >
+                    <md-option :value="index-1" v-for="index in articleData.quantite+1" :key="index" >{{index-1}}</md-option>
+                </md-select> <span class="max-quantite"> / {{articleData.quantite}}</span>
             </md-field>
             <md-button clas="cardAction" v-on:click="selectionnerPourPanier()" class="md-button">AJOUTER</md-button>
         </md-card-actions>
@@ -29,16 +29,15 @@
                 quantiteSelection: 0
             }
         },
-        props: ['articleData', 'ajouterDansPanier'],
+        props: ['articleData', 'selectionArticle'],
         methods: {
             selectionnerPourPanier(){
-                this.ajouterDansPanier(this.articleData.id, this.quantiteSelection);
+                this.selectionArticle(this.articleData.id, this.quantiteSelection);
             }
         }
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .md-button{
         background-color: #ffd246;
@@ -57,7 +56,11 @@
         font-size: 1.8em;
     }
     .cardAction{
-        width: 45%;
-        margin: auto
+        width: 50%;
+    }
+    .max-quantite{
+        margin-top: 6px;
+        font-size: 18px;
+        width: 50%;
     }
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="panier">
-        <img class="iconPanier" src="https://www.flaticon.com/svg/vstatic/svg/3378/3378015.svg?token=exp=1617540539~hmac=223676048c4798303e07de446f8850e8"/>
+        <img atl="image panier" class="iconPanier" src="https://www.flaticon.com/svg/vstatic/svg/526/526736.svg?token=exp=1618071588~hmac=ec3151498b2cda612d1e2e2327ce9e7f"/>
         <p class="texte">Panier</p>
     </div>
 </template>

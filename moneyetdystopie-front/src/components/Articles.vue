@@ -1,20 +1,35 @@
 <template>
     <div class="articles">
         <div v-for="article in articlesData" :key="article.id">
-            <Article :ajouterDansPanier="ajouterDansPanier" :articleData="article"></Article>
+            <div v-if="navigation ==='CATALOGUE'">
+                <ArticleCatalogue :selectionArticle="changeDansPanier" :articleData="article"></ArticleCatalogue>
+            </div>
+            <div v-else>
+                <ArticlePanier :selectionArticle="changeDansPanier" :articleData="article"></ArticlePanier>
+            </div>
+        </div>
+        <div v-if="aucunArticle()" class="aucun" >
+            Aucun article
         </div>
     </div>
 </template>
 
 <script>
-    import Article from './Article.vue';
+    import ArticleCatalogue from './ArticleCatalogue.vue';
+    import ArticlePanier from './ArticlePanier.vue';
 
     export default {
         name: "Articles",
         components: {
-            Article
+            ArticleCatalogue,
+            ArticlePanier
         },
-        props:['ajouterDansPanier', 'articlesData' ]
+        props:['changeDansPanier', 'articlesData', 'navigation'],
+        methods: {
+            aucunArticle(){
+                return this.articlesData.length == 0;
+            }
+        }
     }
 </script>
 
@@ -24,5 +39,9 @@
         width: 80%;
         display: flex;
         flex-wrap: wrap;
+    }
+    .aucun{
+        color: white;
+        margin: 0 auto;
     }
 </style>
