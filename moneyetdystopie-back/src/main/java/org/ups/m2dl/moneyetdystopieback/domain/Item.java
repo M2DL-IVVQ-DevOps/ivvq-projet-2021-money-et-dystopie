@@ -5,7 +5,7 @@ import com.sun.istack.NotNull;
 import javax.persistence.*;
 
 @Entity
-public class Article {
+public class Item {
 
     /**
      * Identifiant de l'annonce.
@@ -18,7 +18,7 @@ public class Article {
      * Titre de l'annonce, obligatoire.
      */
     @NotNull
-    private String titre;
+    private String title;
 
     /**
      * Description du produit optionnelle.
@@ -28,17 +28,17 @@ public class Article {
     /**
      * Montant du produit en euros.
      */
-    private float prix;
+    private float price;
 
     /**
      * Quantité disponible à la vente.
      */
-    private int quantite;
+    private int amount;
 
     /**
      * URL vers l'image à utiliser.
      */
-    private String image;
+    private String picture;
 
     /**
      * Version du produit.
@@ -47,5 +47,5 @@ public class Article {
 
     @NotNull
     @ManyToOne
-    private Commercant commercant;
+    private Seller seller;
 }
