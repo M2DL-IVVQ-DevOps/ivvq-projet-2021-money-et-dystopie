@@ -8,7 +8,7 @@ import javax.validation.constraints.Email;
 import java.util.List;
 
 @Entity
-public class Utilisateur {
+public class User {
 
     /**
      * Nom de famille de l'utilisateur.
@@ -47,10 +47,10 @@ public class Utilisateur {
     @OneToMany(mappedBy = "utilisateur")
     private List<Token> tokensList;
 
-    public Utilisateur() {
+    public User() {
     }
 
-    public Utilisateur(String nom, String prenom, @Email String adresseMail, String motDePasse, Commercant compteCommercant, Acheteur compteAcheteur) {
+    public User(String nom, String prenom, @Email String adresseMail, String motDePasse, Commercant compteCommercant, Acheteur compteAcheteur) {
         this.nom = nom;
         this.prenom = prenom;
         this.adresseMail = adresseMail;

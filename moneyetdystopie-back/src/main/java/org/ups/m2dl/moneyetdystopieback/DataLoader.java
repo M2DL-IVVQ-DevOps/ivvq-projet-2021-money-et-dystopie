@@ -32,7 +32,7 @@ public class DataLoader implements ApplicationRunner {
 
     private Commercant commercant;
 
-    private Utilisateur utilisateur;
+    private User user;
 
     private void initCommercant() {
         commercant = new Commercant("Boutique de FredoMgeon", new ArrayList<>(), new ArrayList<>());
@@ -49,11 +49,11 @@ public class DataLoader implements ApplicationRunner {
     }
 
     private void initAcheteur() {
-        acheteur = new Acheteur("FredoMigeon", "pas à Fougères, ça c'est JDG", utilisateur, panier, List.of(commande1, commande2, commande3));
+        acheteur = new Acheteur("FredoMigeon", "pas à Fougères, ça c'est JDG", user, panier, List.of(commande1, commande2, commande3));
     }
 
     private void initUtilisateur() {
-        utilisateur = new Utilisateur("Migeon", "Frédéric", "frederic.migeon@irit.fr", "aaaaaa", commercant, acheteur);
+        user = new User("Migeon", "Frédéric", "frederic.migeon@irit.fr", "aaaaaa", commercant, acheteur);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class Acheteur {
      * Compte utilisateur associé au commerçant.
      */
     @OneToOne
-    private Utilisateur compteUtilisateur;
+    private User compteUser;
 
     /**
      * Panier de l'acheteur.
@@ -44,10 +44,10 @@ public class Acheteur {
     public Acheteur() {
     }
 
-    public Acheteur(String pseudo, String adresse, Utilisateur compteUtilisateur, Commande panier, List<Commande> anciennesCommandes) {
+    public Acheteur(String pseudo, String adresse, User compteUser, Commande panier, List<Commande> anciennesCommandes) {
         this.pseudo = pseudo;
         this.adresse = adresse;
-        this.compteUtilisateur = compteUtilisateur;
+        this.compteUser = compteUser;
         this.panier = panier;
         this.anciennesCommandes = anciennesCommandes;
     }

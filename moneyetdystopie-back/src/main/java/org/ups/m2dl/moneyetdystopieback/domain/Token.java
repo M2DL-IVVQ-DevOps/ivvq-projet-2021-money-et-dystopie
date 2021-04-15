@@ -38,7 +38,7 @@ public class Token {
      */
     @ManyToOne
     @NotNull
-    private Utilisateur utilisateur;
+    private User user;
 
     public Token(){
 
@@ -68,12 +68,12 @@ public class Token {
         this.expiration_date = expiration_date;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
+    public User getUtilisateur() {
+        return user;
     }
 
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setUtilisateur(User user) {
+        this.user = user;
     }
 
 

@@ -2,7 +2,7 @@ package org.ups.m2dl.moneyetdystopieback.services;
 
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
-import org.ups.m2dl.moneyetdystopieback.domain.Utilisateur;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
@@ -13,15 +13,15 @@ import java.util.Date;
 @Service
 public class TokenService {
     private TokenRepository tokenRepository;
-    private UtilisateurService utilisateurService;
+    private UserService userService;
 
     //TODO Remplacer cette valeur par une vraie valeur, actuellement c'est la valeur de test
     private final int TOKEN_DURABILITY_IN_HOURS = 1;
 
 
-    public TokenService(TokenRepository tokenRepository, UtilisateurService utilisateurService){
+    public TokenService(TokenRepository tokenRepository, UserService userService){
         this.tokenRepository = tokenRepository;
-        this.utilisateurService = utilisateurService;
+        this.userService = userService;
     }
 
     public Token saveToken(Token token){
@@ -32,10 +32,10 @@ public class TokenService {
         return tokenRepository.findTokenByValue(tokenValue).orElse(null);
     }
 
-    public Token createNewTokenForUser(Utilisateur utilisateur){
+    public Token createNewTokenForUser(User user){
         Token newToken = new Token();
         newToken.setExpiration_date(generateTokenExpiryDate());
-        newToken.setUtilisateur(utilisateur);
+        newToken.setUtilisateur(user);
         newToken.setValue(generateToken());
         return newToken;
     }

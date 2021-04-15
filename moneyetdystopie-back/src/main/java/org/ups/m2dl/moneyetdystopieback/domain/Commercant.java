@@ -16,7 +16,7 @@ public class Commercant {
      * Compte utilisateur associé au commerçant.
      */
     @OneToOne
-    private Utilisateur compteUtilisateur;
+    private User compteUser;
 
     /**
      * Liste des produits en vente.

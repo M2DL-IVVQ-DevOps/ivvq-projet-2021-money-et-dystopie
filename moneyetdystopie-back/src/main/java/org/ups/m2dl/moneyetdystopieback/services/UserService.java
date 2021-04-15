@@ -4,10 +4,10 @@ import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.repositories.UtilisateurRepository;
 
 @Service
-public class UtilisateurService {
+public class UserService {
     private UtilisateurRepository utilisateurRepository;
 
-    public UtilisateurService(UtilisateurRepository utilisateurRepository){
+    public UserService(UtilisateurRepository utilisateurRepository){
         this.utilisateurRepository = utilisateurRepository;
     }
 }

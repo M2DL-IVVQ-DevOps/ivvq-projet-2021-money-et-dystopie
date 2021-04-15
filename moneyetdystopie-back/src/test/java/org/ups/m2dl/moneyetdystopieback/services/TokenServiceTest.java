@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
-import org.ups.m2dl.moneyetdystopieback.domain.Utilisateur;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
@@ -25,17 +25,17 @@ public class TokenServiceTest {
     private TokenRepository tokenRepository;
 
     @MockBean
-    private UtilisateurService utilisateurService;
+    private UserService userService;
 
     @MockBean
     private Token token;
 
     @MockBean
-    private Utilisateur utilisateur;
+    private User user;
 
     @Before
     public void setup(){
-        tokenService = new TokenService(tokenRepository, utilisateurService);
+        tokenService = new TokenService(tokenRepository, userService);
     }
 
     @Test
@@ -66,16 +66,16 @@ public class TokenServiceTest {
     @Test
     public void testCreateNewTokenForUserGivesCorrectUser(){
         // given : un utilisateur
-        Utilisateur utilisateurTest = new Utilisateur();
-        utilisateurTest.setPrenom("Patrick");
-        utilisateurTest.setNom("Bob");
-        utilisateurTest.setAdresseMail("bob.patrick@rien.com");
+        User userTest = new User();
+        userTest.setPrenom("Patrick");
+        userTest.setNom("Bob");
+        userTest.setAdresseMail("bob.patrick@rien.com");
         // when : un nouveau token est créé pour cet utilisateur
-        Token newToken = tokenService.createNewTokenForUser(utilisateurTest);
+        Token newToken = tokenService.createNewTokenForUser(userTest);
         // then : le token de cet utilisateur n'est pas null
-        assertEquals(utilisateurTest.getNom(), newToken.getUtilisateur().getNom());
-        assertEquals(utilisateurTest.getAdresseMail(), newToken.getUtilisateur().getAdresseMail());
-        assertEquals(utilisateurTest.getPrenom(), newToken.getUtilisateur().getPrenom());
+        assertEquals(userTest.getNom(), newToken.getUtilisateur().getNom());
+        assertEquals(userTest.getAdresseMail(), newToken.getUtilisateur().getAdresseMail());
+        assertEquals(userTest.getPrenom(), newToken.getUtilisateur().getPrenom());
     }
 
     @Test
