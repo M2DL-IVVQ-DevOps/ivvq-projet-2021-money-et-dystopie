@@ -6,7 +6,7 @@
                      :key="index">
                     <div @click="selectionMenu(index, onglet.navigation)" class="scene_nav_button"
                             :class="{'o-active': scene === index}">
-                        <div v-if="scene===index" class="texte" :class="{'revert': index%2 != 0}">
+                        <div v-if="scene===index" class="text" :class="{'revert': index%2 != 0}">
                             {{onglet.name}}
                         </div>
                         <img class="icon" v-else :src="getImage(onglet.icon)" :class="{'revert': index%2 != 0}"/>
@@ -22,16 +22,16 @@
         name : 'Menu',
         data () {
             return {
-                scene: 'CATALOGUE',
+                scene: 'CATALOG',
                 maxScene: [
                     {
-                        name:'Catalogue',
+                        name:'Catalog',
                         icon:'dollar',
-                        navigation: 'CATALOGUE'
+                        navigation: 'CATALOG'
                     },{
                         name:'Mon panier',
                         icon:'panier',
-                        navigation: 'PANIER'
+                        navigation: 'CART'
                     }
                 ]
             }
@@ -112,7 +112,7 @@
         width: 45px;
     }
 
-    .texte{
+    .text{
         padding-bottom: 7px;
         margin-top: 7px;
     }

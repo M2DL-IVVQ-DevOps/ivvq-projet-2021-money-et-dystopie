@@ -3,37 +3,40 @@
         <md-card-content>
 
             <md-card-media>
-                <img :src="articleData.img" alt="Avatar">
-                <div class="title">{{ articleData.title }}</div>
-                <div class="price">{{ articleData.price }}</div>
-                <p>Quantité : {{articleData.quantite}}</p>
+                <img :src="itemData.picture" alt="Avatar">
+                <div class="title">{{ itemData.title }}</div>
+                <div class="price">{{ itemData.price }}</div>
+                <p>Quantité : {{itemData.amount}}</p>
             </md-card-media>
 
         </md-card-content>
 
         <md-card-actions>
             <md-field class="cardAction">
-                <md-select v-model="quantiteSelection" >
-                    <md-option :value="index-1" v-for="index in articleData.quantite+1" :key="index" >{{index-1}}</md-option>
-                </md-select>
+                <select v-model="amountSelect" >
+                    <option :value="index-1" v-for="index in itemData.amount+1" :key="index" >{{index-1}}</option>
+                </select>
             </md-field>
-            <md-button clas="cardAction" v-on:click="selectionnerPourPanier()" class="md-button">MODIFIER</md-button>
+            <md-button clas="cardAction" v-on:click="modificationForCart()" class="md-button">MODIFIER</md-button>
         </md-card-actions>
     </md-card>
 </template>
 
 <script>
     export default {
-        name: 'Article',
+        name: 'ItemCart',
         data: function () {
             return {
-                quantiteSelection: 0
+                amountSelect: 0
             }
         },
-        props: ['articleData', 'selectionArticle'],
+        mounted() {
+            this.amountSelect = this.itemData.amount;
+        },
+        props: ['itemData', 'selectionItem'],
         methods: {
-            selectionnerPourPanier(){
-                this.selectionArticle(this.articleData.id, this.quantiteSelection);
+            modificationForCart(){
+                this.selectionItem(this.itemData.id, this.amountSelect);
             }
         }
     }

@@ -1,180 +1,178 @@
 <template>
-  <div id="app" class="size-app" :class="{'catalogue': utilisateur, 'connexionCreationCompte': !utilisateur}">
+  <div id="app" class="size-app" :class="{'catalog': user, 'connexionCreationAccount': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
 
-    <section v-if="utilisateur">
-      <div v-if="navigation === 'CATALOGUE'">
+    <section v-if="user">
+      <div v-if="navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <Articles
-                :changeDansPanier="ajouterDansPanier"
-                :articlesData="articlesData"
+        <Items
+                :changeCart="addInCart"
+                :itemsData="itemsData"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="navigation === 'PANIER'">
+      <div v-if="navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <Articles
-                :changeDansPanier="retirerDansPanier"
-                :articlesData="utilisateur.acheteur.commande.articles"
+        <Items
+                :changeCart="changeInCart"
+                :itemsData="user.customer.cart.items"
                 :navigation="navigation"
         />
       </div>
     </section>
 
     <section v-else>
-      <ConnexionCreationCompte :connexion="connexionCompte" :creation="creationCompte"></ConnexionCreationCompte>
+      <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
   </div>
 </template>
 
 <script>
-  import Articles from './components/Articles.vue';
+  import Items from './components/Items.vue';
   import Menu from './components/Menu.vue';
-  import ConnexionCreationCompte from "./components/connexionCreationCompte/ConnexionCreationCompte";
+  import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
 
   export default {
     name: 'App',
     components: {
-      ConnexionCreationCompte,
-      Articles,
+      ConnexionCreationAccount,
+      Items,
       Menu
     },
     mounted: function () {
       this.$nextTick(function () {
-        this.utilisateur = null;
+        this.user = null;
       })
     },
     methods: {
       changeNavigation(nav){
         this.navigation = nav;
       },
-      connexionCompte(){
-        this.utilisateur = {
-          mail: 'monMail',
-          mdp: 'azert',
-          nom: 'FRANZESE',
-          prenom: 'Alessandra',
-          commercant: {
-            nomBoutique: 'Le crochet de Nina',
-          },
-          acheteur:{
-            pseudo: 'Rozen',
-            adresse: '54 rue jenesaisou, TOULOUSE',
-            commande: {
-              id: '2152',
-              etat: 'EN_COURS',
-              articles: []
-            }
-          }
-        };
-      },
-      creationCompte(){
-        this.utilisateur = {
-          mail: 'monMail',
-          mdp: 'azert',
-          nom: 'FRANZESE',
-          prenom: 'Alessandra',
-          commercant: {
-            nomBoutique: 'Le crochet de Nina',
-          },
-          acheteur:{
-            pseudo: 'Rozen',
-            adresse: '54 rue jenesaisou, TOULOUSE',
-            commande: {
-              id: '2152',
-              etat: 'EN_COURS',
-              articles: []
-            }
-          }
-        };
-      },
-      ajouterDansPanier(idElement, quantiteSelection) {
-        let elementDansPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
-        let elementSelectionne = this.articlesData.find(elt => elt.id == idElement);
 
-        switch (quantiteSelection) {
-          case 0 :
-            if(elementDansPanier != null){
-              elementSelectionne.quantite += elementDansPanier.quantite;
-              this.utilisateur.acheteur.commande.articles.splice(this.utilisateur.acheteur.commande.articles.indexOf(elt=>elt.id == idElement), 1);
-            }
-            break;
-          default:
-            if(elementDansPanier != null){
-              elementDansPanier.quantite += quantiteSelection;
-            }else {
-              this.utilisateur.acheteur.commande.articles = [...this.utilisateur.acheteur.commande.articles, {...elementSelectionne, quantite: quantiteSelection}];
-            }
-            elementSelectionne.quantite -= quantiteSelection;
-            break;
+      connexionAccount(){
+        this.user = {
+          email: 'monMail',
+          password: 'azert',
+          lastName: 'FRANZESE',
+          firstName: 'Alessandra',
+          seller: {
+            storeName: 'Le crochet de Nina',
+          },
+          customer:{
+            pseudo: 'Rozen',
+            adress: '54 rue jenesaisou, TOULOUSE',
+            cart: {
+              id: '2152',
+              state: 'IN_PROGRESS',
+              items: []
+            },
+            pastOrder: null,
+          }
+        };
+        console.log("creation");
+      },
+
+      creationAccount(){
+        this.user = {
+          email: 'monMail',
+          password: 'azert',
+          lastName: 'FRANZESE',
+          firstName: 'Alessandra',
+          seller: {
+            storeName: 'Le crochet de Nina',
+          },
+          customer:{
+            pseudo: 'Rozen',
+            adress: '54 rue jenesaisou, TOULOUSE',
+            cart: {
+              id: '2152',
+              state: 'IN_PROGRESS',
+              items: []
+            },
+            pastOrder: null,
+          }
+        };
+      },
+
+      addInCart(idElement, amountSelection) {
+        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id == idElement);
+        let elementSelect = this.itemsData.find(elt => elt.id == idElement);
+
+        if(elementInPanier != null){
+           elementInPanier.amount += amountSelection;
+        }else if(amountSelection>0){
+          this.user.customer.cart.items = [...this.user.customer.cart.items, {...elementSelect, amount: amountSelection}];
         }
+        elementSelect.amount -= amountSelection;
       },
-      retirerDansPanier(idElement, quantiteRestante) {
-        let elementDansPanier = this.utilisateur.acheteur.commande.articles.find(elt => elt.id == idElement);
-        let elementSelectionne = this.articlesData.find(elt => elt.id == idElement);
-        let quantiteRetire;
-
-        switch (quantiteRestante) {
+      changeInCart(idElement, amountRestante) {
+        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
+        let elementSelect = this.itemsData.find(elt => elt.id === idElement);
+        let amountRetire, index;
+        switch (amountRestante) {
           case 0 :
-            elementSelectionne.quantite += elementDansPanier.quantite;
-            this.utilisateur.acheteur.commande.articles.splice(this.utilisateur.acheteur.commande.articles.indexOf(elt=>elt.id == idElement), 1);
+            index = this.user.customer.cart.items.indexOf(elementInPanier);
+            if(index!=-1){
+              elementSelect.amount += elementInPanier.amount;
+              this.user.customer.cart.items.splice(index, 1);
+            }
             break;
           default:
-            quantiteRetire = elementDansPanier.quantite - quantiteRestante;
-            elementDansPanier.quantite = quantiteRestante;
-            elementSelectionne.quantite += quantiteRetire;
+            amountRetire = elementInPanier.amount - amountRestante;
+            elementInPanier.amount = amountRestante;
+            elementSelect.amount += amountRetire;
             break;
         }
       }
     },
     data: function () {
       return {
-        navigation: 'CATALOGUE',
-        utilisateur: null,
-        articlesData : [{
+        navigation: 'CATALOG',
+        user: null,
+        itemsData : [{
           id : 1,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/10850904/scratch-r.gif"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/10850904/scratch-r.gif"
         },{
           id: 2,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
         },{
           id: 3,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
         },{
           id: 4,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/10864129/win-r.gif"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/10864129/win-r.gif"
         },{
           id: 5,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/5700236/artboard_24.png?compress=1&resize=800x600"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/5700236/artboard_24.png?compress=1&resize=800x600"
         },{
           id: 6,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
         },{
           id: 7,
           price : 10,
-          quantite : 10,
+          amount : 10,
           title : "Mon titre",
-          img : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
+          picture : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
         }
         ]
       }
@@ -188,10 +186,10 @@
     text-align: center;
     padding: 50px 0;
   }
-  .catalogue{
+  .catalog{
     background-color: #24212b;
   }
-  .connexionCreationCompte{
+  .connexionCreationAccount{
     background-color: #242b45;
   }
   h1{

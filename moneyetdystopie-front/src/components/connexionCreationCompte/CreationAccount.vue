@@ -11,43 +11,43 @@
 
             <md-field>
                 <label>Nom</label>
-                <md-input id="nom" v-model="nom" type="text" name="nom"/>
+                <md-input id="lastName" v-model="lastName" type="text" name="lastName"/>
             </md-field>
 
             <md-field>
                 <label>Prénom</label>
-                <md-input id="prenom" v-model="prenom" type="text" name="prenom"/>
+                <md-input id="firstname" v-model="firstname" type="text" name="firstname"/>
             </md-field>
 
             <md-field>
                 <label>Mail</label>
-                <md-input id="mail" v-model="mail" type="mail" name="mail"/>
+                <md-input id="email" v-model="email" type="email" name="email"/>
             </md-field>
 
             <md-field>
                 <label>Mot de passe</label>
-                <md-input v-model="motDePasse" type="password"></md-input>
+                <md-input v-model="password" type="password"></md-input>
             </md-field>
 
-            <md-checkbox v-model="commercant">Je souhaite être commerçant.</md-checkbox>
+            <md-checkbox v-model="seller">Je souhaite être commerçant.</md-checkbox>
 
-            <md-field v-if="commercant">
+            <md-field v-if="seller">
                 <label>Nom de ma boutique</label>
-                <md-input v-model="boutique" type="text"></md-input>
+                <md-input v-model="storeName" type="text"></md-input>
             </md-field>
 
-            <md-checkbox v-model="acheteur">Je souhaite être acheteur.</md-checkbox>
+            <md-checkbox v-model="customer">Je souhaite être acheteur.</md-checkbox>
 
-            <md-field v-if="acheteur">
+            <md-field v-if="customer">
                 <label>Pseudo</label>
                 <md-input v-model="pseudo" type="text"></md-input>
             </md-field>
-            <md-field v-if="acheteur">
+            <md-field v-if="customer">
                 <label>Adresse postale</label>
-                <md-input v-model="adresse" type="text"></md-input>
+                <md-input v-model="adress" type="text"></md-input>
             </md-field>
-            <div v-if="acheteur || commercant">
-                <md-button v-on:click="creation()">Créer un compte</md-button>
+            <div v-if="customer || seller">
+                <md-button v-on:click="creationAccount()">Créer un compte</md-button>
             </div>
         </form>
     </div>
@@ -59,46 +59,46 @@
         data: function () {
             return {
                 errors: [],
-                nom: null,
-                prenom: null,
-                motDePasse: null,
-                mail: null,
-                boutique: null,
+                lastName: null,
+                firstname: null,
+                password: null,
+                email: null,
+                storeName: null,
                 pseudo: null,
-                adresse: null,
-                commercant: false,
-                acheteur: false
+                adress: null,
+                seller: false,
+                customer: false
             };
         },
         props: ['creation'],
         methods: {
-            creationCompte(){
+            creationAccount(){
                 this.creation();
             },
             checkForm: function (e) {
                 this.errors = [];
 
-                if (!this.nom) {
+                if (!this.lastName) {
                     this.errors.push("Nom requis.");
                 }
-                if (!this.prenom) {
+                if (!this.firstname) {
                     this.errors.push("Prenom requis.");
                 }
-                if (!this.motDePasse) {
+                if (!this.password) {
                     this.errors.push("Mot de passe requis.");
                 }
-                if (!this.mail) {
+                if (!this.email) {
                     this.errors.push('Mail requis.');
-                } else if (!this.validEmail(this.mail)) {
+                } else if (!this.validEmail(this.email)) {
                     this.errors.push('Mail valide requis.');
                 }
-                if (this.commercant && !this.boutique) {
+                if (this.seller && !this.storeName) {
                     this.errors.push("Nom de votre boutique requise.");
                 }
-                if (this.acheteur && !this.pseudo) {
+                if (this.customer && !this.pseudo) {
                     this.errors.push("Pseudo requis.");
                 }
-                if (this.acheteur && !this.adresse) {
+                if (this.customer && !this.adress) {
                     this.errors.push("Adresse requise.");
                 }
 

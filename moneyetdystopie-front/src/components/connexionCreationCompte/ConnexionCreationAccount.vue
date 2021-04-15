@@ -4,25 +4,25 @@
         <div class="flex">
             <div class="flex-contenu">
                 <h2>Connexion</h2>
-                <Connexion :connexion="connexion"></Connexion>
+                <ConnexionAccount :connexion="connexion"></ConnexionAccount>
             </div>
             <div class="flex-contenu">
                 <h2>Création d'un compte</h2>
-                <CreationCompte :creation="creation"></CreationCompte>
+                <CreationAccount :creation="creation"></CreationAccount>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import Connexion from "./Connexion";
-    import CreationCompte from "./CreationCompte";
+    import ConnexionAccount from "./ConnexionAccount";
+    import CreationAccount from "./CreationAccount";
 
     export default {
         name: "ConnexionCreationCompte",
         components: {
-            Connexion,
-            CreationCompte
+            ConnexionAccount,
+            CreationAccount
         },
         props: ['connexion', 'creation'],
     }
