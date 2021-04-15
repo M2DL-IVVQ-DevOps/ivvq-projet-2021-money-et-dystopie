@@ -13,7 +13,7 @@ public class Token {
      * Id du token unique et autogénéré.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
     private Long id;
 

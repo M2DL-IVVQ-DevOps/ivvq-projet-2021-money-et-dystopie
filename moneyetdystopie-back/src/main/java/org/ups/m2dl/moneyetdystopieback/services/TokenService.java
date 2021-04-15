@@ -15,7 +15,8 @@ public class TokenService {
     private TokenRepository tokenRepository;
     private UtilisateurService utilisateurService;
 
-    private final int TOKEN_DURABILITY_IN_HOURS = 1000;
+    //TODO Remplacer cette valeur par une vraie valeur, actuellement c'est la valeur de test
+    private final int TOKEN_DURABILITY_IN_HOURS = 1;
 
 
     public TokenService(TokenRepository tokenRepository, UtilisateurService utilisateurService){
