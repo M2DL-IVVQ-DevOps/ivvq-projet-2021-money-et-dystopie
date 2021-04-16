@@ -17,6 +17,6 @@ jobs:
       - name: Heroku container login
         run: heroku container:login
       - name: Heroku container push
-        run: heroku container:push web -a githubactionstests
+        run: heroku container:push web -a money-et-dystopie
       - name: heroku deploy
-        run: heroku container:release web -a githubactionstests
+        run: heroku container:release web -a money-et-dystopie
