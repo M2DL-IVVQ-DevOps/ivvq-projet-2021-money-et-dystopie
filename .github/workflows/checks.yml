@@ -1,0 +1,43 @@
+name: Sonar and build checks
+
+on:
+  push:
+    branches:
+      - feature-base-project
+  pull_request:
+    branches:
+      - feature-base-project
+jobs:
+
+  docker-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag tests:$(date +%s)
+
+  sonar-checks-back:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Check Sonar report for backend
+        run: cd moneyetdystopie-back && mvn clean install sonar:sonar -Dspring.profiles.active=dev -Dsonar.projectBaseDir=moneyetdystopie-back -Dsonar.projectKey=${{secrets.SONAR_PROJECT_BACK}} -Dsonar.host.url=${{secrets.SONAR_URL_BACK}} -Dsonar.login=${{secrets.SONAR_LOGIN_BACK}} -Dsonar.qualitygate.wait=true
+
+  sonar-checks-front:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Repository
+        uses: actions/checkout@v2
+      - name: Check Sonar report for frontend
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{secrets.SONAR_LOGIN_FRONT}}
+        with:
+          projectBaseDir: moneyetdystopie-front
+          args: >
+            -Dsonar.projectKey=${{secrets.SONAR_PROJECT_FRONT}}
+            -Dsonar.host.url=${{secrets.SONAR_URL_FRONT}}
+            -Dsonar.login=${{secrets.SONAR_LOGIN_FRONT}}
+            -Dsonar.qualitygate.wait=true

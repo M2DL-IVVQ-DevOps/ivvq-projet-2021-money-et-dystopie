@@ -1,0 +1,22 @@
+name: Deploy to Heroku.
+
+on:
+  push:
+    branches:
+      - feature-base-project
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    env:
+      HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      profile: "prod"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Heroku container login
+        run: heroku container:login
+      - name: Heroku container push
+        run: heroku container:push web -a githubactionstests
+      - name: heroku deploy
+        run: heroku container:release web -a githubactionstests

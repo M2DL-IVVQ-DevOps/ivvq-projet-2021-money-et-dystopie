@@ -3,9 +3,11 @@ package org.ups.m2dl.moneyetdystopieback.domain;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 @Entity
+@Table(name = "app_user")
 public class User {
 
     /**

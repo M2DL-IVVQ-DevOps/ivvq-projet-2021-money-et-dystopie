@@ -18,7 +18,7 @@ RUN mvn dependency:go-offline -B
 
 COPY moneyetdystopie-back/src /back/src
 COPY --from=node /front/dist/ /back/src/main/resources/static/
-RUN mvn package -DskipTests && cp /back/target/moneyetdystopie-back-*.jar app.jar
+RUN mvn package && cp /back/target/moneyetdystopie-back-*.jar app.jar
 
 # Run Back
 FROM openjdk:11-jre
@@ -26,5 +26,7 @@ WORKDIR /app
 COPY wait-for-it.sh wait-for-it.sh 
 COPY --from=maven /back/app.jar app.jar
 
+ENV profile="dev"
+
 EXPOSE 8080
-ENTRYPOINT ["./wait-for-it.sh", "postgresql://${POSTGRES_URL}:5432/${POSTGRES_DB}", "--", "java","-Djava.security.egd=file:/dev/./urandom","-jar","app.jar"]
+ENTRYPOINT ["./wait-for-it.sh", "postgresql://${POSTGRES_URL}:5432/${POSTGRES_DB}", "--", "java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
