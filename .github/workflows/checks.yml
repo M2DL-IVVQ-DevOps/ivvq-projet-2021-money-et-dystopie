@@ -3,10 +3,11 @@ name: Sonar and build checks
 on:
   push:
     branches:
-      - feature-base-project
+      - develop
   pull_request:
     branches:
-      - feature-base-project
+      - develop
+
 jobs:
 
   docker-build:
