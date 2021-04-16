@@ -29,4 +29,4 @@ COPY --from=maven /back/app.jar app.jar
 ENV profile="dev"
 
 EXPOSE 8080
-ENTRYPOINT ["./wait-for-it.sh", "postgresql://${POSTGRES_URL}:5432/${POSTGRES_DB}", "--", "java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
