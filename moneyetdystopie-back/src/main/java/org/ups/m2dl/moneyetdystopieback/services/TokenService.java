@@ -12,8 +12,8 @@ import java.util.Date;
 
 @Service
 public class TokenService {
-    private TokenRepository tokenRepository;
-    private UserService userService;
+    private final TokenRepository tokenRepository;
+    private final UserService userService;
 
     //TODO Remplacer cette valeur par une vraie valeur, actuellement c'est la valeur de test
     private final int TOKEN_DURABILITY_IN_HOURS = 1;

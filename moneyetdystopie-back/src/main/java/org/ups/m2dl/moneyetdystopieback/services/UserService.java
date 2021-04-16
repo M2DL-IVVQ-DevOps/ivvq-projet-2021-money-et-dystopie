@@ -5,7 +5,7 @@ import org.ups.m2dl.moneyetdystopieback.repositories.UtilisateurRepository;
 
 @Service
 public class UserService {
-    private UtilisateurRepository utilisateurRepository;
+    private final UtilisateurRepository utilisateurRepository;
 
     public UserService(UtilisateurRepository utilisateurRepository){
         this.utilisateurRepository = utilisateurRepository;
