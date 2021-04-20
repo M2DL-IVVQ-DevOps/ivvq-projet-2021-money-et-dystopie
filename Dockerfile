@@ -23,7 +23,6 @@ RUN mvn package && cp /back/target/moneyetdystopie-back-*.jar app.jar
 # Run Back
 FROM openjdk:11-jre
 WORKDIR /app
-COPY wait-for-it.sh wait-for-it.sh 
 COPY --from=maven /back/app.jar app.jar
 
 ENV profile="dev"
