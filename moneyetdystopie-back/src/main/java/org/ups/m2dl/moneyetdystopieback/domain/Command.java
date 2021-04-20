@@ -1,11 +1,14 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
+import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
 @Table(name = "Command")
-public class Order {
+public class Command {
 
     /**
      * Identifiant de la commande.
@@ -17,7 +20,8 @@ public class Order {
     /**
      * Etat de la commande.
      */
-    private OrderState state;
+    @NotNull
+    private CommandState state;
 
     /**
      * Liste des articles de la commande.
@@ -25,12 +29,12 @@ public class Order {
     @OneToMany
     private List<Item> items;
 
-    public Order() {
+    public Command() {
     }
 
-    public Order(OrderState state, List<Item> items) {
-        this.state = state;
-        this.items = items;
+    public Command(CommandState state, List<Item> items) {
+        this.setState(state);
+        this.setItems(items);
     }
 
     public Long getId() {
@@ -41,11 +45,15 @@ public class Order {
         this.id = id;
     }
 
-    public OrderState getState() {
+    public CommandState getState() {
         return state;
     }
 
-    public void setState(OrderState state) {
+    public void setState(CommandState state) {
         this.state = state;
+    }
+
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 }
