@@ -46,7 +46,7 @@ http://localhost:43000/index.html
 
 # La base de données
 
-Le projet utilise une base de données **postgreSQL** pour stocker les éléments tels que les compte utilisateurs, les articles en vente ou encore le commandes passées.
+Le projet utilise une base de données **postgreSQL** pour stocker les éléments tels que les comptes utilisateurs, les articles en vente ou encore les commandes passées.
 La base de données utilisée lors du développement et lors de la production ne sont pas les mêmes.
 Celle utilisée pour le développement est réinitialisée à chaque lancement. Elle fonctionne à l'aide d'un conteneur Docker dédié.
 
