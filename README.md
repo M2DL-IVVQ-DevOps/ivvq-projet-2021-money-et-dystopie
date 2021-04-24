@@ -43,3 +43,22 @@ Le serveur est alors accessible ici :
 ```console
 http://localhost:43000/index.html
 ```
+
+# La base de données
+
+Le projet utilise une base de données **postgreSQL** pour stocker les éléments tels que les compte utilisateurs, les articles en vente ou encore le commandes passées.
+La base de données utilisée lors du développement et lors de la production ne sont pas les mêmes.
+Celle utilisée pour le développement est réinitialisée à chaque lancement. Elle fonctionne à l'aide d'un conteneur Docker dédié.
+
+Pour consulter cette base de données il est possible d'utiliser le logiciel [DBeaver](https://dbeaver.io/) :
+
+Après avoir installé et lancé l'application, il suffit de **démarrer une nouvelle connexion** de type **postgreSQL** et de renseigner :
+* l'hôte
+* la base de données
+* le nom d'utilisateur
+* le mot de passe
+
+Ces informations sont accessibles de deux manières :
+
+* Lors d'un développement local, elles sont trouvables dans le fichier **db.env**
+* En production, dans l'interface Heroku postgres
