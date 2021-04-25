@@ -42,9 +42,9 @@ class UserServiceTest {
         // GIVEN
         User userTest = new User("lastName33", "firstName33", "email33@gmail", "password33");
         when(userService.getUserRepository().save(userTest)).thenReturn(userTest);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         userService.save(userTest);
-        // THEN: UserRepository is invoked
+        // THEN: UserRepository est invoqué
         verify(userService.getUserRepository()).save(userTest);
     }
 
@@ -53,9 +53,9 @@ class UserServiceTest {
         // GIVEN
         String emailTest = "email34@email.com";
         when(userService.getUserRepository().findByEmail(emailTest)).thenReturn(null);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         userService.findByEmail(emailTest);
-        // THEN: UserRepository is invoked
+        // THEN: UserRepository est invoqué
         verify(userService.getUserRepository()).findByEmail(emailTest);
     }
 

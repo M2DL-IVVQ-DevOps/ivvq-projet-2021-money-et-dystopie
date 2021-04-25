@@ -34,9 +34,9 @@ class SellerServiceTest {
         // GIVEN
         Seller sellerTest = new Seller("storeName21");
         when(sellerService.getSellerRepository().save(sellerTest)).thenReturn(sellerTest);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         sellerService.save(sellerTest);
-        // THEN: SellerRepository is invoked
+        // THEN: SellerRepository est invoqué
         verify(sellerService.getSellerRepository()).save(sellerTest);
     }
 
@@ -45,9 +45,9 @@ class SellerServiceTest {
         // GIVEN
         String storeNameTest = "storeName22";
         when(sellerService.getSellerRepository().findByStoreName(storeNameTest)).thenReturn(null);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         sellerService.findByStoreName(storeNameTest);
-        // THEN: CustomerRepository is invoked
+        // THEN: CustomerRepository est invoqué
         verify(sellerService.getSellerRepository()).findByStoreName(storeNameTest);
     }
 

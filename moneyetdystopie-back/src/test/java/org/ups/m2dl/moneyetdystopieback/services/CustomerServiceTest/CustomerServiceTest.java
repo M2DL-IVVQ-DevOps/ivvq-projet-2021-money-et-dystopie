@@ -34,9 +34,9 @@ class CustomerServiceTest {
         // GIVEN
         Customer customerTest = new Customer("pseudo16", "numberCityCountry16");
         when(customerService.getCustomerRepository().save(customerTest)).thenReturn(customerTest);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         customerService.save(customerTest);
-        // THEN: CustomerRepository is invoked
+        // THEN: CustomerRepository est invoqué
         verify(customerService.getCustomerRepository()).save(customerTest);
     }
 
@@ -45,9 +45,9 @@ class CustomerServiceTest {
         // GIVEN
         String pseudoTest = "pseudo17";
         when(customerService.getCustomerRepository().findByPseudo(pseudoTest)).thenReturn(null);
-        // WHEN: save methode is invoked
+        // WHEN: save méthode est invoqué
         customerService.findByPseudo(pseudoTest);
-        // THEN: CustomerRepository is invoked
+        // THEN: CustomerRepository est invoqué
         verify(customerService.getCustomerRepository()).findByPseudo(pseudoTest);
     }
 

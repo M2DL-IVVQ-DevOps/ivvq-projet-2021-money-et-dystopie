@@ -46,7 +46,7 @@ class CustomerServiceValidMethodTest {
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
-            // HEN
+            // THEN
             customerService.valid(customerTest);
         });
     }

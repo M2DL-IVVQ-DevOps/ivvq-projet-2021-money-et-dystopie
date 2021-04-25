@@ -94,8 +94,7 @@ public class UserService {
         try {
             return userRepository.save(user);
         }catch (Exception e){
-            e.printStackTrace();
-            throw new BusinessException("Une erreur est survenu lors de l'enregistrement de l'utilisateur." + (e.getMessage() == null ? e.getMessage() : ""));
+            throw new BusinessException("Une erreur est survenue lors de l'enregistrement de l'utilisateur." + (e.getMessage() == null ? e.getMessage() : ""));
         }
     }
 

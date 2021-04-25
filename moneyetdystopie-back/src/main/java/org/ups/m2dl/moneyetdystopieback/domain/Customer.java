@@ -33,7 +33,7 @@ public class Customer {
      * Compte utilisateur associé au commerçant.
      */
     @JsonIgnore
-    @OneToOne(mappedBy = "customerAccount")
+    @OneToOne
     private User userAccount;
 
     /**

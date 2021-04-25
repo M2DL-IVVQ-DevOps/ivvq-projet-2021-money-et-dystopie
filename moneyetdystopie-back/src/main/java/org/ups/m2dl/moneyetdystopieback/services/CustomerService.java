@@ -54,7 +54,7 @@ public class CustomerService {
         try{
             return customerRepository.save(customer);
         } catch (Exception e){
-            throw new BusinessException("Une erreur est survenu lors de l'enregistrement de l'acheteur." + (e.getMessage() != null? e.getMessage() : ""));
+            throw new BusinessException("Une erreur est survenue lors de l'enregistrement de l'acheteur." + (e.getMessage() != null? e.getMessage() : ""));
         }
 
     }

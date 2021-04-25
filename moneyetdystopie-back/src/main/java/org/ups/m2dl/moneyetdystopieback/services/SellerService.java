@@ -55,8 +55,7 @@ public class SellerService {
         try{
             return sellerRepository.save(seller);
         }catch (Exception e){
-            e.printStackTrace();
-            throw new BusinessException("Une erreur est survenu lors de l'enregistrement de la boutique." + (e.getMessage() != null? e.getMessage():""));
+            throw new BusinessException("Une erreur est survenue lors de l'enregistrement de la boutique." + (e.getMessage() != null? e.getMessage():""));
         }
 
     }

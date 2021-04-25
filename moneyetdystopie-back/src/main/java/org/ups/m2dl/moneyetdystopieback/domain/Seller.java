@@ -24,7 +24,7 @@ public class Seller {
      * Compte utilisateur associé au commerçant.
      */
     @JsonIgnore
-    @OneToOne(mappedBy = "sellerAccount")
+    @OneToOne
     private User userAccount;
 
     /**

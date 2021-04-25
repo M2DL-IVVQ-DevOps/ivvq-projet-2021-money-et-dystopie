@@ -47,7 +47,7 @@ class UserServiceValidMethodTest {
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
-            // HEN
+            // THEN
             userService.valid(userTest);
         });
     }
@@ -62,7 +62,7 @@ class UserServiceValidMethodTest {
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
-            // HEN
+            // THEN
             userService.valid(userTest);
         });
     }
@@ -77,7 +77,7 @@ class UserServiceValidMethodTest {
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
-            // HEN
+            // THEN
             userService.valid(userTest);
         });
     }
