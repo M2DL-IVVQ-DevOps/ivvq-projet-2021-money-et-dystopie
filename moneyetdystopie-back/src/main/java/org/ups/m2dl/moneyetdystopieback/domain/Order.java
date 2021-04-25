@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Commande {
+@Table(name = "Command")
+public class Order {
 
     /**
      * Identifiant de la commande.
@@ -16,20 +17,20 @@ public class Commande {
     /**
      * Etat de la commande.
      */
-    private EtatCommande etat;
+    private OrderState state;
 
     /**
      * Liste des articles de la commande.
      */
     @OneToMany
-    private List<Article> articles;
+    private List<Item> items;
 
-    public Commande() {
+    public Order() {
     }
 
-    public Commande(EtatCommande etat, List<Article> articles) {
-        this.etat = etat;
-        this.articles = articles;
+    public Order(OrderState state, List<Item> items) {
+        this.state = state;
+        this.items = items;
     }
 
     public Long getId() {
@@ -40,11 +41,11 @@ public class Commande {
         this.id = id;
     }
 
-    public EtatCommande getEtat() {
-        return etat;
+    public OrderState getState() {
+        return state;
     }
 
-    public void setEtat(EtatCommande etat) {
-        this.etat = etat;
+    public void setState(OrderState state) {
+        this.state = state;
     }
 }

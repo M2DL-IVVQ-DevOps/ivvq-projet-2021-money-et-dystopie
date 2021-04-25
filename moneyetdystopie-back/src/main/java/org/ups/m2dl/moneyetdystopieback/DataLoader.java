@@ -6,8 +6,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.ups.m2dl.moneyetdystopieback.domain.*;
-import org.ups.m2dl.moneyetdystopieback.repositories.AcheteurRepository;
-import org.ups.m2dl.moneyetdystopieback.repositories.CommandeRepository;
+import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
+import org.ups.m2dl.moneyetdystopieback.repositories.OrderRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,57 +17,57 @@ import java.util.List;
 public class DataLoader implements ApplicationRunner {
 
     @Autowired
-    private AcheteurRepository acheteurRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    private CommandeRepository commandeRepository;
+    private OrderRepository orderRepository;
 
-    private Acheteur acheteur;
+    private Customer buyer;
 
-    private Commande panier;
+    private Order cart;
 
-    private Commande commande1;
-    private Commande commande2;
-    private Commande commande3;
+    private Order order1;
+    private Order order2;
+    private Order order3;
 
-    private Commercant commercant;
+    private Seller seller;
 
     private User user;
 
-    private void initCommercant() {
-        commercant = new Commercant("Boutique de FredoMgeon", new ArrayList<>(), new ArrayList<>());
+    private void initSeller() {
+        seller = new Seller("Boutique de FredoMgeon", new ArrayList<>(), new ArrayList<>());
     }
 
-    private void initPanier() {
-        panier = new Commande(EtatCommande.EN_COURS, new ArrayList<>());
+    private void initCart() {
+        cart = new Order(OrderState.IN_PROGRESS, new ArrayList<>());
     }
 
-    private void initCommandes() {
-        commande1 = new Commande(EtatCommande.EN_ATTENTE_D_EXPEDITION, new ArrayList<>());
-        commande2 = new Commande(EtatCommande.EN_ATTENTE_DE_LIVRAISON, new ArrayList<>());
-        commande3 = new Commande(EtatCommande.EN_ATTENTE_DE_PAIEMENT, new ArrayList<>());
+    private void initOrders() {
+        order1 = new Order(OrderState.WAITING_FOR_SHIPMENT, new ArrayList<>());
+        order2 = new Order(OrderState.WAITING_FOR_DELIVERY, new ArrayList<>());
+        order3 = new Order(OrderState.WAITING_FOR_PAYMENT, new ArrayList<>());
     }
 
-    private void initAcheteur() {
-        acheteur = new Acheteur("FredoMigeon", "pas à Fougères, ça c'est JDG", user, panier, List.of(commande1, commande2, commande3));
+    private void initBuyer() {
+        buyer = new Customer("FredoMigeon", "pas à Fougères, ça c'est JDG", user, cart, List.of(order1, order2, order3));
     }
 
-    private void initUtilisateur() {
-        user = new User("Migeon", "Frédéric", "frederic.migeon@irit.fr", "aaaaaa", commercant, acheteur);
+    private void initUser() {
+        user = new User("Migeon", "Frédéric", "frederic.migeon@irit.fr", "aaaaaa", seller, buyer);
     }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        initCommercant();
-        initCommandes();
-        initPanier();
-        initAcheteur();
-        initUtilisateur();
+        initSeller();
+        initOrders();
+        initCart();
+        initBuyer();
+        initUser();
 
-        commandeRepository.save(panier);
-        commandeRepository.save(commande1);
-        commandeRepository.save(commande2);
-        commandeRepository.save(commande3);
-        acheteurRepository.save(acheteur);
+        orderRepository.save(cart);
+        orderRepository.save(order1);
+        orderRepository.save(order2);
+        orderRepository.save(order3);
+        customerRepository.save(buyer);
     }
 }

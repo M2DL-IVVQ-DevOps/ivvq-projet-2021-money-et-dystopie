@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-public class Acheteur {
+public class Customer {
 
     /**
      * Identifiant de l'acheteur.
@@ -21,34 +21,34 @@ public class Acheteur {
     /**
      * Adresse de l'acheteur.
      */
-    private String adresse;
+    private String address;
 
     /**
      * Compte utilisateur associé au commerçant.
      */
     @OneToOne
-    private User compteUser;
+    private User userAccount;
 
     /**
      * Panier de l'acheteur.
      */
     @OneToOne
-    private Commande panier;
+    private Order cart;
 
     /**
      * Liste des anciennes commandes de l'acheteur.
      */
     @OneToMany
-    private List<Commande> anciennesCommandes;
+    private List<Order> pastOrders;
 
-    public Acheteur() {
+    public Customer() {
     }
 
-    public Acheteur(String pseudo, String adresse, User compteUser, Commande panier, List<Commande> anciennesCommandes) {
+    public Customer(String pseudo, String address, User userAccount, Order cart, List<Order> pastOrders) {
         this.pseudo = pseudo;
-        this.adresse = adresse;
-        this.compteUser = compteUser;
-        this.panier = panier;
-        this.anciennesCommandes = anciennesCommandes;
+        this.address = address;
+        this.userAccount = userAccount;
+        this.cart = cart;
+        this.pastOrders = pastOrders;
     }
 }
