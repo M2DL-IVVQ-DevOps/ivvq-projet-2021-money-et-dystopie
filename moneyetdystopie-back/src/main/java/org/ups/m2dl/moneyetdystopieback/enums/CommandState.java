@@ -1,6 +1,6 @@
-package org.ups.m2dl.moneyetdystopieback.domain;
+package org.ups.m2dl.moneyetdystopieback.enums;
 
-public enum OrderState {
+public enum CommandState {
     IN_PROGRESS,
     WAITING_FOR_PAYMENT,
     WAITING_FOR_SHIPMENT,

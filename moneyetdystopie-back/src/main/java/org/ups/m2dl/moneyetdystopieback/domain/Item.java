@@ -1,8 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
-import com.sun.istack.NotNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Item {
@@ -23,27 +23,33 @@ public class Item {
     /**
      * Description du produit optionnelle.
      */
+    @NotNull
     private String description;
 
     /**
      * Montant du produit en euros.
      */
+    @NotNull
     private float price;
 
     /**
      * Quantité disponible à la vente.
      */
+    @NotNull
     private int amount;
 
     /**
      * URL vers l'image à utiliser.
      */
+    @NotNull
     private String picture;
 
     /**
      * Version du produit.
      */
-    private int version;
+    @NotNull
+    @Version
+    private long version;
 
     @NotNull
     @ManyToOne
