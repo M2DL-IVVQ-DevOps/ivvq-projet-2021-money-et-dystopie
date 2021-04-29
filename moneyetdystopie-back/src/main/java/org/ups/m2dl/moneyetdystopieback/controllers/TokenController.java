@@ -4,6 +4,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
+import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
@@ -43,7 +44,7 @@ public class TokenController {
     public ResponseEntity<Object> check(@CookieValue(value="token", defaultValue = "none") String token) {
         try{
             return ResponseEntity.status(200).body(tokenService.getUserByTokenValue(token));
-        }catch (AccessDeniedException e){
+        }catch (BusinessException e){
             return ResponseEntity.badRequest().body(new AccessDeniedException(e.getMessage()));
         }catch (Exception e){
             return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
