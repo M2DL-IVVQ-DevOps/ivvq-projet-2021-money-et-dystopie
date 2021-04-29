@@ -76,7 +76,7 @@ class TokenServiceTest {
 
 
     @Test
-    public void testGeneratedTokenHasCorrectLength(){
+    public void testGeneratedTokenHasCorrectLength() throws BusinessException {
         // when : on génère un token
         String tokenValue = tokenService.generateToken();
         // then : la valeur du token est précisément celle attendue
@@ -84,7 +84,7 @@ class TokenServiceTest {
     }
 
     @Test
-    void testTwoDistinctsGeneratedTokensAreNotEquals(){
+    void testTwoDistinctsGeneratedTokensAreNotEquals() throws BusinessException {
         // when : deux tokens sont générés
         String tokenValue1 = tokenService.generateToken();
         String tokenValue2 = tokenService.generateToken();
@@ -94,7 +94,7 @@ class TokenServiceTest {
 
 
     @Test
-    void testCreateNewTokenForUserGivesCorrectUser(){
+    void testCreateNewTokenForUserGivesCorrectUser() throws BusinessException {
         // given : un utilisateur
         User userTest = new User();
         userTest.setFirstName("Patrick");

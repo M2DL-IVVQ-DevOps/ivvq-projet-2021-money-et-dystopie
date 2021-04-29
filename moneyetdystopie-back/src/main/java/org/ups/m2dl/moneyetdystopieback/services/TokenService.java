@@ -7,7 +7,6 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
-import java.nio.file.AccessDeniedException;
 import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,10 +15,6 @@ import java.util.Date;
 public class TokenService {
     private final TokenRepository tokenRepository;
     private final UserService userService;
-
-    //TODO Remplacer cette valeur par une vraie valeur, actuellement c'est la valeur de test
-    private final int TOKEN_DURABILITY_IN_HOURS = 1;
-
 
     public TokenService(TokenRepository tokenRepository, UserService userService){
         this.tokenRepository = tokenRepository;
@@ -46,12 +41,12 @@ public class TokenService {
         if (isTokenValid(token)){
             user = token.getUtilisateur();
         }else{
-            throw new BusinessException("");
+            throw new BusinessException("Votre session a expiré, veuillez vous reconnecter.");
         }
         return user;
     }
 
-    public Token createNewTokenForUser(User user){
+    public Token createNewTokenForUser(User user) throws BusinessException {
         Token newToken = new Token();
         newToken.setExpiration_date(generateTokenExpiryDate());
         newToken.setUtilisateur(user);
@@ -62,14 +57,14 @@ public class TokenService {
     public Date generateTokenExpiryDate(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.HOUR, TOKEN_DURABILITY_IN_HOURS);
+        calendar.add(Calendar.MINUTE, MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
         return calendar.getTime();
     }
 
     /**
      * Génère un token d'une taille spécifique aléatoirement
      */
-    public String generateToken() throws IllegalStateException{
+    public String generateToken() throws BusinessException{
         String tokenValue;
         String carac_min = "abcdefghijklmnopqrstuvwxyz";
         String carac_maj = carac_min.toUpperCase();
@@ -85,7 +80,7 @@ public class TokenService {
         }
         tokenValue = stringBuilder.toString();
         if (getTokenByValue(tokenValue) != null){
-            throw new IllegalStateException("");
+            throw new BusinessException("");
         }
         return tokenValue;
     }
@@ -98,7 +93,7 @@ public class TokenService {
         return (token.getUtilisateur().getEmail().equals(user.getEmail()));
     }
 
-    public Token performNewTokenRequest(User user, String ancientTokenValue) throws AccessDeniedException {
+    public Token performNewTokenRequest(User user, String ancientTokenValue) throws BusinessException {
         Token newToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
         if ((isTokenValid(ancientToken) && isTokenUserAssociationValid(ancientToken, user) || userService.checkUserPassword(user))){
@@ -107,14 +102,14 @@ public class TokenService {
             removeToken(ancientToken);
         }else{
             removeToken(ancientToken);
-            throw new AccessDeniedException("");
+            throw new BusinessException("Impossible de vous connecter avec les identifiants renseignés.");
         }
         return newToken;
     }
 
-    public Token removeTokenByValue(String tokenValue){
+    public boolean removeTokenByValue(String tokenValue){
         Token token = getTokenByValue(tokenValue);
         removeToken(token);
-        return token;
+        return true;
     }
 }
