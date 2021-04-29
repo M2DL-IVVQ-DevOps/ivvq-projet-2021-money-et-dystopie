@@ -2,7 +2,6 @@
 # Use this script to test if a given TCP host/port are available
 # Source : https://github.com/vishnubob/wait-for-it
 
-
 # Specific adaptation for money-et-dystopie project :
 WAITFORIT_HOST=$POSTGRES_URL
 WAITFORIT_PORT=5432
