@@ -50,7 +50,7 @@ http://localhost:43000/index.html
 
 Le projet utilise une base de données pour stocker les éléments tels que les comptes utilisateurs,
 les articles en vente ou encore les commandes passées. Le schéma de la base de données est visible ci-dessous.
-[Schéma de la base de données](database-diagram.png)
+![Schéma de la base de données](database-diagram.png)
 
 Le projet dispose de deux profils d'exécution : **dev** et **prod**.
 * Le mode **dev** permet d'utiliser une base de données **H2**, stockant les éléments en mémoire, et réinitialisée à chaque lancement.
