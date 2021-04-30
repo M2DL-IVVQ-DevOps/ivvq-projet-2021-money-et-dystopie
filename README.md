@@ -54,14 +54,13 @@ les articles en vente ou encore les commandes passées. Le schéma de la base de
 
 Le projet dispose de deux profils d'exécution : **dev** et **prod**, définis par la variable d'environnement **profile**.
 * Le mode **dev** permet d'utiliser une base de données **H2**, stockant les éléments en mémoire, et réinitialisée à chaque lancement.
-Elle permet de s'affranchir de Docker
 Utile pour développer le back-end sans passer par la conteneurisation.
 * Le mode **prod** permet d'utiliser une base de données **PostgreSQL**.
 C'est ce mode qui est utilisé lorsqu'on conteneurise le projet ou si l'on souhaite développer en local à l'aide du docker-compose.
 
 La base de données PostgreSQL utilisée dans le conteneur local (pour le développement) et dans le conteneur distant (en production) ne sont pas les mêmes :
 * Celle utilisée en local est réinitialisée à chaque lancement. Elle fonctionne à l'aide d'un conteneur Docker dédié.
-* Celle utilisée en production est hébergée à travers la plateforme Heroku et n'est jamais réinitialisée.
+* Celle utilisée en production est hébergée à travers la plateforme Heroku et n'est que rarement réinitialisée.
 
 ## Comment accéder aux bases de données
 
