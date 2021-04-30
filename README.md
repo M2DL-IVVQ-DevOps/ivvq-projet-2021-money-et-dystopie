@@ -63,7 +63,7 @@ La base de données utilisée dans le conteneur local (pour le développement) e
 Elle fonctionne à l'aide d'un conteneur Docker dédié.
 * Celle utilisée en production est hébergée à travers la plateforme Heroku.
 
-## Comment accéder à la base de données
+## Comment accéder aux bases de données
 
 En profil d'exécution **dev** il est possible d'accéder à la console H2 à travers ce lien : http://localhost:8080/h2-console
 
