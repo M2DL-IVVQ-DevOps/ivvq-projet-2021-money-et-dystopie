@@ -14,18 +14,18 @@ import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
 class CustomerServiceCreateMethodIntegrationTest {
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
-    Customer customerTestTwinA;
-    Customer customerTestTwinB;
-    Customer customerTest;
+    private Customer customerTestTwinA;
+    private Customer customerTestTwinB;
+    private Customer customerTest;
 
     @Test
     void whenCreateCustomerWithSamePseudo_thenThrowBusinessException() throws BusinessException {
 
         // GIVEN
-        customerTestTwinA = new Customer("customerTestTwin", "numberCityCountry9");
-        customerTestTwinB = new Customer("customerTestTwin", "numberCityCountry10");
+        customerTestTwinA = new Customer("customerTestTwin", "numberCityCountry9", null, null, null);
+        customerTestTwinB = new Customer("customerTestTwin", "numberCityCountry10", null, null, null);
 
         // WHEN
         customerService.create(customerTestTwinA);
@@ -40,7 +40,7 @@ class CustomerServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateCustomerWithoutPseudo_thenThrowBusinessException() {
         // GIVEN
-        customerTest = new Customer(null, "numberCityCountry11");
+        customerTest = new Customer(null, "numberCityCountry11", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

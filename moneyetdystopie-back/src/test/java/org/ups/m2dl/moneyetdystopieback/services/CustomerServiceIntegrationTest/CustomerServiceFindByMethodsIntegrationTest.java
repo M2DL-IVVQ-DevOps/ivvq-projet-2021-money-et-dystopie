@@ -1,6 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.services.CustomerServiceIntegrationTest;
 
-import org.assertj.core.api.ComparableAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,29 +16,29 @@ import java.util.List;
 class CustomerServiceFindByMethodsIntegrationTest {
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
-    Customer customerTest;
+    private Customer customerTest;
 
     @Test
     void whenCreateSaveCustomer_thenCanFind() throws BusinessException {
 
         // GIVEN
-        customerTest = new Customer("pseudo12", "numberCityCountry12");
+        customerTest = new Customer("pseudo12", "numberCityCountry12", null, null, null);
 
         // WHEN
         customerService.save(customerTest);
-        List<Customer> resultFindBy = customerService.findByPseudo(customerTest.getPseudo());
+        Customer resultFindBy = customerService.findByPseudo(customerTest.getPseudo());
 
         // THEN
-        Assertions.assertEquals( 1, resultFindBy.size(), "The saved customer was not found.");
+        Assertions.assertNotNull( resultFindBy, "The saved customer was not found.");
     }
 
     @Test
     void whenSearchCustomerDontExist_thenNoResult() {
         // GIVEN WHEN
-        List<Customer> resultFindBy = customerService.findByPseudo("pseudo13");
+        Customer resultFindBy = customerService.findByPseudo("pseudo13");
 
-        Assertions.assertEquals( 0, resultFindBy.size(), "A customer was returned despite his non-existence.");
+        Assertions.assertNull(  resultFindBy, "A customer was returned despite his non-existence.");
     }
 }

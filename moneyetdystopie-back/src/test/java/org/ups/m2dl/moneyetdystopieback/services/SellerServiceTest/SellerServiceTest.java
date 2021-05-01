@@ -11,6 +11,8 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.SellerRepository;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,7 +34,7 @@ class SellerServiceTest {
     @Test
     void whenUseSaveMethod_thenRepositorySellerInvoked() throws BusinessException {
         // GIVEN
-        Seller sellerTest = new Seller("storeName21");
+        Seller sellerTest = new Seller("storeName21",null,null,null);
         when(sellerService.getSellerRepository().save(sellerTest)).thenReturn(sellerTest);
         // WHEN: save méthode est invoqué
         sellerService.save(sellerTest);
@@ -41,10 +43,10 @@ class SellerServiceTest {
     }
 
     @Test
-    void whenUseFindByPseudoMethod_thenRepositoryCustomerInvoked() {
+    void whenUseFindByPseudoMethod_thenRepositorySellerInvoked() {
         // GIVEN
         String storeNameTest = "storeName22";
-        when(sellerService.getSellerRepository().findByStoreName(storeNameTest)).thenReturn(null);
+        when(sellerService.getSellerRepository().findByStoreName(storeNameTest)).thenReturn(Optional.empty());
         // WHEN: save méthode est invoqué
         sellerService.findByStoreName(storeNameTest);
         // THEN: CustomerRepository est invoqué

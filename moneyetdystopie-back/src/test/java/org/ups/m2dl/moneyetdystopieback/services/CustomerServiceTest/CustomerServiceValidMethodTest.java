@@ -17,9 +17,9 @@ import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
 class CustomerServiceValidMethodTest {
 
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
-    Customer customerTest;
+    private Customer customerTest;
 
     @ParameterizedTest
     @ValueSource(strings = {"1234","012345678901234567890123456789012345678901234567890"})
@@ -27,7 +27,7 @@ class CustomerServiceValidMethodTest {
     void whenValidCustomerWithBadPseudo_thenThrowBusinessException(String pseudo)  {
 
         // GIVEN
-        customerTest = new Customer(pseudo,"numberCityCountry18");
+        customerTest = new Customer(pseudo,"numberCityCountry18", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -42,11 +42,11 @@ class CustomerServiceValidMethodTest {
     void whenValidCustomerWithBadAddress_thenThrowBusinessException(String address)  {
 
         // GIVEN
-        customerTest = new Customer("1234",address);
+        customerTest = new Customer("1234",address, null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
+            // WHEN
             customerService.valid(customerTest);
         });
     }
@@ -54,10 +54,11 @@ class CustomerServiceValidMethodTest {
     @Test
     void whenValidCustomer_thenNoThrowBusinessException() {
         // GIVEN
-        customerTest = new Customer("pseudo18", "numberCityCountry18");
+        customerTest = new Customer("pseudo18", "numberCityCountry18", null, null, null);
 
-        //WHEN
+        //THEN
         Assertions.assertDoesNotThrow( () -> {
+            //WHEN
             customerService.valid(customerTest);
         });
     }

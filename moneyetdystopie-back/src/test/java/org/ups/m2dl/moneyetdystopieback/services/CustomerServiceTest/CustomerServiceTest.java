@@ -11,6 +11,8 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
@@ -32,7 +34,7 @@ class CustomerServiceTest {
     @Test
     void whenUseSaveMethod_thenRepositoryCustomerInvoked() throws BusinessException {
         // GIVEN
-        Customer customerTest = new Customer("pseudo16", "numberCityCountry16");
+        Customer customerTest = new Customer("pseudo16", "numberCityCountry16", null, null, null);
         when(customerService.getCustomerRepository().save(customerTest)).thenReturn(customerTest);
         // WHEN: save méthode est invoqué
         customerService.save(customerTest);
@@ -44,7 +46,7 @@ class CustomerServiceTest {
     void whenUseFindByPseudoMethod_thenRepositoryCustomerInvoked() {
         // GIVEN
         String pseudoTest = "pseudo17";
-        when(customerService.getCustomerRepository().findByPseudo(pseudoTest)).thenReturn(null);
+        when(customerService.getCustomerRepository().findByPseudo(pseudoTest)).thenReturn(Optional.empty());
         // WHEN: save méthode est invoqué
         customerService.findByPseudo(pseudoTest);
         // THEN: CustomerRepository est invoqué

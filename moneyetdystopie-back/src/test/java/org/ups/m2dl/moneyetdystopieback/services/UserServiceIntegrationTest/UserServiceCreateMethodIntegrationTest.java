@@ -3,7 +3,6 @@ package org.ups.m2dl.moneyetdystopieback.services.UserServiceIntegrationTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
@@ -12,29 +11,28 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 class UserServiceCreateMethodIntegrationTest {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    User userTestTwinA;
-    User userTestTwinB;
-    User userTest;
+    private User userTestTwinA;
+    private User userTestTwinB;
+    private User userTest;
 
     @Test
     void whenCreateUserWithSameEmail_thenThrowBusinessException() throws BusinessException {
 
-        String sameMail = "email24@email.email";
+        String sameMail = "email57@email.email";
 
         // GIVEN
-        userTestTwinA = new User("lastName25", "firstName25", sameMail, "passwordpassword25");
-        userTestTwinA.setSellerAccount(new Seller("storeName25"));
-        userTestTwinA.setCustomerAccount(new Customer("pseudo25", "numberCityCountry25"));
+        userTestTwinA = new User("lastName25", "firstName25", sameMail, "passwordpassword25", null, null);
+        userTestTwinA.setSellerAccount(new Seller("storeName25",null,null,null));
+        userTestTwinA.setCustomerAccount(new Customer("pseudo25", "numberCityCountry25", null, null, null));
 
-        userTestTwinB = new User("lastName26", "firstName26", sameMail, "passwordpassword26");
-        userTestTwinB.setSellerAccount(new Seller("storeName26"));
-        userTestTwinB.setCustomerAccount(new Customer("pseudo26", "numberCityCountry26"));
+        userTestTwinB = new User("lastName26", "firstName26", sameMail, "passwordpassword26", null, null);
+        userTestTwinB.setSellerAccount(new Seller("storeName26",null,null,null));
+        userTestTwinB.setCustomerAccount(new Customer("pseudo26", "numberCityCountry26", null, null, null));
 
         // WHEN
         userService.create(userTestTwinA);
@@ -49,7 +47,7 @@ class UserServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateUserWithoutCustomerSeller_thenThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName27", "firstName27", "email27@email.email", "passwordpassword27");
+        userTest = new User("lastName27", "firstName27", "email27@email.email", "passwordpassword27", null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -61,7 +59,7 @@ class UserServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateUserWithoutEmail_thenThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName28", "firstName28", null, "passwordpassword28");
+        userTest = new User("lastName28", "firstName28", null, "passwordpassword28", null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

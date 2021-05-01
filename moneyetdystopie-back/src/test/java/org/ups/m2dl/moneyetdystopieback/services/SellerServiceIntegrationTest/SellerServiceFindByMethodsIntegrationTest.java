@@ -16,29 +16,29 @@ import java.util.List;
 class SellerServiceFindByMethodsIntegrationTest {
 
     @Autowired
-    SellerService sellerService;
+    private SellerService sellerService;
 
-    Seller sellerTest;
+    private Seller sellerTest;
 
     @Test
     void whenCreateSaveSeller_thenCanFind() throws BusinessException {
 
         // GIVEN
-        sellerTest = new Seller("storeName20");
+        sellerTest = new Seller("storeName20",null,null,null);
 
         // WHEN
         sellerService.save(sellerTest);
-        List<Seller> resultFindBy = sellerService.findByStoreName(sellerTest.getStoreName());
+        Seller resultFindBy = sellerService.findByStoreName(sellerTest.getStoreName());
 
         // THEN
-        Assertions.assertEquals( 1, resultFindBy.size(), "The saved seller was not found.");
+        Assertions.assertNotNull( resultFindBy, "The saved seller was not found.");
     }
 
     @Test
     void whenSearchCustomerDontExist_thenNoResult() {
         // GIVEN WHEN
-        List<Seller> resultFindBy = sellerService.findByStoreName("Bonjour");
+        Seller resultFindBy = sellerService.findByStoreName("Bonjour");
 
-        Assertions.assertEquals( 0, resultFindBy.size(), "A seller was returned despite his non-existence.");
+        Assertions.assertNull( resultFindBy, "A seller was returned despite his non-existence.");
     }
 }

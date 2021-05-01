@@ -14,18 +14,18 @@ import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 class SellerServiceCreateMethodIntegrationTest {
 
     @Autowired
-    SellerService sellerService;
+    private SellerService sellerService;
 
-    Seller sellerTestTwinA;
-    Seller sellerTestTwinB;
-    Seller sellerTest;
+    private Seller sellerTestTwinA;
+    private Seller sellerTestTwinB;
+    private Seller sellerTest;
 
     @Test
     void whenCreateSellerWithSameStoreName_thenThrowBusinessException() throws BusinessException {
 
         // GIVEN
-        sellerTestTwinA = new Seller("storeName19");
-        sellerTestTwinB = new Seller("storeName19");
+        sellerTestTwinA = new Seller("storeName19",null,null,null);
+        sellerTestTwinB = new Seller("storeName19",null,null,null);
 
         // WHEN
         sellerService.create(sellerTestTwinA);
@@ -40,7 +40,7 @@ class SellerServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateSellerWithoutStoreName_thenThrowBusinessException() {
         // GIVEN
-        sellerTest = new Seller(null);
+        sellerTest = new Seller(null,null,null,null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

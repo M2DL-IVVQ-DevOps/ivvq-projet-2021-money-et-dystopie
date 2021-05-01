@@ -1,6 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.services.SellerServiceIntegrationTest;
 
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +16,25 @@ import java.util.List;
 class SellerServiceSaveMethodIntegrationTest {
 
     @Autowired
-    SellerService sellerService;
+    private SellerService sellerService;
 
-    Seller sellerTest;
+    private Seller sellerTest;
 
     @Test
-    void whenSaveSeller_thenCanFind() throws BusinessException {
+    void whenSaveSeller_thenCanFindWithDatas() throws BusinessException {
         // GIVEN
-        sellerTest = new Seller("storeName21");
+        sellerTest = new Seller("storeName21",null,null,null);
 
         // WHEN
         sellerService.save(sellerTest);
-        List<Seller> resultFindById = sellerService.findByStoreName(sellerTest.getStoreName());
+        Seller resultFindById = sellerService.findByStoreName(sellerTest.getStoreName());
 
         //THEN
-        Assertions.assertEquals( 1, resultFindById.size(), "More or Less sellers than expected were obtained.");
-        Assertions.assertEquals( sellerTest.getStoreName(), resultFindById.get(0).getStoreName(), "The information retrieved does not match that expected.");
-        Assertions.assertNull( resultFindById.get(0).getUserAccount(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( 0,  resultFindById.get(0).getItems().size(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( 0, resultFindById.get(0).getCommands().size(), "The information retrieved does not match that expected.");
+        Assertions.assertNotNull( resultFindById, "More or Less sellers than expected were obtained.");
+        Assertions.assertEquals( sellerTest.getStoreName(), resultFindById.getStoreName(), "The information retrieved does not match that expected.");
+        Assertions.assertNull( resultFindById.getUserAccount(), "The information retrieved does not match that expected.");
+        Assertions.assertTrue( resultFindById.getItems().isEmpty(), "The information retrieved does not match that expected.");
+        Assertions.assertTrue( resultFindById.getCommands().isEmpty(), "The information retrieved does not match that expected.");
     }
 
     @Test
@@ -50,7 +49,7 @@ class SellerServiceSaveMethodIntegrationTest {
     @Test
     void whenSaveSellerWithoutStoreName_thenThrowBusinessException() {
         // GIVEN
-        sellerTest = new Seller(null);
+        sellerTest = new Seller(null,null,null,null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

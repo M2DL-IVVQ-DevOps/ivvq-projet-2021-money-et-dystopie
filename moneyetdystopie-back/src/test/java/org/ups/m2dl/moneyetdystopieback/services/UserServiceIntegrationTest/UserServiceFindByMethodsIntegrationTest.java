@@ -16,29 +16,29 @@ import java.util.List;
 class UserServiceFindByMethodsIntegrationTest {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
-    User userTest;
+    private User userTest;
 
     @Test
     void whenCreateSaveUser_thenCanFind() throws BusinessException {
 
         // GIVEN
-        userTest = new User("lastName29", "firstName29", "email29@gmail", "passwordpassword29");
+        userTest = new User("lastName29", "firstName29", "email29@gmail", "passwordpassword29", null, null);
 
         // WHEN
         userService.save(userTest);
-        List<User> resultFindBy = userService.findByEmail(userTest.getEmail());
+        User resultFindBy = userService.findByEmail(userTest.getEmail());
 
         // THEN
-        Assertions.assertEquals( 1, resultFindBy.size(), "The saved user was not found.");
+        Assertions.assertNotNull( resultFindBy, "The saved user was not found.");
     }
 
     @Test
     void whenSearchUserDontExist_thenNoResult() {
         // GIVEN WHEN
-        List<User> resultFindBy = userService.findByEmail("email30@email.com");
+        User resultFindBy = userService.findByEmail("email30@email.com");
 
-        Assertions.assertEquals( 0, resultFindBy.size(), "A user was returned despite his non-existence.");
+        Assertions.assertNull( resultFindBy, "A user was returned despite his non-existence.");
     }
 }
