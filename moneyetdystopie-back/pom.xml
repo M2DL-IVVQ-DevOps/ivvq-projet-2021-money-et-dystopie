@@ -58,11 +58,6 @@
             <version>5.7.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>sonar-findbugs-plugin</artifactId>
-            <version>4.0.3</version>
-        </dependency>
 
         <!-- Base de données -->
         <dependency>
