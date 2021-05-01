@@ -1,5 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
@@ -10,41 +13,28 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class SellerService {
 
+    @Getter
+    @Setter
     private SellerRepository sellerRepository;
-
-    public SellerService(SellerRepository sellerRepository){
-        this.sellerRepository = sellerRepository;
-    }
-
-    public SellerRepository getSellerRepository() {
-        return sellerRepository;
-    }
 
     public Seller create(Seller seller) throws BusinessException{
 
-        try {
-            this.valid(seller);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
-        }
+        this.valid(seller);
         seller.setCommands(null);
         seller.setItems(null);
 
-        if(!this.findByStoreName(seller.getStoreName()).isEmpty()){
+        if(this.findByStoreName(seller.getStoreName()) != null){
             throw new BusinessException("Une boutique '" + seller.getStoreName() + "' existe déjà.");
         }
 
-        try {
-            return this.save(seller);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
-        }
+        return this.save(seller);
     }
 
     public Seller save(Seller seller) throws BusinessException {
@@ -60,10 +50,13 @@ public class SellerService {
 
     }
 
-    public List<Seller> findByStoreName(String storeName) {
-        return sellerRepository.findByStoreName(storeName);
+    public Seller findByStoreName(String storeName) {
+        if(storeName==null || storeName.isBlank()){
+            return null;
+        }
+        Optional<Seller> seller = sellerRepository.findByStoreName(storeName);
+        return seller.isPresent() ? seller.get() : null;
     }
-
 
     public void valid(Seller seller) throws BusinessException {
 

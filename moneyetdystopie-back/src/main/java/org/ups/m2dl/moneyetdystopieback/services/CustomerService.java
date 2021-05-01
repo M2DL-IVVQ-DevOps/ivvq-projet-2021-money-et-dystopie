@@ -1,5 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
@@ -7,42 +10,29 @@ import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 
 import javax.validation.*;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class CustomerService {
 
+    @Getter
+    @Setter
     private CustomerRepository customerRepository;
-
-    public CustomerService(CustomerRepository customerRepository){
-        this.customerRepository = customerRepository;
-    }
-
-    public CustomerRepository getCustomerRepository() {
-        return customerRepository;
-    }
 
     public Customer create(Customer customer) throws BusinessException {
 
-        try {
-            this.valid(customer);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
-        }
+        this.valid(customer);
 
         customer.setCart(null);
         customer.setPastCommands(null);
 
-        if(!this.findByPseudo(customer.getPseudo()).isEmpty()){
+        if(this.findByPseudo(customer.getPseudo()) != null){
             throw new BusinessException("Un acheteur '" + customer.getPseudo() + "' existe déjà.");
         }
 
-        try {
-            return this.save(customer);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
-        }
+        return this.save(customer);
     }
 
 
@@ -56,11 +46,14 @@ public class CustomerService {
         } catch (Exception e){
             throw new BusinessException("Une erreur est survenue lors de l'enregistrement de l'acheteur." + (e.getMessage() != null? e.getMessage() : ""));
         }
-
     }
 
-    public List<Customer> findByPseudo (String pseudo){
-        return customerRepository.findByPseudo(pseudo);
+    public Customer findByPseudo (String pseudo){
+        if(pseudo==null || pseudo.isBlank()){
+            return null;
+        }
+        Optional<Customer> customer = customerRepository.findByPseudo(pseudo);
+        return customer.isPresent() ? customer.get() : null;
     }
 
     public void valid(Customer customer) throws BusinessException{

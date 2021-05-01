@@ -1,95 +1,53 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserBean {
 
     /**
      * Nom de famille de l'utilisateur.
      */
+    @Getter
+    @Setter
     private String lastName;
 
     /**
      * Prénom de l'utilisateur.
      */
+    @Getter
+    @Setter
     private String firstName;
 
     /**
      * Pseudo, unique, de l'utilisateur.
      */
+    @Getter
+    @Setter
     private String email;
 
     /**
      * Mot de passe, chiffré
      */
+    @Getter
+    @Setter
     private String password;
 
     /**
      * Compte commercant associé.
      */
+    @Getter
+    @Setter
     private SellerBean sellerAccount;
 
     /**
      * Compte acheteur associé.
      */
+    @Getter
+    @Setter
     private CustomerBean customerAccount;
-
-    public UserBean() {
-    }
-
-    public UserBean(String lastName, String firstName, String email, String password) {
-        this.setLastName(lastName);
-        this.setFirstName(firstName);
-        this.setEmail(email);
-        this.setPassword(password);
-        this.setSellerAccount(null);
-        this.setCustomerAccount(null);
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public SellerBean getSellerAccount() {
-        return sellerAccount;
-    }
-
-    public CustomerBean getCustomerAccount() {
-        return customerAccount;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setSellerAccount(SellerBean sellerAccount) {
-        this.sellerAccount = sellerAccount;
-    }
-
-    public void setCustomerAccount(CustomerBean customerAccount) {
-        this.customerAccount = customerAccount;
-    }
-
 }

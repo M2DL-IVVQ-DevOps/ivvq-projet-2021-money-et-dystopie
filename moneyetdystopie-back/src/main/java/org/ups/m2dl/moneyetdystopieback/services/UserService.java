@@ -1,5 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,27 +20,24 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
+    @Getter
+    @Setter
     private UserRepository userRepository;
 
+    @Getter
+    @Setter
     private SellerService sellerService;
 
+    @Getter
+    @Setter
     private CustomerService customerService;
-
-    public UserService(UserRepository userRepository, SellerService sellerService, CustomerService customerService){
-        this.userRepository = userRepository;
-        this.sellerService = sellerService;
-        this.customerService = customerService;
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
 
     @Transactional
     public User create(User user) throws BusinessException {
@@ -46,45 +46,37 @@ public class UserService {
             throw new BusinessException("Le compte doit être acheteur ou commerçant.");
         }
 
-        if(!this.findByEmail(user.getEmail()).isEmpty()){
+        if(this.findByEmail(user.getEmail()) != null){
             throw new BusinessException("Un utilisateur '" + user.getEmail() + "' existe déjà.");
         }
 
-        try {
-            if(user.getSellerAccount() != null){
-                sellerService.valid(user.getSellerAccount());
-            }
-            if(user.getCustomerAccount() != null){
-                customerService.valid(user.getCustomerAccount());
-            }
-            this.valid(user);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
+        if(user.getSellerAccount() != null){
+            sellerService.valid(user.getSellerAccount());
+        }
+        if(user.getCustomerAccount() != null){
+            customerService.valid(user.getCustomerAccount());
+        }
+        this.valid(user);
+
+        if(user.getSellerAccount() != null){
+            user.setSellerAccount(sellerService.create(user.getSellerAccount()));
         }
 
-        try {
-            if(user.getSellerAccount() != null){
-                user.setSellerAccount(sellerService.create(user.getSellerAccount()));
-            }
-
-            if(user.getCustomerAccount() != null){
-                user.setCustomerAccount(customerService.create(user.getCustomerAccount()));
-            }
-
-            User u = this.save(user);
-
-            if(user.getSellerAccount() != null){
-                user.getSellerAccount().setUserAccount(u);
-            }
-
-            if(user.getCustomerAccount() != null){
-                user.getCustomerAccount().setUserAccount(u);
-            }
-
-            return u;
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
+        if(user.getCustomerAccount() != null){
+           user.setCustomerAccount(customerService.create(user.getCustomerAccount()));
         }
+
+        User u = this.save(user);
+
+        if(user.getSellerAccount() != null){
+           user.getSellerAccount().setUserAccount(u);
+        }
+
+        if(user.getCustomerAccount() != null){
+           user.getCustomerAccount().setUserAccount(u);
+        }
+
+        return u;
     }
 
     public User save(User user) throws BusinessException {
@@ -98,10 +90,13 @@ public class UserService {
         }
     }
 
-    public List<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        if(email==null || email.isBlank()){
+            return null;
+        }
+        Optional<User> user = userRepository.findByEmail(email);
+        return user.isPresent() ? user.get() : null;
     }
-
 
     public void valid(User user) throws BusinessException {
 
