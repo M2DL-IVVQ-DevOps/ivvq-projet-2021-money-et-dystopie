@@ -20,7 +20,7 @@
             </md-field>
 
             <div>
-                <md-button v-on:click="connexionAccount()">Connexion</md-button>
+                <md-button v-on:click="connexionAccount()" id="connection-button">Connexion</md-button>
             </div>
         </form>
     </div>
