@@ -32,18 +32,14 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final TokenService tokenService;
-
     public UserService(UserRepository userRepository,
                        SellerService sellerService,
                        CustomerService customerService,
-                       PasswordEncoder passwordEncoder,
-                       TokenService tokenService){
+                       PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.sellerService = sellerService;
         this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
-        this.tokenService = tokenService;
     }
 
     public UserRepository getUserRepository() {

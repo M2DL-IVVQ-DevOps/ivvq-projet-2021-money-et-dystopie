@@ -35,12 +35,9 @@ class UserServiceTest {
     @MockBean
     private CustomerService customerService;
 
-    @MockBean
-    private TokenService tokenService;
-
     @BeforeEach
     void setup() {
-        userService = new UserService(userRepository, sellerService, customerService, passwordEncoder, tokenService);
+        userService = new UserService(userRepository, sellerService, customerService, passwordEncoder);
     }
 
     @Test
