@@ -70,8 +70,8 @@ public class Token {
         return expirationDate;
     }
 
-    public void setExpirationDate(Date expiration_date) {
-        this.expirationDate = expiration_date;
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public User getUser() {

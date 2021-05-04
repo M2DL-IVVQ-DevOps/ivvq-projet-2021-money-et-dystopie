@@ -179,9 +179,10 @@ public class UserService {
     }
 
     public boolean checkUserPassword(User user){
-        User dbUser = findByEmail(user.getEmail());
-        if (dbUser != null && user != null && passwordEncoder.matches(user.getPassword(),dbUser.getPassword()))
-            return true;
+        if (user != null){
+            User dbUser = findByEmail(user.getEmail());
+            return (dbUser != null && passwordEncoder.matches(user.getPassword(),dbUser.getPassword()));
+        }
         return false;
     }
 
