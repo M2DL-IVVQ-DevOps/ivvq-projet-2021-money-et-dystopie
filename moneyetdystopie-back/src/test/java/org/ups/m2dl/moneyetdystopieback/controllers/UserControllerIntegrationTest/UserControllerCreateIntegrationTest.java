@@ -270,7 +270,7 @@ class UserControllerCreateIntegrationTest {
 
         // THEN
         User resultUser = userService.findByEmail(userTest.getEmail());
-        Assertions.assertNotNull( resultUser, "The saved user was found.");
+        Assertions.assertNull( resultUser, "The saved user was found.");
 
         // THEN
         List<Customer> resultCustomer = customerService.findByPseudo(userTest.getCustomerAccount().getPseudo());

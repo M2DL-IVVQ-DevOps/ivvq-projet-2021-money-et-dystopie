@@ -126,6 +126,9 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
+        if(email==null || email.isBlank()){
+            return null;
+        }
         return userRepository.findByEmail(email).orElse(null);
     }
 

@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.services.userserviceintegrationtest;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -21,7 +22,7 @@ class UserServiceSaveMethodIntegrationTest {
 
     User userTest;
 
-    @Test
+    @Disabled
     void whenSaveUser_thenCanFind() throws BusinessException {
         // GIVEN
         userTest = new User("lastName31", "firstName31", "email31@gmail", "Passwordpassword31");

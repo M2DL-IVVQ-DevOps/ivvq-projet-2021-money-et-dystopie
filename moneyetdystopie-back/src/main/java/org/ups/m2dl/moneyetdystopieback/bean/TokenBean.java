@@ -1,4 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import java.util.Date;
 

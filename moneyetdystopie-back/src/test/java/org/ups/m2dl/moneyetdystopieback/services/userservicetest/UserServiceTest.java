@@ -16,6 +16,8 @@ import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +59,7 @@ class UserServiceTest {
     void whenUseFindByEmailMethod_thenRepositoryUserInvoked() {
         // GIVEN
         String emailTest = "email34@email.com";
-        when(userService.getUserRepository().findByEmail(emailTest)).thenReturn(null);
+        when(userService.getUserRepository().findByEmail(emailTest)).thenReturn(Optional.empty());
         // WHEN: save méthode est invoqué
         userService.findByEmail(emailTest);
         // THEN: UserRepository est invoqué
