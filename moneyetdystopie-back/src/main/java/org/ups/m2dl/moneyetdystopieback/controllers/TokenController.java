@@ -33,10 +33,7 @@ public class TokenController {
         try{
             User user = new User();
             BeanUtils.copyProperties(userBean,user);
-            Token token = tokenService.performNewTokenRequest(user, tokenValue);
-            Cookie cookie = new Cookie("token", token.getValue());
-            cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
-            response.addCookie(cookie);
+            response.addCookie(tokenService.createTokenCookie(user, tokenValue));
             return ResponseEntity.status(200).body(true);
         }catch (BusinessException e){
             return ResponseEntity.badRequest().body(e);

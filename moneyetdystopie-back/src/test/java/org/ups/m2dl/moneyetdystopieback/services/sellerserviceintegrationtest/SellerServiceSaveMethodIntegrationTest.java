@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.cellerserviceintegrationtest;
+package org.ups.m2dl.moneyetdystopieback.services.sellerserviceintegrationtest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -7,6 +7,7 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
+import javax.servlet.http.Cookie;
 import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
@@ -116,5 +117,12 @@ public class TokenService {
         removeToken(token);
         userService.removeTokenToUser(token.getUser(),token);
         return true;
+    }
+
+    public Cookie createTokenCookie(User user, String tokenValue) throws BusinessException {
+        Token token = performNewTokenRequest(user, tokenValue);
+        Cookie cookie = new Cookie("token", token.getValue());
+        cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
+        return cookie;
     }
 }
