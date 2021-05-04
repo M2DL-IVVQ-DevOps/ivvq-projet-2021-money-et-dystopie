@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
@@ -23,7 +24,8 @@ class UserServiceSaveMethodIntegrationTest {
     @Test
     void whenSaveUser_thenCanFind() throws BusinessException {
         // GIVEN
-        userTest = new User("lastName31", "firstName31", "email31@gmail", "passwordpassword31");
+        userTest = new User("lastName31", "firstName31", "email31@gmail", "Passwordpassword31");
+        userTest.setCustomerAccount(new Customer("superPseudo","rue de par là bas"));
 
         // WHEN
         userService.save(userTest);

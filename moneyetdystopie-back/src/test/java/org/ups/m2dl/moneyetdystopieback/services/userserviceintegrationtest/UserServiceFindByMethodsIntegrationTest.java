@@ -24,7 +24,7 @@ class UserServiceFindByMethodsIntegrationTest {
     void whenCreateSaveUser_thenCanFind() throws BusinessException {
 
         // GIVEN
-        userTest = new User("lastName29", "firstName29", "email29@gmail", "passwordpassword29");
+        userTest = new User("lastName29", "firstName29", "email29@gmail", "Passwordpassword29");
 
         // WHEN
         userService.save(userTest);

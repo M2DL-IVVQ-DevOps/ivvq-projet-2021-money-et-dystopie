@@ -22,8 +22,10 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserServiceTest {
+    @Autowired
     private UserService userService;
 
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @MockBean
@@ -43,7 +45,7 @@ class UserServiceTest {
     @Test
     void whenUseSaveMethod_thenRepositoryUserInvoked() throws BusinessException {
         // GIVEN
-        User userTest = new User("lastName33", "firstName33", "email33@gmail", "password33");
+        User userTest = new User("lastName33", "firstName33", "email33@gmail", "Password33");
         when(userService.getUserRepository().save(userTest)).thenReturn(userTest);
         // WHEN: save méthode est invoqué
         userService.save(userTest);
