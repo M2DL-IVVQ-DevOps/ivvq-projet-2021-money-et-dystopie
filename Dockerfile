@@ -24,8 +24,10 @@ RUN mvn package && cp /back/target/moneyetdystopie-back-*.jar app.jar
 FROM openjdk:11-jre
 WORKDIR /app
 COPY --from=maven /back/app.jar app.jar
+COPY ./wait-for-it.sh .
 
 ENV profile="dev"
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
+ENTRYPOINT ["./wait-for-it.sh", "-s", "--"]
+CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-Dspring.profiles.active=${profile}", "-jar", "app.jar"]
