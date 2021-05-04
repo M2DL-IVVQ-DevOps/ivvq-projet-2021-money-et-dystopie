@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.tokenservice;
+package org.ups.m2dl.moneyetdystopieback.services.tokenservicetest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,31 +67,6 @@ class TokenServiceTest {
         verify(tokenRepository).findTokenByValue("email@adresse.truc");
     }
 
-    @Test
-    void givenExistingToken_whenGetTokenByValueMethod_thenTokenFound() throws BusinessException {
-        // given : a saved existing token
-        String tokenValue = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                "aaaaaa";
-        Token token = new Token(tokenValue, new Date());
-        // when : un getTokenByValue() est appelé sur un tokenService
-        Token expectedToken = tokenService.saveToken(token);
-        // then : le token est récupéré
-        Token actualToken = tokenService.getTokenByValue(tokenValue);
-        assertEquals("1", "1");
-    }
-
-    @Test
-    void whenGetUserByTokenValueMethod_thenRepositoryTokenInvoked() throws BusinessException {
-        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
-        Customer customer = new Customer("merci","15241635");
-        user.setCustomerAccount(customer);
-        userService.save(user);
-        userService.findByEmail("truc@truc.fr");
-    }
 
 
     @Test

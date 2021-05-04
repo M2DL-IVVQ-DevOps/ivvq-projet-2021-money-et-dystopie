@@ -1,5 +1,4 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import java.util.Date;
 
@@ -17,7 +16,7 @@ public class TokenBean {
     /**
      * Date après laquelle le token n'est plus valable.
      */
-    private Date expiration_date;
+    private Date expirationDate;
 
 
     /**
@@ -26,7 +25,7 @@ public class TokenBean {
     private User user;
 
     public TokenBean(){
-
+        //Constructeur vide
     }
 
     public Long getId() {
@@ -45,12 +44,12 @@ public class TokenBean {
         this.value = value;
     }
 
-    public Date getExpiration_date() {
-        return expiration_date;
+    public Date getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setExpiration_date(Date expiration_date) {
-        this.expiration_date = expiration_date;
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
     }
 
     public User getUtilisateur() {
