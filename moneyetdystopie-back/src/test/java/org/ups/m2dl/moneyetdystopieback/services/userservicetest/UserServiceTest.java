@@ -7,11 +7,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
 import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
+import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
 import static org.mockito.Mockito.verify;
@@ -33,9 +35,12 @@ class UserServiceTest {
     @MockBean
     private CustomerService customerService;
 
+    @MockBean
+    private TokenService tokenService;
+
     @BeforeEach
     void setup() {
-        userService = new UserService(userRepository, sellerService, customerService, passwordEncoder);
+        userService = new UserService(userRepository, sellerService, customerService, passwordEncoder, tokenService);
     }
 
     @Test

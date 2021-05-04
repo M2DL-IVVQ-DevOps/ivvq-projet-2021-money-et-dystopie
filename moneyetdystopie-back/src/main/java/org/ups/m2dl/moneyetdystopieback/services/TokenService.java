@@ -39,7 +39,7 @@ public class TokenService {
         Token token = getTokenByValue(tokenValue);
         User user;
         if (isTokenValid(token)){
-            user = token.getUtilisateur();
+            user = token.getUser();
         }else{
             throw new BusinessException("Votre session a expiré, veuillez vous reconnecter.");
         }
@@ -48,9 +48,10 @@ public class TokenService {
 
     public Token createNewTokenForUser(User user) throws BusinessException {
         Token newToken = new Token();
-        newToken.setExpiration_date(generateTokenExpiryDate());
-        newToken.setUtilisateur(user);
+        newToken.setExpirationDate(generateTokenExpiryDate());
+        newToken.setUser(user);
         newToken.setValue(generateToken());
+        userService.addTokenToUser(user,newToken);
         return newToken;
     }
 
@@ -66,11 +67,10 @@ public class TokenService {
      */
     public String generateToken() throws BusinessException{
         String tokenValue;
-        String carac_min = "abcdefghijklmnopqrstuvwxyz";
-        String carac_maj = carac_min.toUpperCase();
+        String caracMin = "abcdefghijklmnopqrstuvwxyz";
+        String caracMaj = caracMin.toUpperCase();
         String chiffres = "0123456789";
-        String symboles = "#{([|)]}$£?!€@.;,";
-        String carac = carac_min + carac_maj + chiffres + symboles;
+        String carac = caracMin + caracMaj + chiffres;
         SecureRandom secureRandom = new SecureRandom();
         StringBuilder stringBuilder = new StringBuilder(MoneyDystopieConstants.TOKEN_LENGTH);
         for (int i = 0; i < MoneyDystopieConstants.TOKEN_LENGTH; i++) {
@@ -86,30 +86,35 @@ public class TokenService {
     }
 
     public boolean isTokenValid(Token token){
-        return (token == null || token.getExpiration_date().before(new Date()));
+        return (token != null && token.getExpirationDate().before(new Date()));
     }
 
     public boolean isTokenUserAssociationValid(Token token, User user){
-        return (token.getUtilisateur().getEmail().equals(user.getEmail()));
+        return (token != null && user != null && token.getUser().getEmail().equals(user.getEmail()));
     }
 
     public Token performNewTokenRequest(User user, String ancientTokenValue) throws BusinessException {
         Token newToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
-        if ((isTokenValid(ancientToken) && isTokenUserAssociationValid(ancientToken, user) || userService.checkUserPassword(user))){
+        if ((isTokenValid(ancientToken) && isTokenUserAssociationValid(ancientToken, user)) || userService.checkUserPassword(user)){
             newToken = createNewTokenForUser(user);
             saveToken(newToken);
-            removeToken(ancientToken);
+            if (ancientToken != null){
+                removeToken(ancientToken);
+            }
         }else{
-            removeToken(ancientToken);
+            if (ancientToken != null){
+                removeToken(ancientToken);
+            }
             throw new BusinessException("Impossible de vous connecter avec les identifiants renseignés.");
         }
         return newToken;
     }
 
-    public boolean removeTokenByValue(String tokenValue){
+    public boolean removeTokenByValue(String tokenValue) throws BusinessException {
         Token token = getTokenByValue(tokenValue);
         removeToken(token);
+        userService.removeTokenToUser(token.getUser(),token);
         return true;
     }
 }

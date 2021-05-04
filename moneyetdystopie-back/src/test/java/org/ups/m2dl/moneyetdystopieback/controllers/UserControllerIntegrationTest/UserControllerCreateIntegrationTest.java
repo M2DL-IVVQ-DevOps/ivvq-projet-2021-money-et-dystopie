@@ -111,14 +111,14 @@ class UserControllerCreateIntegrationTest {
                 .andExpect(content().contentType(contentType));
 
         // THEN
-        List<User> resultUser = userService.findByEmail(userTest.getEmail());
+        User resultUser = userService.findByEmail(userTest.getEmail());
 
-        Assertions.assertEquals( 1, resultUser.size(), "The saved user was not found.");
+        Assertions.assertNotNull( resultUser, "The saved user was not found.");
 
-        Assertions.assertEquals( userTest.getEmail(), resultUser.get(0).getEmail(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getPassword(), resultUser.get(0).getPassword(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getLastName(), resultUser.get(0).getLastName(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getFirstName(), resultUser.get(0).getFirstName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getEmail(), resultUser.getEmail(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getPassword(), resultUser.getPassword(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getLastName(), resultUser.getLastName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getFirstName(), resultUser.getFirstName(), "The returned user does not comply.");
 
         // THEN
         List<Customer> resultCustomer = customerService.findByPseudo(userTest.getCustomerAccount().getPseudo());
@@ -152,14 +152,14 @@ class UserControllerCreateIntegrationTest {
                 .andExpect(content().contentType(contentType));
 
         // THEN
-        List<User> resultUser = userService.findByEmail(userTest.getEmail());
+        User resultUser = userService.findByEmail(userTest.getEmail());
 
-        Assertions.assertEquals( 1, resultUser.size(), "The saved user was not found.");
+        Assertions.assertNotNull( resultUser, "The saved user was not found.");
 
-        Assertions.assertEquals( userTest.getEmail(), resultUser.get(0).getEmail(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getPassword(), resultUser.get(0).getPassword(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getLastName(), resultUser.get(0).getLastName(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getFirstName(), resultUser.get(0).getFirstName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getEmail(), resultUser.getEmail(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getPassword(), resultUser.getPassword(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getLastName(), resultUser.getLastName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getFirstName(), resultUser.getFirstName(), "The returned user does not comply.");
 
         // THEN
         Assertions.assertNull( userTest.getCustomerAccount(), "The saved customer was found.");
@@ -189,14 +189,14 @@ class UserControllerCreateIntegrationTest {
                 .andExpect(content().contentType(contentType));
 
         // THEN
-        List<User> resultUser = userService.findByEmail(userTest.getEmail());
+        User resultUser = userService.findByEmail(userTest.getEmail());
 
-        Assertions.assertEquals( 1, resultUser.size(), "The saved user was not found.");
+        Assertions.assertNotNull( resultUser, "The saved user was not found.");
 
-        Assertions.assertEquals( userTest.getEmail(), resultUser.get(0).getEmail(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getPassword(), resultUser.get(0).getPassword(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getLastName(), resultUser.get(0).getLastName(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getFirstName(), resultUser.get(0).getFirstName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getEmail(), resultUser.getEmail(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getPassword(), resultUser.getPassword(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getLastName(), resultUser.getLastName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getFirstName(), resultUser.getFirstName(), "The returned user does not comply.");
 
         // THEN
         List<Customer> resultCustomer = customerService.findByPseudo(userTest.getCustomerAccount().getPseudo());
@@ -265,8 +265,8 @@ class UserControllerCreateIntegrationTest {
                 .andExpect(content().contentType(contentType));
 
         // THEN
-        List<User> resultUser = userService.findByEmail(userTest.getEmail());
-        Assertions.assertEquals( 0, resultUser.size(), "The saved user was found.");
+        User resultUser = userService.findByEmail(userTest.getEmail());
+        Assertions.assertNotNull( resultUser, "The saved user was found.");
 
         // THEN
         List<Customer> resultCustomer = customerService.findByPseudo(userTest.getCustomerAccount().getPseudo());

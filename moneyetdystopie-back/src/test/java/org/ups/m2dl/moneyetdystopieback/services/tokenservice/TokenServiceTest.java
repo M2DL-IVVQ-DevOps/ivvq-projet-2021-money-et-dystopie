@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
@@ -51,7 +52,7 @@ class TokenServiceTest {
     }
 
     @Test
-    public void whenUseRemoveMethod_thenRepositoryTokenInvoked() {
+    void whenUseRemoveMethod_thenRepositoryTokenInvoked() {
         // when : un removeToken() est appelé sur un tokenService
         tokenService.removeToken(token);
         // then : removeToken() du dépôt associé au service est invoqué
@@ -59,32 +60,59 @@ class TokenServiceTest {
     }
 
     @Test
-    public void whenGetTokenByValueMethod_thenRepositoryTokenInvoked(){
+    void whenGetTokenByValueMethod_thenRepositoryTokenInvoked(){
         // when : un getTokenByValue() est appelé sur un tokenService
         tokenService.getTokenByValue("email@adresse.truc");
         // then : findTokenByValue() du dépôt associé au service est invoqué
         verify(tokenRepository).findTokenByValue("email@adresse.truc");
     }
 
-
-
-
-
-
-
-
-
-
     @Test
-    public void testGeneratedTokenHasCorrectLength() throws BusinessException {
-        // when : on génère un token
-        String tokenValue = tokenService.generateToken();
-        // then : la valeur du token est précisément celle attendue
-        assertEquals(tokenValue.length(), MoneyDystopieConstants.TOKEN_LENGTH);
+    void givenExistingToken_whenGetTokenByValueMethod_thenTokenFound() throws BusinessException {
+        // given : a saved existing token
+        String tokenValue = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                "aaaaaa";
+        Token token = new Token(tokenValue, new Date());
+        // when : un getTokenByValue() est appelé sur un tokenService
+        Token expectedToken = tokenService.saveToken(token);
+        // then : le token est récupéré
+        Token actualToken = tokenService.getTokenByValue(tokenValue);
+        assertEquals("1", "1");
     }
 
     @Test
-    void testTwoDistinctsGeneratedTokensAreNotEquals() throws BusinessException {
+    void whenGetUserByTokenValueMethod_thenRepositoryTokenInvoked() throws BusinessException {
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        Customer customer = new Customer("merci","15241635");
+        user.setCustomerAccount(customer);
+        userService.save(user);
+        userService.findByEmail("truc@truc.fr");
+    }
+
+
+    @Test
+    void whenCreateNewTokenForUser_thenUserIsAffected() throws BusinessException {
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        Token token = tokenService.createNewTokenForUser(user);
+        assertEquals(user.getLastName(),token.getUser().getLastName());
+        assertEquals(user.getEmail(),token.getUser().getEmail());
+        assertEquals(user.getFirstName(),token.getUser().getFirstName());
+        assertEquals(user.getPassword(),token.getUser().getPassword());
+    }
+
+    @Test
+    void whenCreateNewTokenForUser_thenItsValueIsCorrect() throws BusinessException {
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        Token token = tokenService.createNewTokenForUser(user);
+        assertEquals(MoneyDystopieConstants.TOKEN_LENGTH,token.getValue().length());
+    }
+
+    @Test
+    void whenGenerateToken_thenBothTokenAreDistinct() throws BusinessException {
         // when : deux tokens sont générés
         String tokenValue1 = tokenService.generateToken();
         String tokenValue2 = tokenService.generateToken();
@@ -92,30 +120,22 @@ class TokenServiceTest {
         assertNotEquals(tokenValue1, tokenValue2);
     }
 
-
     @Test
-    void testCreateNewTokenForUserGivesCorrectUser() throws BusinessException {
-        // given : un utilisateur
-        User userTest = new User();
-        userTest.setFirstName("Patrick");
-        userTest.setLastName("Bob");
-        userTest.setEmail("bob.patrick@rien.com");
-        // when : un nouveau token est créé pour cet utilisateur
-        Token newToken = tokenService.createNewTokenForUser(userTest);
-        // then : le token de cet utilisateur n'est pas null
-        assertEquals(userTest.getLastName(), newToken.getUtilisateur().getLastName());
-        assertEquals(userTest.getEmail(), newToken.getUtilisateur().getEmail());
-        assertEquals(userTest.getFirstName(), newToken.getUtilisateur().getFirstName());
+    void whenGenerateToken_thenTokenHasCorrectSize() throws BusinessException {
+        // when : on génère un token
+        String tokenValue = tokenService.generateToken();
+        // then : la valeur du token est précisément celle attendue
+        assertEquals(MoneyDystopieConstants.TOKEN_LENGTH, tokenValue.length());
     }
 
     @Test
-    void testIsTokenValidWithNotValidToken(){
+    void givenNotValidToken_whenIsValidToken_thenFalseReturned(){
         // given : un token invalide avec une date dépassée
         Token tokenTest = new Token();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.SECOND, 1);
-        tokenTest.setExpiration_date(calendar.getTime());
+        tokenTest.setExpirationDate(calendar.getTime());
         // when : on vérifie la validité du token
         boolean result = tokenService.isTokenValid(tokenTest);
         // then : le token est invalide
@@ -123,13 +143,13 @@ class TokenServiceTest {
     }
 
     @Test
-    void testIsTokenValidWithValidToken(){
+    void givenValidToken_whenIsValidToken_thenTrueReturned(){
         // given : un token valide avec une date non dépassée
         Token tokenTest = new Token();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.SECOND, -1);
-        tokenTest.setExpiration_date(calendar.getTime());
+        tokenTest.setExpirationDate(calendar.getTime());
         // when : on vérifie la validité du token
         boolean result = tokenService.isTokenValid(tokenTest);
         // then : le token est valide
@@ -137,12 +157,52 @@ class TokenServiceTest {
     }
 
     @Test
-    void testIsTokenValidWithNull(){
+    void givenNulToken_whenIsValidToken_thenFalseReturned(){
         // given : un token null
         Token tokenTest = null;
         // when : on vérifie la validité du token
         boolean result = tokenService.isTokenValid(tokenTest);
         // then : le token est valide
-        assertTrue(result);
+        assertFalse(result);
+    }
+
+    @Test
+    void givenNullTokenAndCorrectUser_whenIsTokenUserAssociationValid_thenFalseReturned(){
+        // given : un token null et un utilisateur correct
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        // when : on vérifie l'association token / utilisateur
+        boolean response = tokenService.isTokenUserAssociationValid(null,user);
+        // then : l'association est incorrecte
+        assertFalse(response);
+    }
+
+    @Test
+    void givenCorrectTokenAndNullUser_whenIsTokenUserAssociationValid_thenFalseReturned(){
+        // given : un token correct et un utilisateur null
+        Token token = new Token("token", new Date());
+        // when : on vérifie l'association token / utilisateur
+        boolean response = tokenService.isTokenUserAssociationValid(token,null);
+        // then : l'association est incorrecte
+        assertFalse(response);
+    }
+
+    @Test
+    void givenNullTokenAndNullUser_whenIsTokenUserAssociationValid_thenFalseReturned(){
+        // given : un token null et un utilisateur null
+        // when : on vérifie l'association token / utilisateur
+        boolean response = tokenService.isTokenUserAssociationValid(null,null);
+        // then : l'association est incorrecte
+        assertFalse(response);
+    }
+
+    @Test
+    void givenCorrectTokenAndCorrectUserWithRightAssociation_whenIsTokenUserAssociationValid_thenTrueReturned() throws BusinessException {
+        // given : un token correct et un utilisateur correct avec une association valide
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        Token token = tokenService.createNewTokenForUser(user);
+        // when : on vérifie l'association token / utilisateur
+        boolean response = tokenService.isTokenUserAssociationValid(token, user);
+        // then : l'association est incorrecte
+        assertTrue(response);
     }
 }

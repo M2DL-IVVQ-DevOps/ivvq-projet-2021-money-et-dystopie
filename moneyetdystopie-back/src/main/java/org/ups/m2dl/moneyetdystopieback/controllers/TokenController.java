@@ -39,7 +39,7 @@ public class TokenController {
             response.addCookie(cookie);
             return ResponseEntity.status(200).body(true);
         }catch (BusinessException e){
-            return ResponseEntity.badRequest().body(new AccessDeniedException(e.getMessage()));
+            return ResponseEntity.badRequest().body(e);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
@@ -48,7 +48,7 @@ public class TokenController {
     @PostMapping(
             value="/check",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> getUser(@CookieValue(value="token", defaultValue = "none") String tokenValue) {
+    public ResponseEntity<Object> getUser(@CookieValue(value="token", defaultValue = "") String tokenValue) {
         try{
             User user = tokenService.getUserByTokenValue(tokenValue);
             UserBean userBean = new UserBean();

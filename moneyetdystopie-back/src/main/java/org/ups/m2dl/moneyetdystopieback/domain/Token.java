@@ -30,18 +30,24 @@ public class Token {
      */
     @Column(name="expiration_date")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date expiration_date;
+    @NotNull
+    private Date expirationDate;
 
 
     /**
      * Utilisateur lié au token.
      */
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
     private User user;
 
     public Token(){
 
+    }
+
+    public Token (String value, Date expirationDate){
+        this.value = value;
+        this.expirationDate = expirationDate;
     }
 
     public Long getId() {
@@ -60,20 +66,34 @@ public class Token {
         this.value = value;
     }
 
-    public Date getExpiration_date() {
-        return expiration_date;
+    public Date getExpirationDate() {
+        return expirationDate;
     }
 
-    public void setExpiration_date(Date expiration_date) {
-        this.expiration_date = expiration_date;
+    public void setExpirationDate(Date expiration_date) {
+        this.expirationDate = expiration_date;
     }
 
-    public User getUtilisateur() {
+    public User getUser() {
         return user;
     }
 
-    public void setUtilisateur(User user) {
+    public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof Token){
+            Token token = (Token) o;
+            return (getId().equals(token.getId()) && getValue().equals(token.getValue()));
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return getId().hashCode() + getValue().hashCode();
     }
 
 

@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
@@ -15,6 +16,8 @@ import org.ups.m2dl.moneyetdystopieback.services.UserService;
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserServiceValidMethodTest {
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     UserService userService;
@@ -85,7 +88,7 @@ class UserServiceValidMethodTest {
     @Test
     void whenCreateUser_thenNoThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName35", "firstName35", "email35@email.email", "passwordpassword35");
+        userTest = new User("lastName35", "firstName35", "email35@email.email", passwordEncoder.encode("passwordpassword35"));
 
         //WHEN
         Assertions.assertDoesNotThrow( () -> {

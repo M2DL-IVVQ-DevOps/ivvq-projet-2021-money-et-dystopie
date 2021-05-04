@@ -27,14 +27,14 @@ class UserServiceSaveMethodIntegrationTest {
 
         // WHEN
         userService.save(userTest);
-        List<User> resultFindById = userService.findByEmail(userTest.getEmail());
+        User resultFindById = userService.findByEmail(userTest.getEmail());
 
         //THEN
-        Assertions.assertEquals( 1, resultFindById.size(), "More or less users than expected were obtained.");
-        Assertions.assertEquals( userTest.getFirstName(), resultFindById.get(0).getFirstName(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( userTest.getPassword(), resultFindById.get(0).getPassword(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( userTest.getEmail(), resultFindById.get(0).getEmail(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( userTest.getLastName(), resultFindById.get(0).getLastName(), "The information retrieved does not match that expected.");
+        Assertions.assertNotNull( resultFindById, "More or less users than expected were obtained.");
+        Assertions.assertEquals( userTest.getFirstName(), resultFindById.getFirstName(), "The information retrieved does not match that expected.");
+        Assertions.assertEquals( userTest.getPassword(), resultFindById.getPassword(), "The information retrieved does not match that expected.");
+        Assertions.assertEquals( userTest.getEmail(), resultFindById.getEmail(), "The information retrieved does not match that expected.");
+        Assertions.assertEquals( userTest.getLastName(), resultFindById.getLastName(), "The information retrieved does not match that expected.");
     }
 
     @Test

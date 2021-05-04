@@ -28,17 +28,17 @@ class UserServiceFindByMethodsIntegrationTest {
 
         // WHEN
         userService.save(userTest);
-        List<User> resultFindBy = userService.findByEmail(userTest.getEmail());
+        User resultFindBy = userService.findByEmail(userTest.getEmail());
 
         // THEN
-        Assertions.assertEquals( 1, resultFindBy.size(), "The saved user was not found.");
+        Assertions.assertNotNull( resultFindBy, "The saved user was not found.");
     }
 
     @Test
     void whenSearchUserDontExist_thenNoResult() {
         // GIVEN WHEN
-        List<User> resultFindBy = userService.findByEmail("email30@email.com");
+        User resultFindBy = userService.findByEmail("email30@email.com");
 
-        Assertions.assertEquals( 0, resultFindBy.size(), "A user was returned despite his non-existence.");
+        Assertions.assertNotNull( resultFindBy, "A user was returned despite his non-existence.");
     }
 }
