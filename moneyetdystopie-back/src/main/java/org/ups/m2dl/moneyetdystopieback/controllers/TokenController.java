@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.controllers;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +33,9 @@ public class TokenController {
             User user = new User();
             BeanUtils.copyProperties(userBean,user);
             response.addCookie(tokenService.createTokenCookie(user, tokenValue));
-            return ResponseEntity.status(200).body(true);
+            return ResponseEntity.status(HttpStatus.OK).body(true);
         }catch (BusinessException e){
-            return ResponseEntity.badRequest().body(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
         }catch (Exception e){
             return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
@@ -48,11 +49,11 @@ public class TokenController {
             User user = tokenService.getUserByTokenValue(tokenValue);
             UserBean userBean = new UserBean();
             BeanUtils.copyProperties(user,userBean);
-            return ResponseEntity.status(200).body(userBean);
+            return ResponseEntity.status(HttpStatus.OK).body(userBean);
         }catch (BusinessException e){
-            return ResponseEntity.badRequest().body(new AccessDeniedException(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AccessDeniedException(e.getMessage()));
         }catch (Exception e){
-            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
 
@@ -61,9 +62,9 @@ public class TokenController {
             produces = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<Object> remove(@CookieValue(value="token", defaultValue = "none") String tokenValue) {
         try{
-            return ResponseEntity.status(200).body(tokenService.removeTokenByValue(tokenValue));
+            return ResponseEntity.status(HttpStatus.OK).body(tokenService.removeTokenByValue(tokenValue));
         }catch (Exception e){
-            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
 }

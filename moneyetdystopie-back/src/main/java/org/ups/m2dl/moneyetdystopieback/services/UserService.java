@@ -104,11 +104,11 @@ public class UserService {
         String retour = "";
         if (password.length() < 8){
             retour = "Votre mot de passe doit faire au moins 8 caractères.";
-        }else if (!password.matches(".*[A-Z].*")){
+        }else if (!password.matches("^.*[A-Z].*$")){
             retour = "Votre mot de passe doit contenir au moins une majuscule.";
-        }else if (!password.matches(".*[a-z].*")){
+        }else if (!password.matches("^.*[a-z].*$")){
             retour = "Votre mot de passe doit contenir au moins une minuscule.";
-        }else if (!password.matches(".*[0-9].*")){
+        }else if (!password.matches("^.*[0-9].*$")){
             retour = "Votre mot de passe doit contenir au moins un chiffre.";
         }
         return retour;

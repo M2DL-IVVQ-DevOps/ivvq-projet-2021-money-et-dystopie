@@ -20,7 +20,6 @@ public class Token {
     /**
      * Valeur du token qui sera sauvegardée en cookie et récupérée pour être comparée et servir d'identification.
      */
-    @Column(name="value")
     @NotNull
     @Size(min = MoneyDystopieConstants.TOKEN_LENGTH, max = MoneyDystopieConstants.TOKEN_LENGTH)
     private String value;
@@ -28,11 +27,9 @@ public class Token {
     /**
      * Date après laquelle le token n'est plus valable.
      */
-    @Column(name="expiration_date")
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
     private Date expirationDate;
-
 
     /**
      * Utilisateur lié au token.

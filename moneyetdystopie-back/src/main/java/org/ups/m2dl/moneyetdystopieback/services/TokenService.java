@@ -87,7 +87,7 @@ public class TokenService {
     }
 
     public boolean isTokenValid(Token token){
-        return (token != null && token.getExpirationDate().before(new Date()));
+        return (token != null && token.getExpirationDate().after(new Date()));
     }
 
     public boolean isTokenUserAssociationValid(Token token, User user){
@@ -123,6 +123,8 @@ public class TokenService {
         Token token = performNewTokenRequest(user, tokenValue);
         Cookie cookie = new Cookie("token", token.getValue());
         cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
         return cookie;
     }
 }

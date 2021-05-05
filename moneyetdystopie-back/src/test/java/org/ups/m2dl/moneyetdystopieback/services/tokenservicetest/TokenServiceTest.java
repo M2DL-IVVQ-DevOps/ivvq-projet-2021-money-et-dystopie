@@ -67,8 +67,6 @@ class TokenServiceTest {
         verify(tokenRepository).findTokenByValue("email@adresse.truc");
     }
 
-
-
     @Test
     void whenCreateNewTokenForUser_thenUserIsAffected() throws BusinessException {
         User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
@@ -104,21 +102,21 @@ class TokenServiceTest {
     }
 
     @Test
-    void givenNotValidToken_whenIsValidToken_thenFalseReturned(){
+    void givenValidToken_whenIsValidToken_thenTrueReturned(){
         // given : un token invalide avec une date dépassée
         Token tokenTest = new Token();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.SECOND, 1);
+        calendar.add(Calendar.SECOND, 10000);
         tokenTest.setExpirationDate(calendar.getTime());
         // when : on vérifie la validité du token
         boolean result = tokenService.isTokenValid(tokenTest);
         // then : le token est invalide
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
-    void givenValidToken_whenIsValidToken_thenTrueReturned(){
+    void givenNotValidToken_whenIsValidToken_thenFalseReturned(){
         // given : un token valide avec une date non dépassée
         Token tokenTest = new Token();
         Calendar calendar = Calendar.getInstance();
@@ -128,7 +126,7 @@ class TokenServiceTest {
         // when : on vérifie la validité du token
         boolean result = tokenService.isTokenValid(tokenTest);
         // then : le token est valide
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
