@@ -3,8 +3,8 @@ package org.ups.m2dl.moneyetdystopieback.repositories;
 import org.springframework.data.repository.CrudRepository;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends CrudRepository<User, Long> {
-    List<User> findByEmail(String email);
+    Optional<User> findByEmail(String email);
 }

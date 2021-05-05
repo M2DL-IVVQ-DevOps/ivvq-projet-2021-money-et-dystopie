@@ -5,6 +5,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "app_user")
@@ -37,7 +38,7 @@ public class User {
      * Mot de passe, chiffré
      */
     @NotNull
-    @Size( min = 10, max = 100, message = "Le mot de passe doit faire entre 10 et 100 caractère.")
+    @Size( min = 60, max = 60, message = "Le hash mot de passe doit faire exactement 60 caractères.")
     private String password;
 
     /**
@@ -51,6 +52,9 @@ public class User {
      */
     @OneToOne
     private Customer customerAccount;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Token> tokenList;
 
     public User() {
     }
@@ -112,4 +116,11 @@ public class User {
         this.customerAccount = customerAccount;
     }
 
+    public List<Token> getTokenList() {
+        return tokenList;
+    }
+
+    public void setTokenList(List<Token> tokenList) {
+        this.tokenList = tokenList;
+    }
 }

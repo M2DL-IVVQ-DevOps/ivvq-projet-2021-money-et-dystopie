@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
@@ -8,6 +9,7 @@ import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
@@ -17,22 +19,27 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private SellerService sellerService;
+    private final SellerService sellerService;
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
-    public UserService(UserRepository userRepository, SellerService sellerService, CustomerService customerService){
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository,
+                       SellerService sellerService,
+                       CustomerService customerService,
+                       PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.sellerService = sellerService;
         this.customerService = customerService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public UserRepository getUserRepository() {
@@ -46,9 +53,15 @@ public class UserService {
             throw new BusinessException("Le compte doit être acheteur ou commerçant.");
         }
 
-        if(!this.findByEmail(user.getEmail()).isEmpty()){
+        if(this.findByEmail(user.getEmail()) != null){
             throw new BusinessException("Un utilisateur '" + user.getEmail() + "' existe déjà.");
         }
+
+        String passwordSyntaxValidation = checkPasswordSyntax(user.getPassword());
+        if(!passwordSyntaxValidation.equals("")){
+            throw new BusinessException(passwordSyntaxValidation);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         try {
             if(user.getSellerAccount() != null){
@@ -87,6 +100,20 @@ public class UserService {
         }
     }
 
+    public String checkPasswordSyntax(String password){
+        String retour = "";
+        if (password.length() < 8){
+            retour = "Votre mot de passe doit faire au moins 8 caractères.";
+        }else if (!password.matches("^.*[A-Z].*$")){
+            retour = "Votre mot de passe doit contenir au moins une majuscule.";
+        }else if (!password.matches("^.*[a-z].*$")){
+            retour = "Votre mot de passe doit contenir au moins une minuscule.";
+        }else if (!password.matches("^.*[0-9].*$")){
+            retour = "Votre mot de passe doit contenir au moins un chiffre.";
+        }
+        return retour;
+    }
+
     public User save(User user) throws BusinessException {
         if(user == null){
             throw new BusinessException("Un utilisateur non défini ne peut être sauvegardé.");
@@ -98,8 +125,11 @@ public class UserService {
         }
     }
 
-    public List<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByEmail(String email) {
+        if(email==null || email.isBlank()){
+            return null;
+        }
+        return userRepository.findByEmail(email).orElse(null);
     }
 
 
@@ -149,5 +179,24 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public boolean checkUserPassword(User user){
+        if (user != null){
+            User dbUser = findByEmail(user.getEmail());
+            return (dbUser != null && passwordEncoder.matches(user.getPassword(),dbUser.getPassword()));
+        }
+        return false;
+    }
+
+    public void addTokenToUser(User user, Token token) throws BusinessException {
+        token.setUser(user);
+        user.getTokenList().add(token);
+        save(user);
+    }
+
+    public void removeTokenToUser(User user, Token token) throws BusinessException {
+        user.getTokenList().remove(token);
+        save(user);
     }
 }

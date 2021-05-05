@@ -1,6 +1,5 @@
-package org.ups.m2dl.moneyetdystopieback.services.CustomerServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.customerserviceintegrationtest;
 
-import org.assertj.core.api.ComparableAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
