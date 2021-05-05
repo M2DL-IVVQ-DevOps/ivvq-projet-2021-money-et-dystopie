@@ -69,7 +69,7 @@ class TokenServiceTest {
 
     @Test
     void whenCreateNewTokenForUser_thenUserIsAffected() throws BusinessException {
-        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1", null, null, null);
         Token token = tokenService.createNewTokenForUser(user);
         assertEquals(user.getLastName(),token.getUser().getLastName());
         assertEquals(user.getEmail(),token.getUser().getEmail());
@@ -79,7 +79,7 @@ class TokenServiceTest {
 
     @Test
     void whenCreateNewTokenForUser_thenItsValueIsCorrect() throws BusinessException {
-        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1", null, null, null);
         Token token = tokenService.createNewTokenForUser(user);
         assertEquals(MoneyDystopieConstants.TOKEN_LENGTH,token.getValue().length());
     }
@@ -142,7 +142,7 @@ class TokenServiceTest {
     @Test
     void givenNullTokenAndCorrectUser_whenIsTokenUserAssociationValid_thenFalseReturned(){
         // given : un token null et un utilisateur correct
-        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1", null, null, null);
         // when : on vérifie l'association token / utilisateur
         boolean response = tokenService.isTokenUserAssociationValid(null,user);
         // then : l'association est incorrecte
@@ -171,7 +171,7 @@ class TokenServiceTest {
     @Test
     void givenCorrectTokenAndCorrectUserWithRightAssociation_whenIsTokenUserAssociationValid_thenTrueReturned() throws BusinessException {
         // given : un token correct et un utilisateur correct avec une association valide
-        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1");
+        User user = new User("G","Romain","truc@truc.fr","MotdepasseA1", null, null, null);
         Token token = tokenService.createNewTokenForUser(user);
         // when : on vérifie l'association token / utilisateur
         boolean response = tokenService.isTokenUserAssociationValid(token, user);

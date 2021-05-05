@@ -22,7 +22,7 @@ public class SellerService {
 
     @Getter
     @Setter
-    private SellerRepository sellerRepository;
+    private final SellerRepository sellerRepository;
 
     public Seller create(Seller seller) throws BusinessException{
 

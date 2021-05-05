@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.controllers.UserControllerIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.controllers.ControllersIntegrationTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -14,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import org.springframework.util.Assert;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
@@ -64,7 +63,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUser_thenUserReturn() throws Exception {
 
         // GIVEN
-        userTest = new User("lastName1", "firstName1", "email1@email.email", "Passwordpassword1", null, null);
+        userTest = new User("lastName1", "firstName1", "email1@email.email", "Passwordpassword1", null, null, null);
         sellerTest = new Seller("storeName1",null,null,null);
         customerTest = new Customer("pseudo1", "numberCityCountry1", null, null, null);
         userTest.setCustomerAccount(customerTest);
@@ -98,7 +97,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUser_thenUserIsSaved() throws Exception {
 
         // GIVEN
-        userTest = new User("lastName2", "firstName2", "email2@email.email", "Passwordpassword2", null, null);
+        userTest = new User("lastName2", "firstName2", "email2@email.email", "Passwordpassword2", null, null, null);
         sellerTest = new Seller("storeName2",null,null,null);
         customerTest = new Customer("pseudo2", "numberCityCountry2", null, null, null);
         userTest.setCustomerAccount(customerTest);
@@ -141,7 +140,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUserWithoutCustomer_thenUserIsSaved() throws Exception {
 
         // GIVEN
-        userTest = new User("lastName36", "firstName36", "email36@email.email", "Passwordpassword36", null, null);
+        userTest = new User("lastName36", "firstName36", "email36@email.email", "Passwordpassword36", null, null, null);
         sellerTest = new Seller("storeName36",null,null,null);
         userTest.setSellerAccount(sellerTest);
 
@@ -157,10 +156,10 @@ class UserControllerCreateIntegrationTest {
 
         Assertions.assertNotNull( resultUser, "The saved user was not found.");
 
-        Assertions.assertEquals( userTest.getEmail(), resultUser.get(0).getEmail(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getPassword(), resultUser.get(0).getPassword(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getLastName(), resultUser.get(0).getLastName(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getFirstName(), resultUser.get(0).getFirstName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getEmail(), resultUser.getEmail(), "The returned user does not comply.");
+        Assertions.assertTrue(passwordEncoder.matches(userTest.getPassword(), resultUser.getPassword()), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getLastName(), resultUser.getLastName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getFirstName(), resultUser.getFirstName(), "The returned user does not comply.");
 
         // THEN
         Assertions.assertNull( userTest.getCustomerAccount(), "The saved customer was found.");
@@ -178,7 +177,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUserWithoutSeller_thenUserIsSaved() throws Exception {
 
         // GIVEN
-        userTest = new User("lastName37", "firstName37", "email37@email.email", "Passwordpassword37", null, null);
+        userTest = new User("lastName37", "firstName37", "email37@email.email", "Passwordpassword37", null, null, null);
         customerTest = new Customer("pseudo37", "numberCityCountry37", null, null, null);
         userTest.setCustomerAccount(customerTest);
 
@@ -194,10 +193,10 @@ class UserControllerCreateIntegrationTest {
 
         Assertions.assertNotNull( resultUser, "The saved user was not found.");
 
-        Assertions.assertEquals( userTest.getEmail(), resultUser.get(0).getEmail(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getPassword(), resultUser.get(0).getPassword(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getLastName(), resultUser.get(0).getLastName(), "The returned user does not comply.");
-        Assertions.assertEquals( userTest.getFirstName(), resultUser.get(0).getFirstName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getEmail(), resultUser.getEmail(), "The returned user does not comply.");
+        Assertions.assertTrue(passwordEncoder.matches(userTest.getPassword(), resultUser.getPassword()), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getLastName(), resultUser.getLastName(), "The returned user does not comply.");
+        Assertions.assertEquals( userTest.getFirstName(), resultUser.getFirstName(), "The returned user does not comply.");
 
         // THEN
         Customer resultCustomer = customerService.findByPseudo(userTest.getCustomerAccount().getPseudo());
@@ -220,7 +219,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUserWithoutId_thenThrowBusinessException(String email, String storeName, String pseudo, String subject) throws Exception {
 
         // GIVEN
-        userTest = new User("lastName", "firstName", email, "Passwordpassword2", null, null);
+        userTest = new User("lastName", "firstName", email, "Passwordpassword2", null, null, null);
         sellerTest = new Seller(storeName,null,null,null);
         customerTest = new Customer(pseudo, "numberCityCountry", null, null, null);
         userTest.setEmail(null);
@@ -236,7 +235,6 @@ class UserControllerCreateIntegrationTest {
                 .andDo(mvcResult -> {
                     jsonResult = mvcResult.getResponse().getContentAsString();
                 });
-        BusinessMessage result = mapper.readValue(jsonResult, BusinessMessage.class);
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
@@ -251,7 +249,7 @@ class UserControllerCreateIntegrationTest {
     void whenSaveUserWithoutId_thenNoSave(String email, String storeName, String pseudo) throws Exception {
 
         // GIVEN
-        userTest = new User("lastName", "firstName", email, "Passwordpassword2", null, null);
+        userTest = new User("lastName", "firstName", email, "Passwordpassword2", null, null, null);
         sellerTest = new Seller(storeName,null,null,null);
         customerTest = new Customer(pseudo, "numberCityCountry", null, null, null);
         userTest.setCustomerAccount(customerTest);

@@ -42,7 +42,7 @@ class CustomerServiceValidMethodTest {
     void whenValidCustomerWithBadAddress_thenThrowBusinessException(String address)  {
 
         // GIVEN
-        customerTest = new Customer("1234",address, null, null, null);
+        customerTest = new Customer("pseudo58",address, null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

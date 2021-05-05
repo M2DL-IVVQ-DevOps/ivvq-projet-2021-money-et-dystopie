@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.UserServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.userserviceintegrationtest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,11 +26,11 @@ class UserServiceCreateMethodIntegrationTest {
         String sameMail = "email57@email.email";
 
         // GIVEN
-        userTestTwinA = new User("lastName25", "firstName25", sameMail, "Passwordpassword25", null, null);
+        userTestTwinA = new User("lastName25", "firstName25", sameMail, "Passwordpassword25", null, null, null);
         userTestTwinA.setSellerAccount(new Seller("storeName25",null,null,null));
         userTestTwinA.setCustomerAccount(new Customer("pseudo25", "numberCityCountry25", null, null, null));
 
-        userTestTwinB = new User("lastName26", "firstName26", sameMail, "Passwordpassword26", null, null);
+        userTestTwinB = new User("lastName26", "firstName26", sameMail, "Passwordpassword26", null, null, null);
         userTestTwinB.setSellerAccount(new Seller("storeName26",null,null,null));
         userTestTwinB.setCustomerAccount(new Customer("pseudo26", "numberCityCountry26", null, null, null));
 
@@ -47,7 +47,7 @@ class UserServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateUserWithoutCustomerSeller_thenThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName27", "firstName27", "email27@email.email", "Passwordpassword27", null, null);
+        userTest = new User("lastName27", "firstName27", "email27@email.email", "Passwordpassword27", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -59,7 +59,7 @@ class UserServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateUserWithoutEmail_thenThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName28", "firstName28", null, "Passwordpassword28", null, null);
+        userTest = new User("lastName28", "firstName28", null, "Passwordpassword28", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

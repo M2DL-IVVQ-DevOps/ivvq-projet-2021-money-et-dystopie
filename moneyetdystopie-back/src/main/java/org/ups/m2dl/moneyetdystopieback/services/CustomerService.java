@@ -19,7 +19,7 @@ public class CustomerService {
 
     @Getter
     @Setter
-    private CustomerRepository customerRepository;
+    private final CustomerRepository customerRepository;
 
     public Customer create(Customer customer) throws BusinessException {
 

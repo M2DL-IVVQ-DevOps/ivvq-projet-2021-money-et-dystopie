@@ -20,6 +20,9 @@ class UserServiceValidMethodTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private User userTest;
 
     @ParameterizedTest
@@ -28,7 +31,7 @@ class UserServiceValidMethodTest {
     void whenValidUserWithBadEmail_thenThrowBusinessException(String email)  {
 
         // GIVEN
-        userTest = new User("lastName", "firstName", email, "password", null, null);
+        userTest = new User("lastName", "firstName", email, "password", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -43,7 +46,7 @@ class UserServiceValidMethodTest {
     void whenCreateUserWithBadLastName_thenThrowBusinessException(String lastName)  {
 
         // GIVEN
-        userTest = new User(lastName, "firstName", "email", "password", null, null);
+        userTest = new User(lastName, "firstName", "email", "password", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -58,7 +61,7 @@ class UserServiceValidMethodTest {
     void whenCreateUserWithBadFirstName_thenThrowBusinessException(String firstName)  {
 
         // GIVEN
-        userTest = new User("lastName", firstName, "email", "password", null, null);
+        userTest = new User("lastName", firstName, "email", "password", null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -73,7 +76,7 @@ class UserServiceValidMethodTest {
     void whenCreateUserWithBadPassword_thenThrowBusinessException(String password)  {
 
         // GIVEN
-        userTest = new User("lastName", "firstName", "email", password, null, null);
+        userTest = new User("lastName", "firstName", "email", password, null, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -85,7 +88,7 @@ class UserServiceValidMethodTest {
     @Test
     void whenCreateUser_thenNoThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName35", "firstName35", "email35@email.email", passwordEncoder.encode("passwordpassword35"), null, null);
+        userTest = new User("lastName35", "firstName35", "email35@email.email", passwordEncoder.encode("passwordpassword35"), null, null, null);
 
         // THEN
         Assertions.assertDoesNotThrow( () -> {

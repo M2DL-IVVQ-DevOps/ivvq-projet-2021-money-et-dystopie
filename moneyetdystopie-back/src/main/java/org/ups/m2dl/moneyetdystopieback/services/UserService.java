@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
@@ -11,6 +12,7 @@ import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
@@ -20,7 +22,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor

@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.UserServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.userserviceintegrationtest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,11 +20,13 @@ class UserServiceFindByMethodsIntegrationTest {
 
     private User userTest;
 
+    private String password = "$2a$10$le2GJFsFwf.E1.EdNzGd/edrKUHWYFxsXRJJGZOrJgWMS/WAtthD2";
+
     @Test
     void whenCreateSaveUser_thenCanFind() throws BusinessException {
 
         // GIVEN
-        userTest = new User("lastName29", "firstName29", "email29@gmail", "Passwordpassword29", null, null);
+        userTest = new User("lastName58", "firstName58", "email58@gmail", password, null, null, null);
 
         // WHEN
         userService.save(userTest);

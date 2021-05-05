@@ -1,6 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.controllers;
 
-import org.springframework.beans.BeanUtils;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,19 +11,24 @@ import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
+import org.ups.m2dl.moneyetdystopieback.services.UserService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 import javax.servlet.http.HttpServletResponse;
 import java.nio.file.AccessDeniedException;
 
+@AllArgsConstructor
 @RestController
 @RequestMapping("/token")
 public class TokenController {
+
+    @Getter
+    @Setter
     private final TokenService tokenService;
 
-    public TokenController(TokenService tokenService){
-        this.tokenService = tokenService;
-    }
+    @Getter
+    @Setter
+    private final UserService userService;
 
     @PostMapping(
             value="/create",
@@ -30,8 +37,7 @@ public class TokenController {
                                          HttpServletResponse response,
                                          @CookieValue(value="token", defaultValue = "none") String tokenValue) {
         try{
-            User user = new User();
-            BeanUtils.copyProperties(userBean,user);
+            User user = userService.getDto(userBean);
             response.addCookie(tokenService.createTokenCookie(user, tokenValue));
             return ResponseEntity.status(HttpStatus.OK).body(true);
         }catch (BusinessException e){
@@ -44,12 +50,9 @@ public class TokenController {
     @PostMapping(
             value="/check",
             produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Object> getUser(@CookieValue(value="token", defaultValue = "") String tokenValue) {
+    public ResponseEntity<Object> getUserMatch(@CookieValue(value="token", defaultValue = "") String tokenValue) {
         try{
-            User user = tokenService.getUserByTokenValue(tokenValue);
-            UserBean userBean = new UserBean();
-            BeanUtils.copyProperties(user,userBean);
-            return ResponseEntity.status(HttpStatus.OK).body(userBean);
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(tokenService.getUserByTokenValue(tokenValue)));
         }catch (BusinessException e){
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new AccessDeniedException(e.getMessage()));
         }catch (Exception e){

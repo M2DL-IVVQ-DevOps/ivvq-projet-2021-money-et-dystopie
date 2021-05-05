@@ -47,7 +47,7 @@ class UserServiceTest {
     @Test
     void whenUseSaveMethod_thenRepositoryUserInvoked() throws BusinessException {
         // GIVEN
-        User userTest = new User("lastName33", "firstName33", "email33@gmail", "Password33");
+        User userTest = new User("lastName33", "firstName33", "email33@gmail", "Password33", null, null, null);
         when(userService.getUserRepository().save(userTest)).thenReturn(userTest);
         // WHEN: save méthode est invoqué
         userService.save(userTest);

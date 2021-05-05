@@ -28,11 +28,11 @@ public class ItemService {
 
     @Getter
     @Setter
-    private ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
     @Getter
     @Setter
-    private SellerService sellerService;
+    private final SellerService sellerService;
 
     @Transactional
     public Item create(Item item) throws BusinessException {
