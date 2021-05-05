@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.SellerServiceTest;
+package org.ups.m2dl.moneyetdystopieback.services.sellerservicetest;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,10 @@
-package org.ups.m2dl.moneyetdystopieback.services.SellerServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.sellerservicetest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,41 +14,38 @@ import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class SellerServiceCreateMethodIntegrationTest {
+class SellerServiceValidMethodTest {
 
     @Autowired
     private SellerService sellerService;
 
-    private Seller sellerTestTwinA;
-    private Seller sellerTestTwinB;
     private Seller sellerTest;
 
-    @Test
-    void whenCreateSellerWithSameStoreName_thenThrowBusinessException() throws BusinessException {
+    @ParameterizedTest
+    @ValueSource(strings = {"","0123456789012345678901234567890"})
+    @NullSource
+    void whenValidSellerWithBadStoreName_thenThrowBusinessException(String storeName)  {
 
         // GIVEN
-        sellerTestTwinA = new Seller("storeName19",null,null,null);
-        sellerTestTwinB = new Seller("storeName19",null,null,null);
-
-        // WHEN
-        sellerService.create(sellerTestTwinA);
+        sellerTest = new Seller(storeName,null,null,null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
             // WHEN
-            sellerService.create(sellerTestTwinB);
+            sellerService.valid(sellerTest);
         });
     }
 
     @Test
-    void whenCreateSellerWithoutStoreName_thenThrowBusinessException() {
+    void whenValidSeller_thenNoThrowBusinessException() {
         // GIVEN
-        sellerTest = new Seller(null,null,null,null);
+        sellerTest = new Seller("storeName23",null,null,null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
+        Assertions.assertDoesNotThrow( () -> {
             // WHEN
-            sellerService.create(sellerTest);
+            sellerService.valid(sellerTest);
         });
     }
+
 }

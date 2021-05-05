@@ -12,13 +12,14 @@ import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
 @AllArgsConstructor
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     @Getter
     @Setter
     private UserService userService;
 
-    @PostMapping(value="/user/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
         try{
             return ResponseEntity.status(200).body(userService.getBean(userService.create(userService.getDto(user))));

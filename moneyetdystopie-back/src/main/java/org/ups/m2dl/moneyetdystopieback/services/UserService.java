@@ -29,15 +29,19 @@ public class UserService {
 
     @Getter
     @Setter
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Getter
     @Setter
-    private SellerService sellerService;
+    private final SellerService sellerService;
 
     @Getter
     @Setter
-    private CustomerService customerService;
+    private final CustomerService customerService;
+
+    @Getter
+    @Setter
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public User create(User user) throws BusinessException {
@@ -49,6 +53,12 @@ public class UserService {
         if(this.findByEmail(user.getEmail()) != null){
             throw new BusinessException("Un utilisateur '" + user.getEmail() + "' existe déjà.");
         }
+
+        String passwordSyntaxValidation = checkPasswordSyntax(user.getPassword());
+        if(!passwordSyntaxValidation.equals("")){
+            throw new BusinessException(passwordSyntaxValidation);
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         if(user.getSellerAccount() != null){
             sellerService.valid(user.getSellerAccount());
@@ -79,6 +89,20 @@ public class UserService {
         return u;
     }
 
+    public String checkPasswordSyntax(String password){
+        String retour = "";
+        if (password.length() < 8){
+            retour = "Votre mot de passe doit faire au moins 8 caractères.";
+        }else if (!password.matches("^.*[A-Z].*$")){
+            retour = "Votre mot de passe doit contenir au moins une majuscule.";
+        }else if (!password.matches("^.*[a-z].*$")){
+            retour = "Votre mot de passe doit contenir au moins une minuscule.";
+        }else if (!password.matches("^.*[0-9].*$")){
+            retour = "Votre mot de passe doit contenir au moins un chiffre.";
+        }
+        return retour;
+    }
+
     public User save(User user) throws BusinessException {
         if(user == null){
             throw new BusinessException("Un utilisateur non défini ne peut être sauvegardé.");
@@ -94,8 +118,7 @@ public class UserService {
         if(email==null || email.isBlank()){
             return null;
         }
-        Optional<User> user = userRepository.findByEmail(email);
-        return user.isPresent() ? user.get() : null;
+        return userRepository.findByEmail(email).orElse(null);
     }
 
     public void valid(User user) throws BusinessException {
@@ -144,5 +167,24 @@ public class UserService {
         }
 
         return user;
+    }
+
+    public boolean checkUserPassword(User user){
+        if (user != null){
+            User dbUser = findByEmail(user.getEmail());
+            return (dbUser != null && passwordEncoder.matches(user.getPassword(),dbUser.getPassword()));
+        }
+        return false;
+    }
+
+    public void addTokenToUser(User user, Token token) throws BusinessException {
+        token.setUser(user);
+        user.getTokenList().add(token);
+        save(user);
+    }
+
+    public void removeTokenToUser(User user, Token token) throws BusinessException {
+        user.getTokenList().remove(token);
+        save(user);
     }
 }

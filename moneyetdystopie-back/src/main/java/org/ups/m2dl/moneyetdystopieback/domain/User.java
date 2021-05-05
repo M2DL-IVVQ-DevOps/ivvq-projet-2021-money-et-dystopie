@@ -10,6 +10,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -52,7 +53,7 @@ public class User {
     @Getter
     @Setter
     @NotNull(message = "Le mot de passe doit être renseigné.")
-    @Size( min = 10, max = 100, message = "Le mot de passe doit faire entre 10 et 100 caractère.")
+    @Size( min = 60, max = 60, message = "Le hash mot de passe doit faire exactement 60 caractères.")
     private String password;
 
     /**
@@ -70,4 +71,10 @@ public class User {
     @Setter
     @OneToOne
     private Customer customerAccount;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    private List<Token> tokenList;
+
 }
