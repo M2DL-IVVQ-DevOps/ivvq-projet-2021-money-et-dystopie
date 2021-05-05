@@ -1,6 +1,5 @@
-package org.ups.m2dl.moneyetdystopieback.services.SellerServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.sellerserviceintegrationtest;
 
-import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

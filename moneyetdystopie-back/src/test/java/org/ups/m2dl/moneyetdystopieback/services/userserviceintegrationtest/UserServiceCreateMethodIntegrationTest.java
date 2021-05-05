@@ -1,4 +1,4 @@
-package org.ups.m2dl.moneyetdystopieback.services.UserServiceIntegrationTest;
+package org.ups.m2dl.moneyetdystopieback.services.userserviceintegrationtest;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,11 +28,11 @@ class UserServiceCreateMethodIntegrationTest {
         String sameMail = "email24@email.email";
 
         // GIVEN
-        userTestTwinA = new User("lastName25", "firstName25", sameMail, "passwordpassword25");
+        userTestTwinA = new User("lastName25", "firstName25", sameMail, "Passwordpassword25");
         userTestTwinA.setSellerAccount(new Seller("storeName25"));
         userTestTwinA.setCustomerAccount(new Customer("pseudo25", "numberCityCountry25"));
 
-        userTestTwinB = new User("lastName26", "firstName26", sameMail, "passwordpassword26");
+        userTestTwinB = new User("lastName26", "firstName26", sameMail, "Passwordpassword26");
         userTestTwinB.setSellerAccount(new Seller("storeName26"));
         userTestTwinB.setCustomerAccount(new Customer("pseudo26", "numberCityCountry26"));
 

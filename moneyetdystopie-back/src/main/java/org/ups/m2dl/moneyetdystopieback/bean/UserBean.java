@@ -1,5 +1,10 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
+
+import java.util.List;
+
 public class UserBean {
 
     /**
@@ -31,6 +36,12 @@ public class UserBean {
      * Compte acheteur associé.
      */
     private CustomerBean customerAccount;
+
+    /** Les tokens
+     *
+     */
+    @JsonIgnore
+    private List<Token> tokenList;
 
     public UserBean() {
     }

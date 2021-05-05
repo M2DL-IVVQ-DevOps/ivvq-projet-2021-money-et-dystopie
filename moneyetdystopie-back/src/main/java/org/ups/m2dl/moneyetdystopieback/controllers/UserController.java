@@ -9,6 +9,7 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessMessage;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     private UserService userService;
@@ -17,7 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping(value="/user/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
         try{
             return ResponseEntity.status(200).body(userService.getBean(userService.create(userService.getDto(user))));
