@@ -30,6 +30,7 @@ public class TokenController {
     @Setter
     private final UserService userService;
 
+    @CrossOrigin
     @PostMapping(
             value="/create",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -47,6 +48,7 @@ public class TokenController {
         }
     }
 
+    @CrossOrigin
     @PostMapping(
             value="/check",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -59,7 +61,8 @@ public class TokenController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
-
+    
+    @CrossOrigin
     @PostMapping(
             value="/remove",
             produces = {MediaType.APPLICATION_JSON_VALUE})

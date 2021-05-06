@@ -20,6 +20,7 @@ public class UserController {
     @Setter
     private UserService userService;
 
+    @CrossOrigin
     @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
         try{
