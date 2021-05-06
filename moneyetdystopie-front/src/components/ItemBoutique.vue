@@ -3,22 +3,13 @@
         <md-card-content>
 
             <md-card-media>
-                <img :src="itemData.picture" alt="Avatar">
+                <img class="picture" :src="itemData.picture" alt="Avatar">
                 <div class="title">{{ itemData.title }}</div>
                 <div class="price">{{ itemData.price }}</div>
                 <p>Quantité : {{itemData.amount}}</p>
             </md-card-media>
 
         </md-card-content>
-
-        <md-card-actions>
-            <md-field class="cardAction">
-                <select v-model="amountSelect" >
-                    <option :value="index-1" v-for="index in itemData.amount+1" :key="index" >{{index-1}}</option>
-                </select>
-            </md-field>
-            <md-button clas="cardAction" v-on:click="modificationForCart()" class="md-button">MODIFIER</md-button>
-        </md-card-actions>
     </md-card>
 </template>
 
@@ -42,7 +33,6 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .md-button{
         background-color: #ffd246;
@@ -60,7 +50,8 @@
         color: #634c63;
         font-size: 1.8em;
     }
-    .cardAction{
-        width: 50%;
+    .picture{
+        object-fit: cover;
+        height: 150px;
     }
 </style>

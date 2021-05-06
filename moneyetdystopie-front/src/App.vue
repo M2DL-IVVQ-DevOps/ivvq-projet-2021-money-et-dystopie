@@ -28,7 +28,7 @@
       <div v-if="user.seller != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :storeName="user.seller.storeName"></AddItem>
+        <AddItem :seller="user.seller"></AddItem>
         <Items
                 :itemsData="user.seller.items"
                 :navigation="navigation"
@@ -87,7 +87,6 @@
             pastOrder: null,
           }
         };
-        console.log("creation");
       },
 
       creationAccount(){

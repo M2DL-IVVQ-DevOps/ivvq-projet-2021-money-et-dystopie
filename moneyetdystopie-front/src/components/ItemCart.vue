@@ -3,7 +3,7 @@
         <md-card-content>
 
             <md-card-media>
-                <img :src="itemData.picture" alt="Avatar">
+                <img class="picture" :src="itemData.picture" alt="Avatar">
                 <div class="title">{{ itemData.title }}</div>
                 <div class="price">{{ itemData.price }}</div>
                 <p>Quantité : {{itemData.amount}}</p>
@@ -62,5 +62,9 @@
     }
     .cardAction{
         width: 50%;
+    }
+    .picture{
+        object-fit: cover;
+        height: 150px;
     }
 </style>

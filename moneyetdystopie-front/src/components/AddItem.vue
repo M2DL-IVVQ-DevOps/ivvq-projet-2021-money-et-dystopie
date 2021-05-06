@@ -1,10 +1,12 @@
 <template id="app">
-    <div v-if="!itemInCreation">
-        <md-button class="button-add-item" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
+    <div v-if="!itemInCreation" class="div-button-action-new-item">
+        <md-button class="button-action-new-item" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
     </div>
     <div v-else class="base">
-        <md-button class="button-add-item" v-on:click="endCreation()">Annuler</md-button>
-        <form @submit="checkForm" action="https://vuejs.org/" method="post" novalidate="true">
+        <div class="div-button-action-new-item">
+            <md-button class="button-action-new-item" v-on:click="endCreation()">Annuler</md-button>
+        </div>
+        <form>
             <div v-if="errors.length">
                 <b>Please correct the following error(s):</b>
                 <ul>
@@ -29,12 +31,12 @@
 
             <md-field>
                 <label>Prix</label>
-                <md-input v-model="price" type="text" name="price"></md-input>
+                <md-input v-model="price" type=number step=0.01 name="price"></md-input>
             </md-field>
 
             <md-field>
                 <label>Quantité</label>
-                <md-input v-model="amount" type="text" name="amount"></md-input>
+                <md-input v-model="amount" type=number step=1 name="amount"></md-input>
             </md-field>
 
             <div>
@@ -60,48 +62,60 @@
                 amount: null,
             };
         },
-        props: ['storeName'],
+        props: ['seller'],
         methods: {
-            checkForm: function (e) {
+            checkForm: function () {
                 this.errors = [];
 
-                if (!this.password) {
-                    this.errors.push("Mot de passe requis.");
+                if (!this.title || this.title.length < 2 || this.title.length > 100) {
+                    this.errors.push('Le titre doit faire entre 2 et 100 caractère.');
                 }
-                if (!this.email) {
-                    this.errors.push('email requis.');
+                if (!this.picture) {
+                    this.errors.push('Image requise.');
                 }
-
-                if (!this.errors.length) {
-                    return true;
+                if (!this.description || this.description.length < 2 || this.description.length > 200) {
+                    this.errors.push("La description doit faire entre 10 et 200 caractère.");
                 }
-
-                e.preventDefault();
+                if (!this.amount || this.amount<0) {
+                    this.errors.push("La quantité doit être renseignée.");
+                }
+                if (!this.price || this.price<0) {
+                    this.errors.push("Le prix doit être renseignée.");
+                }
             },
             addItem: function () {
+                this.checkForm();
+                if(this.errors.length){
+                    return;
+                }
+                console.log("coucou");
                 const message ={
                     title: this.title,
                     picture: this.picture,
                     amount: this.amount,
                     price: this.price,
                     description: this.description,
-                    sellerAccount: {"storeName": "Lecrochet1" /*this.storeName*/}
+                    sellerAccount: {"storeName": "Lecrochet1" /*this.seller.storeName*/}
                 };
                 axios.post(
-                    "http://localhost:8080/item/create", message, {
-                        headers: {
-                            'Access-Control-Allow-Origin' : '*',
-                            'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(response => {
-                        console.log("OK",response);
+                    "http://localhost:8080/item/create", message).then(response => {
+                    console.log(response);
+                    console.log(response.data.amount);
+
+                    this.seller.items = [...this.seller.items,
+                            {
+                                id: response.data.id,
+                                amount: response.data.amount,
+                                description: response.data.description,
+                                picture: response.data.picture,
+                                price: response.data.price,
+                                title: response.data.title
+                            }];
+                        this.endCreation();
                     })
                     .catch(error => {
-                        console.log("KO",error);
+                        this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response.data);
                     });
-                /* .finally(() => this.loading = false)*/
-                this.endCreation();
             },
             beginCreation(){
                 this.itemInCreation = true;
@@ -114,11 +128,15 @@
 </script>
 
 <style scoped>
-    .button-add-item {
+    .div-button-action-new-item{
+        text-align: right;
+        margin: 0 10% 0 0;
+    }
+    .button-action-new-item {
         background: #9a96b2;
         color: white;
     }
-    .button-add-item:hover {
+    .button-action-new-item:hover {
         background: #ffd246;
         color: black;
     }

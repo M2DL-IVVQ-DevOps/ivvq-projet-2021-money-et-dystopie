@@ -11,7 +11,7 @@
                 <ItemBoutique :selectionItem="changeCart" :itemData="item"></ItemBoutique>
             </div>
         </div>
-        <div v-if="noitem() && navigation !=='SHOP'" class="no" >
+        <div v-if="noitem()" class="no" >
             Aucun article
         </div>
     </div>
