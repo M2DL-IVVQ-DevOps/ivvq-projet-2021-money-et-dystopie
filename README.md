@@ -27,8 +27,8 @@ Le projet consiste en un site marchant sur lequel il est possible d'acheter de l
 # Développement front-end
 La partie front-end est développée à l'aide de l'IDE **WebStorm** de JetBrains.
 
-**ESLint** est configuré dans notre projet. Il permet d'analyser le code et d'identifier les problèmes associés.
-Il est possible de l'appeler à travers le terminal.
+A des fins de qualité, le projet embarque entre autres [**ESLint**](https://eslint.org/). Il permet d'analyser le code et d'identifier les problèmes associés.
+Il est possible de l'appeler au travers du terminal.
 Pour cela, il faut d'abord se positionner à la racine du projet front, puis taper la commande suivante :
 ```console
 eslint --ext .js,.vue src
@@ -37,20 +37,29 @@ eslint --ext .js,.vue src
 # Développement back-end
 La partie back-end est développée à l'aide de l'IDE **IntelliJ** de JetBrains.
 
-Le projet est accompagné du plugin Spotless, permettant de "nettoyer" le code.
-Pour l'exécuter, il suffit de taper la commande :
+Le projet est accompagné du plugin [**Spotless**](https://github.com/diffplug/spotless), permettant d'appliquer de nombreuses règles de formatage au code.
+Pour l'exécuter, il faut d'abord se positionner à la racine du projet back, puis taper la commande suivante :
 ```console
 mvn spotless:apply
 ```
 
-Le plugin **Spotbugs** est également présent.
+Le plugin [**Spotbugs**](https://spotbugs.github.io/) est également présent.
+Celui-ci permet d'analyser statiquement le code en vue d'identifier les potentiels bugs ou risques de sécurité.
 Pour le lancer, il est possible de lancer la commande :
 ```console
 mvn clean install spotbugs:check
 ```
-Spotbugs affichera sur le terminal le résultat de l'analyse. A noter que le build maven échoue si une erreur est détectée.
-
-Il est également possible de voir la couverture de code du back-end à l'aide de **JaCoCo**.
+Spotbugs affichera sur le terminal le résultat de l'analyse.
+```diff
+- A noter que le build maven échoue si une erreur est détectée. Cea ne veut pas dire que l'analyse a échoué.
+```
+Il est également possible de visualiser la couverture par les tests du code du back-end à l'aide de [**JaCoCo**](https://www.eclemma.org/jacoco/).
+JaCoCo est couplé à Sonar. La couverture de code sera donc visible sur l'interface Sonar.
+Pour visualiser la couverture de code, il faut d'abord se positionner à la racine du projet back, puis taper la commande suivante :
+```console
+mvn clean install sonar:sonar
+```
+Le résultat est publié sur le serveur hébergeant Sonar. Il est visible à travers son interface.
 
 # Lancement du projet
 
