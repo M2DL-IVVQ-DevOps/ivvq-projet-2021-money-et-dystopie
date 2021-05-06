@@ -50,9 +50,8 @@ Pour le lancer, il est possible de lancer la commande :
 mvn clean install spotbugs:check
 ```
 Spotbugs affichera sur le terminal le résultat de l'analyse.
-```diff
-- A noter que le build maven échoue si une erreur est détectée. Cea ne veut pas dire que l'analyse a échoué.
-```
+**A noter que le build maven échoue si une erreur est détectée. Cela ne veut pas dire que l'analyse a échoué.**
+
 Il est également possible de visualiser la couverture par les tests du code du back-end à l'aide de [**JaCoCo**](https://www.eclemma.org/jacoco/).
 JaCoCo est couplé à Sonar. La couverture de code sera donc visible sur l'interface Sonar.
 Pour visualiser la couverture de code, il faut d'abord se positionner à la racine du projet back, puis taper la commande suivante :
