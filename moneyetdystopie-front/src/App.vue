@@ -1,9 +1,13 @@
 <template>
-  <div id="app" class="size-app" :class="{'catalog': user, 'connexionCreationAccount': !user}">
+  <div id="app" class="size-app" :class="{
+          'catalog-background': user && navigation === 'CATALOG',
+          'card-background': user && navigation === 'CART',
+          'shop-background': user && navigation === 'SHOP',
+          'connexionCreationAccount-background': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
 
     <section v-if="user">
-      <div v-if="navigation === 'CATALOG'">
+      <div v-if="user.customer != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
@@ -12,12 +16,21 @@
                 :navigation="navigation"
         />
       </div>
-      <div v-if="navigation === 'CART'">
-        <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
+      <div v-if="user.customer != null &&  navigation === 'CART'">
+        <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
                 :changeCart="changeInCart"
                 :itemsData="user.customer.cart.items"
+                :navigation="navigation"
+        />
+      </div>
+      <div v-if="user.seller != null && navigation === 'SHOP'">
+        <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750"/>
+        <Menu :changeNavigation="changeNavigation"></Menu>
+        <AddItem :storeName="user.seller.storeName"></AddItem>
+        <Items
+                :itemsData="user.seller.items"
                 :navigation="navigation"
         />
       </div>
@@ -32,6 +45,7 @@
 <script>
   import Items from './components/Items.vue';
   import Menu from './components/Menu.vue';
+  import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
 
   export default {
@@ -39,7 +53,8 @@
     components: {
       ConnexionCreationAccount,
       Items,
-      Menu
+      Menu,
+      AddItem
     },
     mounted: function () {
       this.$nextTick(function () {
@@ -59,6 +74,7 @@
           firstName: 'Alessandra',
           seller: {
             storeName: 'Le crochet de Nina',
+            items: []
           },
           customer:{
             pseudo: 'Rozen',
@@ -82,6 +98,7 @@
           firstName: 'Alessandra',
           seller: {
             storeName: 'Le crochet de Nina',
+            items: []
           },
           customer:{
             pseudo: 'Rozen',
@@ -186,11 +203,17 @@
     text-align: center;
     padding: 50px 0;
   }
-  .catalog{
+  .catalog-background{
     background-color: #24212b;
   }
-  .connexionCreationAccount{
+  .shop-background{
+    background-color: #004bb5;
+  }
+  .connexionCreationAccount-background{
     background-color: #242b45;
+  }
+  .card-background{
+    background-color: #f8cedc;
   }
   h1{
     color: white;

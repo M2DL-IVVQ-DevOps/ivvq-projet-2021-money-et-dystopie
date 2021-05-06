@@ -4,11 +4,14 @@
             <div v-if="navigation ==='CATALOG'">
                 <ItemCatalog :selectionItem="changeCart" :itemData="item"></ItemCatalog>
             </div>
-            <div v-else>
+            <div v-if="navigation ==='CART'">
                 <ItemCart :selectionItem="changeCart" :itemData="item"></ItemCart>
             </div>
+            <div v-if="navigation ==='SHOP'">
+                <ItemBoutique :selectionItem="changeCart" :itemData="item"></ItemBoutique>
+            </div>
         </div>
-        <div v-if="noitem()" class="no" >
+        <div v-if="noitem() && navigation !=='SHOP'" class="no" >
             Aucun article
         </div>
     </div>
@@ -17,12 +20,14 @@
 <script>
     import ItemCatalog from './ItemCatalog.vue';
     import ItemCart from './ItemCart.vue';
+    import ItemBoutique from './ItemBoutique.vue';
 
     export default {
         name: "Items",
         components: {
             ItemCatalog,
-            ItemCart
+            ItemCart,
+            ItemBoutique
         },
         props:['changeCart', 'itemsData', 'navigation'],
         methods: {

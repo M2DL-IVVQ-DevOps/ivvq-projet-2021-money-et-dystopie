@@ -32,6 +32,10 @@
                         name:'Mon panier',
                         icon:'panier',
                         navigation: 'CART'
+                    },{
+                        name:'Ma boutique',
+                        icon:'panier',
+                        navigation: 'SHOP'
                     }
                 ]
             }
