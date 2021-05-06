@@ -45,11 +45,11 @@ public class TokenBean {
     }
 
     public Date getExpirationDate() {
-        return expirationDate;
+        return (Date) expirationDate.clone();
     }
 
     public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+        this.expirationDate = (Date) expirationDate.clone();
     }
 
     public User getUtilisateur() {
