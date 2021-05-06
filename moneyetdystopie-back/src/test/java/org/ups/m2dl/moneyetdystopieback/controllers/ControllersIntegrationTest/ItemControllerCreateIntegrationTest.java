@@ -55,7 +55,7 @@ class ItemControllerCreateIntegrationTest {
 
         // GIVEN
         sellerTest =  new Seller("storeName39",null,null,null);
-        itemTest = new Item(null, "title39", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description39", 10, 5.f, null, sellerTest);
+        itemTest = new Item(null, "title39", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description39", 10, 5.f, null, sellerTest);
         sellerService.save(sellerTest);
 
         jsonUserTest = new Gson().toJson(itemTest);
@@ -84,7 +84,7 @@ class ItemControllerCreateIntegrationTest {
 
         // GIVEN
         sellerTest =  new Seller("storeName40",null,null,null);
-        itemTest = new Item(null, "title40", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description40", 10, 5.f, null, sellerTest);
+        itemTest = new Item(null, "title40", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description40", 10, 5.f, null, sellerTest);
         sellerService.save(sellerTest);
         itemsNumber = itemService.findAll().size();
 
@@ -175,7 +175,7 @@ class ItemControllerCreateIntegrationTest {
             sellerTest = new Seller(storeName,null,null,null);
             sellerService.save(sellerTest);
         }
-        itemTest = new Item(null, title, "https://moodle.univ-tlse3.fr/course/view.php?id=1653", description, amount, price, null, areSeller? sellerTest : null);
+        itemTest = new Item(null, title, "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", description, amount, price, null, areSeller? sellerTest : null);
         itemsNumber = itemService.findAll().size();
 
         jsonUserTest = new Gson().toJson(itemTest);

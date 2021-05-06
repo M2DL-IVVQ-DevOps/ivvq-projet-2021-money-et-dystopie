@@ -43,7 +43,7 @@ class ItemServiceTest {
         // GIVEN
         sellerTest =  new Seller("storeName51",null,null,null);
         sellerService.save(sellerTest);
-        itemTest = new Item(null, "title51", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description51", 10, 5.f, null, sellerTest);
+        itemTest = new Item(null, "title51", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description51", 10, 5.f, null, sellerTest);
         when(itemService.getItemRepository().save(itemTest)).thenReturn(itemTest);
         // WHEN: save méthode est invoqué
         itemService.save(itemTest);

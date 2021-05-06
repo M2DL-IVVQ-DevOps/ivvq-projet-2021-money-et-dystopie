@@ -30,7 +30,7 @@ class ItemServiceFindByMethodsIntegrationTest {
         // GIVEN
         sellerTest =  new Seller("storeName50",null,null,null);
         sellerService.save(sellerTest);
-        itemTest = new Item(null, "title50", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description50", 10, 5.f, null, sellerTest);
+        itemTest = new Item(null, "title50", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description50", 10, 5.f, null, sellerTest);
 
         // WHEN
         itemTest = itemService.save(itemTest);

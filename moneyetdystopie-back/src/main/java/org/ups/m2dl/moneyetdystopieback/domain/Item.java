@@ -49,7 +49,7 @@ public class Item {
     @Getter
     @Setter
     @NotNull(message = "La description doit être renseignée.")
-    @Size( min = 10, max = 200, message = "Le mot de passe doit faire entre 10 et 200 caractère.")
+    @Size( min = 10, max = 200, message = "La description doit faire entre 10 et 200 caractère.")
     private String description;
 
     /**

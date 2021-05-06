@@ -36,8 +36,8 @@ class ItemServiceCreateMethodIntegrationTest {
         sellerTest =  new Seller("storeName49",null,null,null);
         sellerService.save(sellerTest);
 
-        itemTestTwinA = new Item(null,"title49", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description49", 10, 5.f, null, sellerTest);
-        itemTestTwinB = new Item(null, "title49", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description49", 10, 5.f, null, sellerTest);
+        itemTestTwinA = new Item(null,"title49", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description49", 10, 5.f, null, sellerTest);
+        itemTestTwinB = new Item(null, "title49", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description49", 10, 5.f, null, sellerTest);
 
         itemsNumber = itemService.findAll().size();
 
@@ -52,7 +52,7 @@ class ItemServiceCreateMethodIntegrationTest {
     @Test
     void whenCreateItemWithoutSeller_thenThrowBusinessException() {
         // GIVEN
-        itemTest = new Item(null, "title50", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description50", 10, 5.f, null, null);
+        itemTest = new Item(null, "title50", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description50", 10, 5.f, null, null);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {

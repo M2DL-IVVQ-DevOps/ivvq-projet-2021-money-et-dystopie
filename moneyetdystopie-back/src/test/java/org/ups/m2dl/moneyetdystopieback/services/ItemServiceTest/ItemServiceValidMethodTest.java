@@ -42,7 +42,7 @@ class ItemServiceValidMethodTest {
     void whenValidItemWithBadTitle_thenThrowBusinessException(String title)  {
 
         // GIVEN
-        itemTest = new Item( null, title, "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description55", 10, 5.f, null, sellerTest);
+        itemTest = new Item( null, title, "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description55", 10, 5.f, null, sellerTest);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -57,7 +57,7 @@ class ItemServiceValidMethodTest {
     void whenValidItemWithBadDescription_thenThrowBusinessException(String description)  {
 
         // GIVEN
-        itemTest = new Item( null, "title56", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", description, 10, 5.f, null, sellerTest);
+        itemTest = new Item( null, "title56", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", description, 10, 5.f, null, sellerTest);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -86,7 +86,7 @@ class ItemServiceValidMethodTest {
     void whenValidItemWithBadAmount_thenThrowBusinessException(Integer amount)  {
 
         // GIVEN
-        itemTest = new Item( null, "title53", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description53", amount, 5.f, null, sellerTest);
+        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", amount, 5.f, null, sellerTest);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -101,7 +101,7 @@ class ItemServiceValidMethodTest {
     void whenValidItemWithBadAmount_thenThrowBusinessException(Float price)  {
 
         // GIVEN
-        itemTest = new Item( null, "title53", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description53", 10, price, null, sellerTest);
+        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", 10, price, null, sellerTest);
 
         // THEN
         Assertions.assertThrows(BusinessException.class, () -> {
@@ -114,7 +114,7 @@ class ItemServiceValidMethodTest {
     @Test
     void whenValidCustomer_thenNoThrowBusinessException() {
         // GIVEN
-        itemTest = new Item( null, "title53", "https://moodle.univ-tlse3.fr/course/view.php?id=1653", "description53", 10, 5.f, null, sellerTest);
+        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", 10, 5.f, null, sellerTest);
 
         // THEN
         Assertions.assertDoesNotThrow( () -> {
