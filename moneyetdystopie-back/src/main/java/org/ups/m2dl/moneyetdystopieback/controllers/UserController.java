@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @RestController
@@ -27,6 +28,8 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(userService.create(userService.getDto(user))));
         }catch (BusinessException e){
             return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
 

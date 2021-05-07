@@ -10,7 +10,6 @@ import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 
 import javax.validation.*;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -52,8 +51,7 @@ public class CustomerService {
         if(pseudo==null || pseudo.isBlank()){
             return null;
         }
-        Optional<Customer> customer = customerRepository.findByPseudo(pseudo);
-        return customer.isPresent() ? customer.get() : null;
+        return customerRepository.findByPseudo(pseudo).orElse(null);
     }
 
     public void valid(Customer customer) throws BusinessException{

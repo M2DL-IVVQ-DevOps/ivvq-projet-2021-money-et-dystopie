@@ -13,7 +13,6 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -54,8 +53,7 @@ public class SellerService {
         if(storeName==null || storeName.isBlank()){
             return null;
         }
-        Optional<Seller> seller = sellerRepository.findByStoreName(storeName);
-        return seller.isPresent() ? seller.get() : null;
+        return sellerRepository.findByStoreName(storeName).orElse(null);
     }
 
     public void valid(Seller seller) throws BusinessException {

@@ -19,7 +19,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -76,8 +75,7 @@ public class ItemService {
         if(id == null){
             return null;
         }
-        Optional<Item> item = itemRepository.findById(id);
-        return item.isPresent() ? item.get() : null;
+        return itemRepository.findById(id).orElse(null);
     }
 
     public List<Item> findAll() {
