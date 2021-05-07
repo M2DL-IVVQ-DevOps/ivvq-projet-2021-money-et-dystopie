@@ -9,7 +9,7 @@
                         <div v-if="scene===index" class="text" :class="{'revert': index%2 != 0}">
                             {{onglet.name}}
                         </div>
-                        <img class="icon" v-else :src="getImage(onglet.icon)" :class="{'revert': index%2 != 0}"/>
+                        <img class="icon" v-else :src="getImage(onglet.icon)" :class="{'revert': index%2 != 0}" alt="Icone d'article"/>
                     </div>
                 </div>
             </li>

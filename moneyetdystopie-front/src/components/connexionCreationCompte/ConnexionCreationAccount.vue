@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img src="https://cdn.dribbble.com/users/427368/screenshots/4750378/asset_35.jpg?compress=1&resize=800x600"/>
+        <img src="https://cdn.dribbble.com/users/427368/screenshots/4750378/asset_35.jpg?compress=1&resize=800x600" alt="Image de voiture garée de nuit"/>
         <div class="flex">
             <div class="flex-contenu">
                 <h2>Connexion</h2>

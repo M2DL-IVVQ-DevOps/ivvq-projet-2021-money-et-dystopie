@@ -8,7 +8,7 @@
 
     <section v-if="user">
       <div v-if="user.customer != null && navigation === 'CATALOG'">
-        <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif"/>
+        <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
                 :changeCart="addInCart"
@@ -17,7 +17,7 @@
         />
       </div>
       <div v-if="user.customer != null &&  navigation === 'CART'">
-        <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750"/>
+        <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
                 :changeCart="changeInCart"
@@ -26,7 +26,7 @@
         />
       </div>
       <div v-if="user.seller != null && navigation === 'SHOP'">
-        <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750"/>
+        <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <AddItem :seller="user.seller"></AddItem>
         <Items
