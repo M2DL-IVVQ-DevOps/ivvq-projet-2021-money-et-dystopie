@@ -88,7 +88,6 @@
                 if(this.errors.length){
                     return;
                 }
-                console.log("coucou");
                 const message ={
                     title: this.title,
                     picture: this.picture,
@@ -98,10 +97,7 @@
                     sellerAccount: {"storeName": "Lecrochet1" /*this.seller.storeName*/}
                 };
                 axios.post(
-                    "http://localhost:8080/item/create", message).then(response => {
-                    console.log(response);
-                    console.log(response.data.amount);
-
+                    "https://money-et-dystopie.herokuapp.com/item/create", message).then(response => {
                     this.seller.items = [...this.seller.items,
                             {
                                 id: response.data.id,
