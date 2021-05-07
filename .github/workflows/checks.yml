@@ -24,13 +24,19 @@ jobs:
       - name: Fetch Repository
         uses: actions/checkout@v2
       - name: Check Sonar report for backend
-        run: cd moneyetdystopie-back && mvn clean install sonar:sonar -Dspring.profiles.active=dev -Dsonar.projectBaseDir=moneyetdystopie-back -Dsonar.projectKey=${{secrets.SONAR_PROJECT_BACK}} -Dsonar.host.url=${{secrets.SONAR_URL_BACK}} -Dsonar.login=${{secrets.SONAR_LOGIN_BACK}} -Dsonar.qualitygate.wait=true
+        run: cd moneyetdystopie-back && mvn clean install spotbugs:check sonar:sonar -Dspring.profiles.active=dev -Dsonar.projectBaseDir=moneyetdystopie-back -Dsonar.projectKey=${{secrets.SONAR_PROJECT_BACK}} -Dsonar.host.url=${{secrets.SONAR_URL_BACK}} -Dsonar.login=${{secrets.SONAR_LOGIN_BACK}} -Dsonar.qualitygate.wait=true
 
   sonar-checks-front:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v2
+      - name: Install modules
+        run: cd moneyetdystopie-front && yarn add eslint eslint-plugin-vue@next --dev
+      - name: Generate ESLint report
+        run: cd moneyetdystopie-front && yarn run eslint --ext .js,.vue -f json -o target/report.json src
+      - name: Correct paths referenced in report
+        run: cd moneyetdystopie-front && sed -i 's+/home/runner/work/ivvq-projet-2021-money-et-dystopie/ivvq-projet-2021-money-et-dystopie+/github/workspace+g' target/report.json
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
