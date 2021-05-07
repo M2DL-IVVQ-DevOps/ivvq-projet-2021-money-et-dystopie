@@ -55,11 +55,4 @@ public class UserBean {
     @Setter
     private CustomerBean customerAccount;
 
-
-    /** Les tokens
-     *
-     */
-    @JsonIgnore
-    private List<Token> tokenList;
-
 }
