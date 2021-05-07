@@ -9,58 +9,42 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemBean {
 
-    /**
-     * Identifiant de l'annonce.
-     */
+    /** Identifiant de l'annonce. */
     @Getter
     @Setter
     private Long id;
 
-    /**
-     * Titre de l'annonce, obligatoire.
-     */
+    /** Titre de l'annonce, obligatoire. */
     @Getter
     @Setter
     private String title;
 
-    /**
-     * URL vers l'image à utiliser.
-     */
+    /** URL vers l'image à utiliser. */
     @Getter
     @Setter
     private String picture;
 
-    /**
-     * Description du produit optionnelle.
-     */
+    /** Description du produit optionnelle. */
     @Getter
     @Setter
     private String description;
 
-    /**
-     * Quantité disponible à la vente.
-     */
+    /** Quantité disponible à la vente. */
     @Getter
     @Setter
     private Integer amount;
 
-    /**
-     * Montant du produit en euros.
-     */
+    /** Montant du produit en euros. */
     @Getter
     @Setter
     private Float price;
 
-    /**
-     * Version du produit.
-     */
+    /** Version du produit. */
     @Getter
     @Setter
     private Long version;
 
-    /**
-     * Vendeur du produit.
-     */
+    /** Vendeur du produit. */
     @Getter
     @Setter
     private SellerBean sellerAccount;

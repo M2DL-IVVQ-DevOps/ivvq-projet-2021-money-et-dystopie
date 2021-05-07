@@ -1,48 +1,36 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerBean {
 
-    /**
-     * Identifiant de l'acheteur.
-     * Pseudo de l'acheteur.
-     */
+    /** Identifiant de l'acheteur. Pseudo de l'acheteur. */
     @Getter
     @Setter
     private String pseudo;
 
-    /**
-     * Adresse de l'acheteur.
-     */
+    /** Adresse de l'acheteur. */
     @Getter
     @Setter
     private String address;
 
-    /**
-     * Compte utilisateur associé au commerçant.
-     */
+    /** Compte utilisateur associé au commerçant. */
     @Getter
     @Setter
     private UserBean userAccount;
 
-    /**
-     * Panier de l'acheteur.
-     */
+    /** Panier de l'acheteur. */
     @Getter
     @Setter
     private CommandBean cart;
 
-    /**
-     * Liste des anciennes commandes de l'acheteur.
-     */
+    /** Liste des anciennes commandes de l'acheteur. */
     @Getter
     @Setter
     private List<CommandBean> pastCommands;

@@ -9,46 +9,33 @@ import lombok.Setter;
 @AllArgsConstructor
 public class UserBean {
 
-    /**
-     * Nom de famille de l'utilisateur.
-     */
+    /** Nom de famille de l'utilisateur. */
     @Getter
     @Setter
     private String lastName;
 
-    /**
-     * Prénom de l'utilisateur.
-     */
+    /** Prénom de l'utilisateur. */
     @Getter
     @Setter
     private String firstName;
 
-    /**
-     * Pseudo, unique, de l'utilisateur.
-     */
+    /** Pseudo, unique, de l'utilisateur. */
     @Getter
     @Setter
     private String email;
 
-    /**
-     * Mot de passe, chiffré
-     */
+    /** Mot de passe, chiffré */
     @Getter
     @Setter
     private String password;
 
-    /**
-     * Compte commercant associé.
-     */
+    /** Compte commercant associé. */
     @Getter
     @Setter
     private SellerBean sellerAccount;
 
-    /**
-     * Compte acheteur associé.
-     */
+    /** Compte acheteur associé. */
     @Getter
     @Setter
     private CustomerBean customerAccount;
-
 }

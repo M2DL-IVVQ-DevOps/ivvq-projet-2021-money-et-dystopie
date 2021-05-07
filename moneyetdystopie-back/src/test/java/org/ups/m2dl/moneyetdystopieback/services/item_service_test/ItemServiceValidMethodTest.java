@@ -26,99 +26,188 @@ class ItemServiceValidMethodTest {
     private SellerService sellerService;
 
     private Seller sellerTest;
-    
+
     private Item itemTest;
 
     @BeforeEach
     void setup() throws BusinessException {
-        sellerTest =  new Seller("storeName54",null,null,null);
+        sellerTest = new Seller("storeName54", null, null, null);
         sellerService.save(sellerTest);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1","01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "1",
+            "01234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenValidItemWithBadTitle_thenThrowBusinessException(String title)  {
-
+    void whenValidItemWithBadTitle_thenThrowBusinessException(String title) {
         // GIVEN
-        itemTest = new Item( null, title, "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description55", 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                title,
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description55",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                itemService.valid(itemTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"1","012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "1",
+            "012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenValidItemWithBadDescription_thenThrowBusinessException(String description)  {
-
+    void whenValidItemWithBadDescription_thenThrowBusinessException(
+        String description
+    ) {
         // GIVEN
-        itemTest = new Item( null, "title56", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", description, 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title56",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                description,
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                itemService.valid(itemTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"uneUrlFausse","httpsmoodle.univ-tlse3.fr/course/view.php?id=1653"})
-    void whenValidItemWithBadPicture_thenThrowBusinessException(String picture)  {
-
+    @ValueSource(
+        strings = {
+            "uneUrlFausse", "httpsmoodle.univ-tlse3.fr/course/view.php?id=1653",
+        }
+    )
+    void whenValidItemWithBadPicture_thenThrowBusinessException(
+        String picture
+    ) {
         // GIVEN
-        itemTest = new Item( null, "title53", picture, "description53", 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title53",
+                picture,
+                "description53",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // THEN
+                itemService.valid(itemTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-1})
+    @ValueSource(ints = { -1 })
     @NullSource
-    void whenValidItemWithBadAmount_thenThrowBusinessException(Integer amount)  {
-
+    void whenValidItemWithBadAmount_thenThrowBusinessException(Integer amount) {
         // GIVEN
-        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", amount, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title53",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description53",
+                amount,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // THEN
+                itemService.valid(itemTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(floats = {-1.f})
+    @ValueSource(floats = { -1.f })
     @NullSource
-    void whenValidItemWithBadAmount_thenThrowBusinessException(Float price)  {
-
+    void whenValidItemWithBadAmount_thenThrowBusinessException(Float price) {
         // GIVEN
-        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", 10, price, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title53",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description53",
+                10,
+                price,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // THEN
+                itemService.valid(itemTest);
+            }
+        );
     }
-
 
     @Test
     void whenValidCustomer_thenNoThrowBusinessException() {
         // GIVEN
-        itemTest = new Item( null, "title53", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description53", 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title53",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description53",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // THEN
-        Assertions.assertDoesNotThrow( () -> {
-            // WHEN
-            itemService.valid(itemTest);
-        });
+        Assertions.assertDoesNotThrow(
+            () -> {
+                // WHEN
+                itemService.valid(itemTest);
+            }
+        );
     }
 }

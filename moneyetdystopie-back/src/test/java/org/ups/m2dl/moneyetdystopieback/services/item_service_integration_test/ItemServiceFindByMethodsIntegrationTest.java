@@ -24,20 +24,30 @@ class ItemServiceFindByMethodsIntegrationTest {
     private Item itemTest;
     private Seller sellerTest;
     private Item resultFindBy;
+
     @Test
     void whenCreateSaveItem_thenCanFind() throws BusinessException {
-
         // GIVEN
-        sellerTest =  new Seller("storeName50",null,null,null);
+        sellerTest = new Seller("storeName50", null, null, null);
         sellerService.save(sellerTest);
-        itemTest = new Item(null, "title50", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description50", 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title50",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description50",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // WHEN
         itemTest = itemService.save(itemTest);
         resultFindBy = itemService.findById(itemTest.getId());
 
         // THEN
-        Assertions.assertNotNull( resultFindBy, "The saved item was not found.");
+        Assertions.assertNotNull(resultFindBy, "The saved item was not found.");
     }
 
     @Test
@@ -45,6 +55,9 @@ class ItemServiceFindByMethodsIntegrationTest {
         // GIVEN WHEN
         resultFindBy = itemService.findById(0L);
 
-        Assertions.assertNull( resultFindBy, "A item was returned despite his non-existence.");
+        Assertions.assertNull(
+            resultFindBy,
+            "A item was returned despite his non-existence."
+        );
     }
 }
