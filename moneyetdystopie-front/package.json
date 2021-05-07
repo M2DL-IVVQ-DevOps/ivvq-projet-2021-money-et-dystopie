@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test": "cypress run"
+    "test": "cypress run",
+    "eslint": "eslint --ext .js,.vue -f json -o target/report.json src"
   },
   "dependencies": {
     "axios": "^0.21.1",
