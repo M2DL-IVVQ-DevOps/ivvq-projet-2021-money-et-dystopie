@@ -33,4 +33,14 @@ public class ItemController {
         }
     }
 
+
+    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
+    @GetMapping(value="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAll() {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(itemService.findAll());
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
+        }
+    }
 }
