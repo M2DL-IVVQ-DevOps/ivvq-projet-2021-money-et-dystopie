@@ -45,7 +45,7 @@ mvn spotless:apply
 
 Le plugin [**Spotbugs**](https://spotbugs.github.io/) est également présent.
 Celui-ci permet d'analyser statiquement le code en vue d'identifier les potentiels bugs ou risques de sécurité.
-Pour le lancer, il est possible de lancer la commande :
+Pour le lancer, il faut d'abord se positionner à la racine du projet back, puis la commande :
 ```console
 mvn clean install spotbugs:check
 ```
