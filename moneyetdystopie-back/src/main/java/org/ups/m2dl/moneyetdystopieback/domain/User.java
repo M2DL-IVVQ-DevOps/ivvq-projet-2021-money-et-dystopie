@@ -1,12 +1,19 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "app_user")
 public class User {
@@ -14,20 +21,26 @@ public class User {
     /**
      * Nom de famille de l'utilisateur.
      */
-    @NotNull
+    @Getter
+    @Setter
+    @NotNull(message = "Le nom doit être renseigné.")
     @Size( min = 1, max = 30, message = "Le nom doit faire entre 1 et 50 caractère.")
     private String lastName;
 
     /**
      * Prénom de l'utilisateur.
      */
-    @NotNull
+    @Getter
+    @Setter
+    @NotNull(message = "Le prénom doit être renseigné.")
     @Size( min = 1, max = 30, message = "Le prénom doit faire entre 1 et 50 caractère.")
     private String firstName;
 
     /**
      * Pseudo, unique, de l'utilisateur.
      */
+    @Getter
+    @Setter
     @Id
     @Email
     @NotNull(message = "Le mail doit être renseigné.")
@@ -37,90 +50,31 @@ public class User {
     /**
      * Mot de passe, chiffré
      */
-    @NotNull
+    @Getter
+    @Setter
+    @NotNull(message = "Le mot de passe doit être renseigné.")
     @Size( min = 60, max = 60, message = "Le hash mot de passe doit faire exactement 60 caractères.")
     private String password;
 
     /**
      * Compte commercant associé.
      */
+    @Getter
+    @Setter
     @OneToOne
     private Seller sellerAccount;
 
     /**
      * Compte acheteur associé.
      */
+    @Getter
+    @Setter
     @OneToOne
     private Customer customerAccount;
 
+    @Getter
+    @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Token> tokenList;
 
-    public User() {
-    }
-
-    public User(String lastName, String firstName, String email, String password) {
-        this.setLastName(lastName);
-        this.setFirstName(firstName);
-        this.setEmail(email);
-        this.setPassword(password);
-        this.setSellerAccount(null);
-        this.setCustomerAccount(null);
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public Seller getSellerAccount() {
-        return sellerAccount;
-    }
-
-    public Customer getCustomerAccount() {
-        return customerAccount;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setSellerAccount(Seller sellerAccount) {
-        this.sellerAccount = sellerAccount;
-    }
-
-    public void setCustomerAccount(Customer customerAccount) {
-        this.customerAccount = customerAccount;
-    }
-
-    public List<Token> getTokenList() {
-        return tokenList;
-    }
-
-    public void setTokenList(List<Token> tokenList) {
-        this.tokenList = tokenList;
-    }
 }

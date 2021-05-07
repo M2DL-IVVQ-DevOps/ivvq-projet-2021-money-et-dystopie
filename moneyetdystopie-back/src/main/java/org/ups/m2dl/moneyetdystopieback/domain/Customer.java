@@ -1,6 +1,10 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -9,6 +13,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Customer {
 
@@ -16,6 +22,8 @@ public class Customer {
      * Identifiant de l'acheteur.
      * Pseudo de l'acheteur.
      */
+    @Getter
+    @Setter
     @Id
     @NotNull(message = "Le pseudo doit être renseigné.")
     @Size( min = 5, max = 50, message = "Le pseudo doit faire entre 5 et 50 caractère.")
@@ -24,7 +32,8 @@ public class Customer {
     /**
      * Adresse de l'acheteur.
      */
-
+    @Getter
+    @Setter
     @Size( min = 10, max = 150, message = "L'adresse doit faire entre 10 et 150 caractère.")
     @NotNull(message = "L'adresse doit être renseigné.")
     private String address;
@@ -32,6 +41,8 @@ public class Customer {
     /**
      * Compte utilisateur associé au commerçant.
      */
+    @Getter
+    @Setter
     @JsonIgnore
     @OneToOne
     private User userAccount;
@@ -39,65 +50,17 @@ public class Customer {
     /**
      * Panier de l'acheteur.
      */
+    @Getter
+    @Setter
     @OneToOne
     private Command cart;
 
     /**
      * Liste des anciennes commandes de l'acheteur.
      */
+    @Getter
+    @Setter
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany
     private List<Command> pastCommands;
-
-
-    public Customer() {
-    }
-
-    public Customer(String pseudo, String address) {
-        this.setPseudo(pseudo);
-        this.setAddress(address);
-        this.setUserAccount(null);
-        this.setCart(null);
-        this.setPastCommands(null);
-    }
-
-    public String getPseudo() {
-        return pseudo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public User getUserAccount() {
-        return userAccount;
-    }
-
-    public Command getCart() {
-        return cart;
-    }
-
-    public List<Command> getPastCommands() {
-        return pastCommands;
-    }
-
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setUserAccount(User userAccount) {
-        this.userAccount = userAccount;
-    }
-
-    public void setCart(Command cart) {
-        this.cart = cart;
-    }
-
-    public void setPastCommands(List<Command> pastCommands) {
-        this.pastCommands = pastCommands;
-    }
 }

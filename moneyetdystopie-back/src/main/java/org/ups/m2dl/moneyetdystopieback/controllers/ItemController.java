@@ -7,25 +7,25 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
+import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
-import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.services.ItemService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping("/item")
+public class ItemController {
 
     @Getter
     @Setter
-    private UserService userService;
+    private ItemService itemService;
 
     @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
     @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(@RequestBody UserBean user) {
+    public ResponseEntity<Object> create(@RequestBody ItemBean item) {
         try{
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(userService.create(userService.getDto(user))));
+            return ResponseEntity.status(HttpStatus.OK).body(itemService.getBean(itemService.create(itemService.getDto(item))));
         }catch (BusinessException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }catch (Exception e){

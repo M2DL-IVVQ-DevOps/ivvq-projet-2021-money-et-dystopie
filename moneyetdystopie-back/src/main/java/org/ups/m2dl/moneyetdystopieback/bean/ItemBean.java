@@ -1,74 +1,67 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class ItemBean {
 
     /**
      * Identifiant de l'annonce.
      */
+    @Getter
+    @Setter
     private Long id;
 
     /**
      * Titre de l'annonce, obligatoire.
      */
+    @Getter
+    @Setter
     private String title;
-
-    /**
-     * Description du produit optionnelle.
-     */
-    private String description;
-
-    /**
-     * Montant du produit en euros.
-     */
-    private float price;
-
-    /**
-     * Quantité disponible à la vente.
-     */
-    private int amount;
 
     /**
      * URL vers l'image à utiliser.
      */
+    @Getter
+    @Setter
     private String picture;
+
+    /**
+     * Description du produit optionnelle.
+     */
+    @Getter
+    @Setter
+    private String description;
+
+    /**
+     * Quantité disponible à la vente.
+     */
+    @Getter
+    @Setter
+    private Integer amount;
+
+    /**
+     * Montant du produit en euros.
+     */
+    @Getter
+    @Setter
+    private Float price;
 
     /**
      * Version du produit.
      */
-    private long version;
+    @Getter
+    @Setter
+    private Long version;
 
-    private SellerBean sellerBean;
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public long getVersion() {
-        return version;
-    }
-
-    public SellerBean getSellerBean() {
-        return sellerBean;
-    }
+    /**
+     * Vendeur du produit.
+     */
+    @Getter
+    @Setter
+    private SellerBean sellerAccount;
 }

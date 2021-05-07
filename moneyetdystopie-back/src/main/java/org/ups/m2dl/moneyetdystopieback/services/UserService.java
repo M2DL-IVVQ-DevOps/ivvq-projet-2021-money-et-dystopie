@@ -1,5 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,30 +24,25 @@ import javax.validation.ValidatorFactory;
 import java.util.Iterator;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class UserService {
 
+    @Getter
+    @Setter
     private final UserRepository userRepository;
 
+    @Getter
+    @Setter
     private final SellerService sellerService;
 
+    @Getter
+    @Setter
     private final CustomerService customerService;
 
+    @Getter
+    @Setter
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository,
-                       SellerService sellerService,
-                       CustomerService customerService,
-                       PasswordEncoder passwordEncoder){
-        this.userRepository = userRepository;
-        this.sellerService = sellerService;
-        this.customerService = customerService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public UserRepository getUserRepository() {
-        return userRepository;
-    }
 
     @Transactional
     public User create(User user) throws BusinessException {
@@ -63,41 +61,33 @@ public class UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        try {
-            if(user.getSellerAccount() != null){
-                sellerService.valid(user.getSellerAccount());
-            }
-            if(user.getCustomerAccount() != null){
-                customerService.valid(user.getCustomerAccount());
-            }
-            this.valid(user);
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
+        if(user.getSellerAccount() != null){
+            sellerService.valid(user.getSellerAccount());
+        }
+        if(user.getCustomerAccount() != null){
+            customerService.valid(user.getCustomerAccount());
+        }
+        this.valid(user);
+
+        if(user.getSellerAccount() != null){
+            user.setSellerAccount(sellerService.create(user.getSellerAccount()));
         }
 
-        try {
-            if(user.getSellerAccount() != null){
-                user.setSellerAccount(sellerService.create(user.getSellerAccount()));
-            }
-
-            if(user.getCustomerAccount() != null){
-                user.setCustomerAccount(customerService.create(user.getCustomerAccount()));
-            }
-
-            User u = this.save(user);
-
-            if(user.getSellerAccount() != null){
-                user.getSellerAccount().setUserAccount(u);
-            }
-
-            if(user.getCustomerAccount() != null){
-                user.getCustomerAccount().setUserAccount(u);
-            }
-
-            return u;
-        }catch (BusinessException e){
-            throw new BusinessException(e.getMessage());
+        if(user.getCustomerAccount() != null){
+           user.setCustomerAccount(customerService.create(user.getCustomerAccount()));
         }
+
+        User u = this.save(user);
+
+        if(user.getSellerAccount() != null){
+           user.getSellerAccount().setUserAccount(u);
+        }
+
+        if(user.getCustomerAccount() != null){
+           user.getCustomerAccount().setUserAccount(u);
+        }
+
+        return u;
     }
 
     public String checkPasswordSyntax(String password){
@@ -131,7 +121,6 @@ public class UserService {
         }
         return userRepository.findByEmail(email).orElse(null);
     }
-
 
     public void valid(User user) throws BusinessException {
 

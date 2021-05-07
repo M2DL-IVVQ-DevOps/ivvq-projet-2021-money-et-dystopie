@@ -1,5 +1,9 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
 
 import javax.persistence.*;
@@ -7,12 +11,16 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "Command")
 public class Command {
 
     /**
      * Identifiant de la commande.
      */
+    @Getter
+    @Setter
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -20,40 +28,16 @@ public class Command {
     /**
      * Etat de la commande.
      */
+    @Getter
+    @Setter
     @NotNull
     private CommandState state;
 
     /**
      * Liste des articles de la commande.
      */
+    @Getter
+    @Setter
     @OneToMany
     private List<Item> items;
-
-    public Command() {
-    }
-
-    public Command(CommandState state, List<Item> items) {
-        this.setState(state);
-        this.setItems(items);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public CommandState getState() {
-        return state;
-    }
-
-    public void setState(CommandState state) {
-        this.state = state;
-    }
-
-    public void setItems(List<Item> items) {
-        this.items = items;
-    }
 }
