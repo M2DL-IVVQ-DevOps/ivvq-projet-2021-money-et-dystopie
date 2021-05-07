@@ -20,7 +20,7 @@ public class UserController {
     @Setter
     private UserService userService;
 
-    @CrossOrigin
+    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
     @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
         try{

@@ -30,7 +30,7 @@ public class TokenController {
     @Setter
     private final UserService userService;
 
-    @CrossOrigin
+    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
     @PostMapping(
             value="/create",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -48,7 +48,7 @@ public class TokenController {
         }
     }
 
-    @CrossOrigin
+    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
     @PostMapping(
             value="/check",
             produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -61,8 +61,8 @@ public class TokenController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
-    
-    @CrossOrigin
+
+    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
     @PostMapping(
             value="/remove",
             produces = {MediaType.APPLICATION_JSON_VALUE})
