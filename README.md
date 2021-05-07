@@ -31,7 +31,7 @@ A des fins de qualité, le projet embarque entre autres [**ESLint**](https://esl
 Il est possible de l'appeler au travers du terminal.
 Pour cela, il faut d'abord se positionner à la racine du projet front, puis taper la commande suivante :
 ```console
-eslint --ext .js,.vue src
+npm run eslint
 ```
 
 # Développement back-end

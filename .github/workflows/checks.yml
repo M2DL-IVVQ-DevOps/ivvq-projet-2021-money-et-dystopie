@@ -32,9 +32,9 @@ jobs:
       - name: Fetch Repository
         uses: actions/checkout@v2
       - name: Install modules
-        run: cd moneyetdystopie-front && yarn add eslint eslint-plugin-vue@next --dev
+        run: cd moneyetdystopie-front && npm install
       - name: Generate ESLint report
-        run: cd moneyetdystopie-front && yarn run eslint --ext .js,.vue -f json -o target/report.json src
+        run: cd moneyetdystopie-front && npm run eslint
       - name: Correct paths referenced in report
         run: cd moneyetdystopie-front && sed -i 's+/home/runner/work/ivvq-projet-2021-money-et-dystopie/ivvq-projet-2021-money-et-dystopie+/github/workspace+g' target/report.json
       - name: Check Sonar report for frontend

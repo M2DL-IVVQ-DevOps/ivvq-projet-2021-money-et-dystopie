@@ -1,13 +1,9 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.ups.m2dl.moneyetdystopieback.domain.Token;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -54,12 +50,5 @@ public class UserBean {
     @Getter
     @Setter
     private CustomerBean customerAccount;
-
-
-    /** Les tokens
-     *
-     */
-    @JsonIgnore
-    private List<Token> tokenList;
 
 }
