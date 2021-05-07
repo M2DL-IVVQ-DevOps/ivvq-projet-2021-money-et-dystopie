@@ -127,19 +127,16 @@
         let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
         let elementSelect = this.itemsData.find(elt => elt.id === idElement);
         let amountRetire, index;
-        switch (amountRestante) {
-          case 0 :
-            index = this.user.customer.cart.items.indexOf(elementInPanier);
-            if(index!=-1){
-              elementSelect.amount += elementInPanier.amount;
-              this.user.customer.cart.items.splice(index, 1);
-            }
-            break;
-          default:
-            amountRetire = elementInPanier.amount - amountRestante;
-            elementInPanier.amount = amountRestante;
-            elementSelect.amount += amountRetire;
-            break;
+        if (amountRestante === 0){
+          index = this.user.customer.cart.items.indexOf(elementInPanier);
+          if(index!==-1){
+            elementSelect.amount += elementInPanier.amount;
+            this.user.customer.cart.items.splice(index, 1);
+          }
+        }else{
+          amountRetire = elementInPanier.amount - amountRestante;
+          elementInPanier.amount = amountRestante;
+          elementSelect.amount += amountRetire;
         }
       }
     },
