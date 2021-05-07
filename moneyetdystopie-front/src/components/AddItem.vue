@@ -110,7 +110,11 @@
                         this.endCreation();
                     })
                     .catch(error => {
-                        this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response.data);
+                        if(error!=null && error.response!=null && error.response.data!=null ){
+                            this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response.data);
+                        }else{
+                            this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur.');
+                        }
                     });
             },
             beginCreation(){
