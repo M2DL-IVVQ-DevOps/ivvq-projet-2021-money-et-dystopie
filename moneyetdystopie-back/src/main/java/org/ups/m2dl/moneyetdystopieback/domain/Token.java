@@ -44,7 +44,7 @@ public class Token {
 
     public Token (String value, Date expirationDate){
         this.value = value;
-        this.expirationDate = expirationDate;
+        this.expirationDate = (Date) expirationDate.clone();
     }
 
     public Long getId() {
@@ -64,11 +64,11 @@ public class Token {
     }
 
     public Date getExpirationDate() {
-        return expirationDate;
+        return (Date) expirationDate.clone();
     }
 
     public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+        this.expirationDate = (Date) expirationDate.clone();
     }
 
     public User getUser() {
