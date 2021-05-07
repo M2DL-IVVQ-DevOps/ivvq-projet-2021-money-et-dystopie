@@ -4,6 +4,8 @@ const {
     Then,
 } = require("cypress-cucumber-preprocessor/steps");
 
+const CARD_ACTIONS = ".cardAction";
+
 beforeEach(() => {
     cy.visit('http://localhost:8080/');
     cy.get('[id=connection-button]').click();
@@ -17,17 +19,18 @@ function goToCart() {
 }
 
 Given(/^an empty cart$/, function () {
+    // This is intentional
 });
 
 Given(/^a cart with one item$/, function () {
-    cy.get('.cardAction')
+    cy.get(CARD_ACTIONS)
         .get('select')
         .first().select('1');
     cy.get('.md-button').first().click();
 });
 
 When(/^I add (\d+) items number (\d+) to the cart$/, function (quantity, number) {
-    cy.get('.cardAction')
+    cy.get(CARD_ACTIONS)
         .get('select')
         .eq(number).select(quantity.toString());
     cy.get('.md-button').eq(number).click();
@@ -37,7 +40,7 @@ When(/^I delete the item from the cart$/, function () {
     goToCart();
     cy.get('.items')
         .get('.md-card.card')
-        .get('.cardAction')
+        .get(CARD_ACTIONS)
         .get('select')
         .select('0');
     cy.get('.items')
@@ -56,7 +59,7 @@ Then(/^"([^"]*)" should be displayed$/, function (text) {
 Then(/^there are (\d+) items number (\d+) in the cart$/, function (quantity, number) {
     cy.get('.items')
         .get('.md-card.card')
-        .get('.cardAction')
+        .get(CARD_ACTIONS)
         .eq(number-1)
         .get('select')
         .find(':selected').contains(quantity.toString());

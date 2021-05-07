@@ -3,7 +3,7 @@
         <form @submit="checkForm" action="https://vuejs.org/" method="post" novalidate="true">
 
             <div v-if="errors.length">
-                <b>Please correct the following error(s):</b>
+                <strong>Please correct the following error(s):</strong>
                 <ul>
                     <li v-for="(error, index) in errors" v-bind:key="error+index">{{ error }}</li>
                 </ul>
