@@ -12,7 +12,7 @@
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
                 :changeCart="addInCart"
-                :itemsData="itemsData"
+                :itemsData="catalogue"
                 :navigation="navigation"
         />
       </div>
@@ -28,7 +28,7 @@
       <div v-if="user.seller != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :seller="user.seller"></AddItem>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeErrorMessageServeur="changeErrorMessageServeur" :seller="user.seller"></AddItem>
         <Items
                 :itemsData="user.seller.items"
                 :navigation="navigation"
@@ -39,14 +39,20 @@
     <section v-else>
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
+
+    <md-snackbar md-position="center" :md-duration="Infinity" :md-active.sync="errorMessageServeur" md-persistent>
+      <span>{{errorMessageServeur}}</span>
+      <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
+    </md-snackbar>
   </div>
 </template>
 
 <script>
-  import Items from './components/Items.vue';
+  import Items from './components/items/Items.vue';
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
+  import axios from "axios";
 
   export default {
     name: 'App',
@@ -87,6 +93,7 @@
             pastOrder: null,
           }
         };
+        this.getAllItemsForCatalogue();
       },
 
       creationAccount(){
@@ -110,11 +117,12 @@
             pastOrder: null,
           }
         };
+        this.getAllItemsForCatalogue();
       },
 
       addInCart(idElement, amountSelection) {
         let elementInPanier = this.user.customer.cart.items.find(elt => elt.id == idElement);
-        let elementSelect = this.itemsData.find(elt => elt.id == idElement);
+        let elementSelect = this.catalogue.find(elt => elt.id == idElement);
 
         if(elementInPanier != null){
            elementInPanier.amount += amountSelection;
@@ -123,9 +131,10 @@
         }
         elementSelect.amount -= amountSelection;
       },
+
       changeInCart(idElement, amountRestante) {
         let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
-        let elementSelect = this.itemsData.find(elt => elt.id === idElement);
+        let elementSelect = this.catalogue.find(elt => elt.id === idElement);
         let amountRetire, index;
         if (amountRestante === 0){
           index = this.user.customer.cart.items.indexOf(elementInPanier);
@@ -138,56 +147,30 @@
           elementInPanier.amount = amountRestante;
           elementSelect.amount += amountRetire;
         }
+      },
+
+      closeSnackBar(){
+        this.errorMessageServeur = null;
+      },
+
+      getAllItemsForCatalogue(){
+        axios.get("http://localhost:8080/item/all").then(response => {
+          this.catalogue = [...response.data];
+        }).catch(() => {
+            this.errorMessageServeur = 'Impossible de récupérer le catalogue d\'article du serveur.';
+        });
+      },
+
+      changeErrorMessageServeur(value){
+        this.errorMessageServeur = value;
       }
     },
     data: function () {
       return {
         navigation: 'CATALOG',
         user: null,
-        itemsData : [{
-          id : 1,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/10850904/scratch-r.gif"
-        },{
-          id: 2,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
-        },{
-          id: 3,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
-        },{
-          id: 4,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/10864129/win-r.gif"
-        },{
-          id: 5,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/5700236/artboard_24.png?compress=1&resize=800x600"
-        },{
-          id: 6,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/6672180/sloth.gif"
-        },{
-          id: 7,
-          price : 10,
-          amount : 10,
-          title : "Mon titre",
-          picture : "https://cdn.dribbble.com/users/427368/screenshots/14239844/dribbble.jpg?compress=1&resize=800x600"
-        }
-        ]
+        catalogue: [],
+        errorMessageServeur: null,
       }
     },
   }
@@ -228,5 +211,13 @@
   }
   .size-app{
     min-height: 100%;
+  }
+  .button-action {
+    background: #9a96b2;
+    color: white;
+  }
+  .button-action:hover {
+    background: #ffd246;
+    color: black;
   }
 </style>

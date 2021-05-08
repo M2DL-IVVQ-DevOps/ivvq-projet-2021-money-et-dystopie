@@ -1,14 +1,14 @@
 <template id="app">
     <div v-if="!itemInCreation" class="div-button-action-new-item">
-        <md-button class="button-action-new-item" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
+        <md-button class="button-action" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
     </div>
     <div v-else class="base">
         <div class="div-button-action-new-item">
-            <md-button class="button-action-new-item" v-on:click="endCreation()">Annuler</md-button>
+            <md-button class="button-action" v-on:click="endCreation()">Annuler</md-button>
         </div>
-        <form>
+        <form class=".form">
             <div v-if="errors.length">
-                <strong>Please correct the following error(s):</strong>
+                <strong class=".error">Veuillez corriger les erreurs suivante(s):</strong>
                 <ul>
                     <li v-for="(error, index) in errors" v-bind:key="error+index">{{ error }}</li>
                 </ul>
@@ -62,7 +62,7 @@
                 amount: null,
             };
         },
-        props: ['seller'],
+        props: ['seller', 'changeErrorMessageServeur', 'getAllItemsForCatalogue'],
         methods: {
             checkForm: function () {
                 this.errors = [];
@@ -97,7 +97,7 @@
                     sellerAccount: {"storeName": "Lecrochet1" /*this.seller.storeName*/}
                 };
                 axios.post(
-                    "https://money-et-dystopie.herokuapp.com/item/create", message).then(response => {
+                    "http://localhost:8080/item/create", message).then(response => {
                     this.seller.items = [...this.seller.items,
                             {
                                 id: response.data.id,
@@ -105,15 +105,17 @@
                                 description: response.data.description,
                                 picture: response.data.picture,
                                 price: response.data.price,
-                                title: response.data.title
+                                title: response.data.title,
+                                sellerAccount:{storeName: response.data.sellerAccount.storeName}
                             }];
+                        this.getAllItemsForCatalogue();
                         this.endCreation();
                     })
                     .catch(error => {
-                        if(error!=null && error.response!=null && error.response.data!=null ){
-                            this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response.data);
+                        if(error!=null && error.response!=null){
+                            this.changeErrorMessageServeur('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
                         }else{
-                            this.errors.push('Impossible d\'enregistrer l\'article du côté du serveur.');
+                            this.changeErrorMessageServeur('Impossible d\'enregistrer l\'article du côté du serveur.');
                         }
                     });
             },
@@ -131,14 +133,6 @@
     .div-button-action-new-item{
         text-align: right;
         margin: 0 10% 0 0;
-    }
-    .button-action-new-item {
-        background: #9a96b2;
-        color: white;
-    }
-    .button-action-new-item:hover {
-        background: #ffd246;
-        color: black;
     }
     h2{
         color: black;
