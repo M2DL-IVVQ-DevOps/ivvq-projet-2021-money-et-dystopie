@@ -18,7 +18,7 @@
                     <option :value="index-1" v-for="index in itemData.amount+1" :key="index" >{{index-1}}</option>
                 </select>
             </md-field>
-            <md-button clas="cardAction" v-on:submit="modificationForCart()" class="md-button">MODIFIER</md-button>
+            <md-button clas="cardAction" v-on:click="modificationForCart()" class="md-button">MODIFIER</md-button>
         </md-card-actions>
     </md-card>
 </template>

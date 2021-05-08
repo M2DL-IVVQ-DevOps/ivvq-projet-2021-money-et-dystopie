@@ -17,7 +17,7 @@
                     <option :value="index-1" v-for="index in itemData.amount+1" :key="index" >{{index-1}}</option>
                 </select> <span class="max-amount"> / {{itemData.amount}}</span>
             </md-field>
-            <md-button v-on:click="selectForCart()" class="md-button">AJOUTER</md-button>
+            <md-button clas="cardAction" v-on:click="selectForCart()" class="md-button">AJOUTER</md-button>
         </md-card-actions>
     </md-card>
 </template>

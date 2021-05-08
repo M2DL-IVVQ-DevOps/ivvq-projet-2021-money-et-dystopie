@@ -1,14 +1,14 @@
 <template id="app">
     <div v-if="!itemInCreation" class="div-button-action-new-item">
-        <md-button class="button-action" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
+        <md-button class="button-action-open" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
     </div>
     <div v-else class="base">
         <div class="div-button-action-new-item">
-            <md-button class="button-action" v-on:click="endCreation()">Annuler</md-button>
+            <md-button class="button-action-close" v-on:click="endCreation()">Annuler</md-button>
         </div>
-        <form class=".form">
+        <form class="form">
             <div v-if="errors.length">
-                <strong class=".error">Veuillez corriger les erreurs suivante(s):</strong>
+                <strong class="errors">Veuillez corriger les erreurs suivante(s):</strong>
                 <ul>
                     <li v-for="(error, index) in errors" v-bind:key="error+index">{{ error }}</li>
                 </ul>
@@ -16,31 +16,31 @@
 
             <md-field>
                 <label>Titre</label>
-                <md-input v-model="title" type="text" name="title"/>
+                <md-input v-model="title" type="text" name="title" class="title"/>
             </md-field>
 
             <md-field>
                 <label>Description</label>
-                <md-input v-model="description" type="text" name="description"></md-input>
+                <md-input v-model="description" type="text" name="description" class="description"></md-input>
             </md-field>
 
             <md-field>
                 <label>Image (URL)</label>
-                <md-input v-model="picture" type="text" name="picture"></md-input>
+                <md-input v-model="picture" type="text" name="picture" class="picture"></md-input>
             </md-field>
 
             <md-field>
                 <label>Prix</label>
-                <md-input v-model="price" type=number step=0.01 name="price"></md-input>
+                <md-input v-model="price" type=number step=0.01 name="price" class="price"></md-input>
             </md-field>
 
             <md-field>
                 <label>Quantité</label>
-                <md-input v-model="amount" type=number step=1 name="amount"></md-input>
+                <md-input v-model="amount" type=number step=1 name="amount" class="amount"></md-input>
             </md-field>
 
             <div>
-                <md-button v-on:click="addItem()">Ajouter</md-button>
+                <md-button class="button-add-item" v-on:click="addItem()">Ajouter</md-button>
             </div>
         </form>
     </div>
@@ -62,7 +62,7 @@
                 amount: null,
             };
         },
-        props: ['seller', 'changeErrorMessageServeur', 'getAllItemsForCatalogue'],
+        props: ['seller', 'changeServeurErrorMessage', 'getAllItemsForCatalogue'],
         methods: {
             checkForm: function () {
                 this.errors = [];
@@ -113,9 +113,9 @@
                     })
                     .catch(error => {
                         if(error!=null && error.response!=null){
-                            this.changeErrorMessageServeur('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
+                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
                         }else{
-                            this.changeErrorMessageServeur('Impossible d\'enregistrer l\'article du côté du serveur.');
+                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur.');
                         }
                     });
             },

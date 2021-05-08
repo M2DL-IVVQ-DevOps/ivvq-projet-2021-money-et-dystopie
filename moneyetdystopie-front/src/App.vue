@@ -28,7 +28,7 @@
       <div v-if="user.seller != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeErrorMessageServeur="changeErrorMessageServeur" :seller="user.seller"></AddItem>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.seller"></AddItem>
         <Items
                 :itemsData="user.seller.items"
                 :navigation="navigation"
@@ -40,8 +40,8 @@
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
 
-    <md-snackbar md-position="center" :md-duration="Infinity" :md-active.sync="errorMessageServeur" md-persistent>
-      <span>{{errorMessageServeur}}</span>
+    <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="serveurErrorMessage" md-persistent>
+      <span>{{serveurErrorMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
   </div>
@@ -150,19 +150,23 @@
       },
 
       closeSnackBar(){
-        this.errorMessageServeur = null;
+        this.serveurErrorMessage = null;
       },
 
       getAllItemsForCatalogue(){
         axios.get("http://localhost:8080/item/all").then(response => {
           this.catalogue = [...response.data];
         }).catch(() => {
-            this.errorMessageServeur = 'Impossible de récupérer le catalogue d\'article du serveur.';
+            this.serveurErrorMessage = 'Impossible de récupérer le formNewItem d\'article du serveur.';
         });
       },
 
-      changeErrorMessageServeur(value){
-        this.errorMessageServeur = value;
+      changeServeurErrorMessage(value){
+        this.serveurErrorMessage = value;
+      },
+
+      isServeurErrorMessage(){
+        return this.serveurErrorMessage && this.serveurErrorMessage.length > 0;
       }
     },
     data: function () {
@@ -170,7 +174,7 @@
         navigation: 'CATALOG',
         user: null,
         catalogue: [],
-        errorMessageServeur: null,
+        serveurErrorMessage: null,
       }
     },
   }
@@ -181,6 +185,9 @@
   #app{
     text-align: center;
     padding: 50px 0;
+  }
+  body {
+    background-color: #24212b;
   }
   .catalog-background{
     background-color: #24212b;
