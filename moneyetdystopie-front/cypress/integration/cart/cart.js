@@ -7,8 +7,10 @@ const {
 const CARD_ACTIONS = ".cardAction";
 
 beforeEach(() => {
+    mockCatalogue();
     cy.visit('http://localhost:8080/');
     cy.get('[id=connection-button]').click();
+    cy.wait('@mockCatalogue');
 });
 
 function goToCart() {
@@ -16,6 +18,42 @@ function goToCart() {
         .get('.scene_nav_list')
         .get('.scene_nav_item')
         .get('img').eq(2).click();
+}
+
+function mockCatalogue() {
+    cy.intercept('GET','http://localhost:8080/item/all', [
+        {
+            "id": 1,
+            "title": "Titre1",
+            "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
+            "description": "Ma description",
+            "amount": 10,
+            "price": 5.0,
+            "sellerAccount": {
+                "storeName": "Master DL seller"
+            }
+        },{
+            "id": 2,
+            "title": "Titre2",
+            "picture": "https://img.over-blog-kiwi.com/0/92/63/65/20150215/ob_6820b6_le-chateau-ambulant-02.jpg",
+            "description": "Une jolie description",
+            "amount": 8,
+            "price": 1.52,
+            "sellerAccount": {
+                "storeName": "master DSL"
+            }
+        },{
+            "id": 3,
+            "title": "Bitcoin",
+            "picture": "https://cdn.dribbble.com/users/791530/screenshots/15336558/media/02b09bcee2c72083607b40f5e9beadc7.png?compress=1&resize=1000x750",
+            "description": "...",
+            "amount": 12,
+            "price": 1004.4,
+            "sellerAccount": {
+                "storeName": "WHo?"
+            }
+        }
+    ]).as('mockCatalogue');
 }
 
 Given(/^an empty cart$/, function () {
