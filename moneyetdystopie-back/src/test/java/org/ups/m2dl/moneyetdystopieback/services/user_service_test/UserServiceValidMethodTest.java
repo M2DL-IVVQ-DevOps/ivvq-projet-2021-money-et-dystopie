@@ -26,74 +26,146 @@ class UserServiceValidMethodTest {
     private User userTest;
 
     @ParameterizedTest
-    @ValueSource(strings = {"","qdsq.fre","0123456789012345678901234567890123@45678901234567890123456789.01234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "",
+            "qdsq.fre",
+            "0123456789012345678901234567890123@45678901234567890123456789.01234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenValidUserWithBadEmail_thenThrowBusinessException(String email)  {
-
+    void whenValidUserWithBadEmail_thenThrowBusinessException(String email) {
         // GIVEN
-        userTest = new User("lastName", "firstName", email, "password", null, null, null);
+        userTest =
+            new User(
+                "lastName",
+                "firstName",
+                email,
+                "password",
+                null,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            userService.valid(userTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                userService.valid(userTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","0123456789012345678901234567890"})
+    @ValueSource(strings = { "", "0123456789012345678901234567890" })
     @NullSource
-    void whenCreateUserWithBadLastName_thenThrowBusinessException(String lastName)  {
-
+    void whenCreateUserWithBadLastName_thenThrowBusinessException(
+        String lastName
+    ) {
         // GIVEN
-        userTest = new User(lastName, "firstName", "email", "password", null, null, null);
+        userTest =
+            new User(
+                lastName,
+                "firstName",
+                "email",
+                "password",
+                null,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
-            userService.valid(userTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // THEN
+                userService.valid(userTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","0123456789012345678901234567890"})
+    @ValueSource(strings = { "", "0123456789012345678901234567890" })
     @NullSource
-    void whenCreateUserWithBadFirstName_thenThrowBusinessException(String firstName)  {
-
+    void whenCreateUserWithBadFirstName_thenThrowBusinessException(
+        String firstName
+    ) {
         // GIVEN
-        userTest = new User("lastName", firstName, "email", "password", null, null, null);
+        userTest =
+            new User(
+                "lastName",
+                firstName,
+                "email",
+                "password",
+                null,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // THEN
-            userService.valid(userTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // THEN
+                userService.valid(userTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"","0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "",
+            "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenCreateUserWithBadPassword_thenThrowBusinessException(String password)  {
-
+    void whenCreateUserWithBadPassword_thenThrowBusinessException(
+        String password
+    ) {
         // GIVEN
-        userTest = new User("lastName", "firstName", "email", password, null, null, null);
+        userTest =
+            new User(
+                "lastName",
+                "firstName",
+                "email",
+                password,
+                null,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            userService.valid(userTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                userService.valid(userTest);
+            }
+        );
     }
 
     @Test
     void whenCreateUser_thenNoThrowBusinessException() {
         // GIVEN
-        userTest = new User("lastName35", "firstName35", "email35@email.email", passwordEncoder.encode("passwordpassword35"), null, null, null);
+        userTest =
+            new User(
+                "lastName35",
+                "firstName35",
+                "email35@email.email",
+                passwordEncoder.encode("passwordpassword35"),
+                null,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertDoesNotThrow( () -> {
-            // WHEN
-            userService.valid(userTest);
-        });
+        Assertions.assertDoesNotThrow(
+            () -> {
+                // WHEN
+                userService.valid(userTest);
+            }
+        );
     }
 }

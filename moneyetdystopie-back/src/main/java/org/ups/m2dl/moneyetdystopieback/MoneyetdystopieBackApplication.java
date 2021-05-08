@@ -9,5 +9,4 @@ public class MoneyetdystopieBackApplication {
     public static void main(String[] args) {
         SpringApplication.run(MoneyetdystopieBackApplication.class, args);
     }
-
 }

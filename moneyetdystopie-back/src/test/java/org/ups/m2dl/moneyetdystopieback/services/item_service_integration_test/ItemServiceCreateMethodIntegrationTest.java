@@ -31,13 +31,32 @@ class ItemServiceCreateMethodIntegrationTest {
 
     @Test
     void whenCreateItemWithSameDatas_thenItemCreate() throws BusinessException {
-
         // GIVEN
-        sellerTest =  new Seller("storeName49",null,null,null);
+        sellerTest = new Seller("storeName49", null, null, null);
         sellerService.save(sellerTest);
 
-        itemTestTwinA = new Item(null,"title49", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description49", 10, 5.f, null, sellerTest);
-        itemTestTwinB = new Item(null, "title49", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description49", 10, 5.f, null, sellerTest);
+        itemTestTwinA =
+            new Item(
+                null,
+                "title49",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description49",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+        itemTestTwinB =
+            new Item(
+                null,
+                "title49",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description49",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         itemsNumber = itemService.findAll().size();
 
@@ -46,18 +65,35 @@ class ItemServiceCreateMethodIntegrationTest {
         itemService.create(itemTestTwinB);
 
         // THEN
-        Assertions.assertEquals( itemsNumber + 2, itemService.findAll().size(), "Twin items are registered.");
+        Assertions.assertEquals(
+            itemsNumber + 2,
+            itemService.findAll().size(),
+            "Twin items are registered."
+        );
     }
 
     @Test
     void whenCreateItemWithoutSeller_thenThrowBusinessException() {
         // GIVEN
-        itemTest = new Item(null, "title50", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description50", 10, 5.f, null, null);
+        itemTest =
+            new Item(
+                null,
+                "title50",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description50",
+                10,
+                5.f,
+                null,
+                null
+            );
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            itemService.create(itemTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                itemService.create(itemTest);
+            }
+        );
     }
 }

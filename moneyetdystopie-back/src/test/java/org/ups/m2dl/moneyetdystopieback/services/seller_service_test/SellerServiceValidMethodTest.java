@@ -22,30 +22,35 @@ class SellerServiceValidMethodTest {
     private Seller sellerTest;
 
     @ParameterizedTest
-    @ValueSource(strings = {"","0123456789012345678901234567890"})
+    @ValueSource(strings = { "", "0123456789012345678901234567890" })
     @NullSource
-    void whenValidSellerWithBadStoreName_thenThrowBusinessException(String storeName)  {
-
+    void whenValidSellerWithBadStoreName_thenThrowBusinessException(
+        String storeName
+    ) {
         // GIVEN
-        sellerTest = new Seller(storeName,null,null,null);
+        sellerTest = new Seller(storeName, null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            sellerService.valid(sellerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                sellerService.valid(sellerTest);
+            }
+        );
     }
 
     @Test
     void whenValidSeller_thenNoThrowBusinessException() {
         // GIVEN
-        sellerTest = new Seller("storeName23",null,null,null);
+        sellerTest = new Seller("storeName23", null, null, null);
 
         // THEN
-        Assertions.assertDoesNotThrow( () -> {
-            // WHEN
-            sellerService.valid(sellerTest);
-        });
+        Assertions.assertDoesNotThrow(
+            () -> {
+                // WHEN
+                sellerService.valid(sellerTest);
+            }
+        );
     }
-
 }

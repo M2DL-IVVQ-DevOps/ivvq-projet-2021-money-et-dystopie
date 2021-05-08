@@ -1,65 +1,41 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.ups.m2dl.moneyetdystopieback.domain.Token;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserBean {
 
-    /**
-     * Nom de famille de l'utilisateur.
-     */
+    /** Nom de famille de l'utilisateur. */
     @Getter
     @Setter
     private String lastName;
 
-    /**
-     * Prénom de l'utilisateur.
-     */
+    /** Prénom de l'utilisateur. */
     @Getter
     @Setter
     private String firstName;
 
-    /**
-     * Pseudo, unique, de l'utilisateur.
-     */
+    /** Pseudo, unique, de l'utilisateur. */
     @Getter
     @Setter
     private String email;
 
-    /**
-     * Mot de passe, chiffré
-     */
+    /** Mot de passe, chiffré */
     @Getter
     @Setter
     private String password;
 
-    /**
-     * Compte commercant associé.
-     */
+    /** Compte commercant associé. */
     @Getter
     @Setter
     private SellerBean sellerAccount;
 
-    /**
-     * Compte acheteur associé.
-     */
+    /** Compte acheteur associé. */
     @Getter
     @Setter
     private CustomerBean customerAccount;
-
-
-    /** Les tokens
-     *
-     */
-    @JsonIgnore
-    private List<Token> tokenList;
-
 }

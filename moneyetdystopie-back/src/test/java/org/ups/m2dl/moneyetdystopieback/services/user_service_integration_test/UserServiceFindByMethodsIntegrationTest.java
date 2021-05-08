@@ -18,20 +18,29 @@ class UserServiceFindByMethodsIntegrationTest {
 
     private User userTest;
 
-    private String password = "$2a$10$le2GJFsFwf.E1.EdNzGd/edrKUHWYFxsXRJJGZOrJgWMS/WAtthD2";
+    private String password =
+        "$2a$10$le2GJFsFwf.E1.EdNzGd/edrKUHWYFxsXRJJGZOrJgWMS/WAtthD2";
 
     @Test
     void whenCreateSaveUser_thenCanFind() throws BusinessException {
-
         // GIVEN
-        userTest = new User("lastName58", "firstName58", "email58@gmail", password, null, null, null);
+        userTest =
+            new User(
+                "lastName58",
+                "firstName58",
+                "email58@gmail",
+                password,
+                null,
+                null,
+                null
+            );
 
         // WHEN
         userService.save(userTest);
         User resultFindBy = userService.findByEmail(userTest.getEmail());
 
         // THEN
-        Assertions.assertNotNull( resultFindBy, "The saved user was not found.");
+        Assertions.assertNotNull(resultFindBy, "The saved user was not found.");
     }
 
     @Test
@@ -39,6 +48,9 @@ class UserServiceFindByMethodsIntegrationTest {
         // GIVEN WHEN
         User resultFindBy = userService.findByEmail("email30@email.com");
 
-        Assertions.assertNull( resultFindBy, "A user was returned despite his non-existence.");
+        Assertions.assertNull(
+            resultFindBy,
+            "A user was returned despite his non-existence."
+        );
     }
 }

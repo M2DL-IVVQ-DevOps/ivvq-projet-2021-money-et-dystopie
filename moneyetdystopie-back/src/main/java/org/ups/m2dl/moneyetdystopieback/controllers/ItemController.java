@@ -21,15 +21,29 @@ public class ItemController {
     @Setter
     private ItemService itemService;
 
-    @CrossOrigin(origins = {"https://money-et-dystopie.herokuapp.com/", "http://localhost:8081"})
-    @PostMapping(value="/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    @CrossOrigin(
+        origins = {
+            "https://money-et-dystopie.herokuapp.com/", "http://localhost:8081",
+        }
+    )
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody ItemBean item) {
-        try{
-            return ResponseEntity.status(HttpStatus.OK).body(itemService.getBean(itemService.create(itemService.getDto(item))));
-        }catch (BusinessException e){
+        try {
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                    itemService.getBean(
+                        itemService.create(itemService.getDto(item))
+                    )
+                );
+        } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e){
-            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
+        } catch (Exception e) {
+            return ResponseEntity
+                .badRequest()
+                .body(
+                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                );
         }
     }
 

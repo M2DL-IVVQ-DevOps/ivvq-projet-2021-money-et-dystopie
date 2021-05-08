@@ -21,31 +21,52 @@ class CustomerServiceCreateMethodIntegrationTest {
     private Customer customerTest;
 
     @Test
-    void whenCreateCustomerWithSamePseudo_thenThrowBusinessException() throws BusinessException {
-
+    void whenCreateCustomerWithSamePseudo_thenThrowBusinessException()
+        throws BusinessException {
         // GIVEN
-        customerTestTwinA = new Customer("customerTestTwin", "numberCityCountry9", null, null, null);
-        customerTestTwinB = new Customer("customerTestTwin", "numberCityCountry10", null, null, null);
+        customerTestTwinA =
+            new Customer(
+                "customerTestTwin",
+                "numberCityCountry9",
+                null,
+                null,
+                null
+            );
+        customerTestTwinB =
+            new Customer(
+                "customerTestTwin",
+                "numberCityCountry10",
+                null,
+                null,
+                null
+            );
 
         // WHEN
         customerService.create(customerTestTwinA);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.create(customerTestTwinB);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.create(customerTestTwinB);
+            }
+        );
     }
 
     @Test
     void whenCreateCustomerWithoutPseudo_thenThrowBusinessException() {
         // GIVEN
-        customerTest = new Customer(null, "numberCityCountry11", null, null, null);
+        customerTest =
+            new Customer(null, "numberCityCountry11", null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.create(customerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.create(customerTest);
+            }
+        );
     }
 }

@@ -24,6 +24,42 @@ Le projet consiste en un site marchant sur lequel il est possible d'acheter de l
 [Nicolas ANDRÉ](https://github.com/iomega11)
 [Romain GOYHENEIX](https://github.com/vandorz)
 
+# Développement front-end
+La partie front-end est développée à l'aide de l'IDE **WebStorm** de JetBrains.
+
+A des fins de qualité, le projet embarque entre autres [**ESLint**](https://eslint.org/). Il permet d'analyser le code et d'identifier les problèmes associés.
+Il est possible de l'appeler au travers du terminal.
+Pour cela, il faut d'abord se positionner à la racine du projet front, puis taper la commande suivante :
+```console
+npm run eslint
+```
+
+# Développement back-end
+La partie back-end est développée à l'aide de l'IDE **IntelliJ** de JetBrains.
+
+Le projet est accompagné du plugin [**Spotless**](https://github.com/diffplug/spotless), permettant d'appliquer de nombreuses règles de formatage au code.
+Pour l'exécuter, il faut d'abord se positionner à la racine du projet back, puis taper la commande suivante :
+```console
+mvn spotless:apply
+```
+
+Le plugin [**Spotbugs**](https://spotbugs.github.io/) est également présent.
+Celui-ci permet d'analyser statiquement le code en vue d'identifier les potentiels bugs ou risques de sécurité.
+Pour le lancer, il faut d'abord se positionner à la racine du projet back, puis la commande :
+```console
+mvn clean install spotbugs:check
+```
+Spotbugs affichera sur le terminal le résultat de l'analyse.
+**A noter que le build maven échoue si une erreur est détectée. Cela ne veut pas dire que l'analyse a échoué.**
+
+Il est également possible de visualiser la couverture par les tests du code du back-end à l'aide de [**JaCoCo**](https://www.eclemma.org/jacoco/).
+JaCoCo est couplé à Sonar. La couverture de code sera donc visible sur l'interface Sonar.
+Pour visualiser la couverture de code, il faut d'abord se positionner à la racine du projet back, puis taper la commande suivante :
+```console
+mvn clean install sonar:sonar
+```
+Le résultat est publié sur le serveur hébergeant Sonar. Il est visible à travers son interface.
+
 # Lancement du projet
 
 Le projet est conteneurisé avec Docker, et peut-être lancé à l'aide de Docker-compose.

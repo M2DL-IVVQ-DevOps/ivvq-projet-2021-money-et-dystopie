@@ -1,31 +1,27 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
-import org.ups.m2dl.moneyetdystopieback.domain.User;
+
 import java.util.Date;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 
 public class TokenBean {
-    /**
-     * Id du token unique et autogénéré.
-     */
+
+    /** Id du token unique et autogénéré. */
     private Long id;
 
     /**
-     * Valeur du token qui sera sauvegardée en cookie et récupérée pour être comparée et servir d'identification.
+     * Valeur du token qui sera sauvegardée en cookie et récupérée pour être comparée et servir
+     * d'identification.
      */
     private String value;
 
-    /**
-     * Date après laquelle le token n'est plus valable.
-     */
+    /** Date après laquelle le token n'est plus valable. */
     private Date expirationDate;
 
-
-    /**
-     * Utilisateur lié au token.
-     */
+    /** Utilisateur lié au token. */
     private User user;
 
-    public TokenBean(){
-        //Constructeur vide
+    public TokenBean() {
+        // Constructeur vide
     }
 
     public Long getId() {
@@ -45,11 +41,11 @@ public class TokenBean {
     }
 
     public Date getExpirationDate() {
-        return expirationDate;
+        return (Date) expirationDate.clone();
     }
 
     public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
+        this.expirationDate = (Date) expirationDate.clone();
     }
 
     public User getUtilisateur() {
@@ -59,6 +55,4 @@ public class TokenBean {
     public void setUtilisateur(User user) {
         this.user = user;
     }
-
-
 }

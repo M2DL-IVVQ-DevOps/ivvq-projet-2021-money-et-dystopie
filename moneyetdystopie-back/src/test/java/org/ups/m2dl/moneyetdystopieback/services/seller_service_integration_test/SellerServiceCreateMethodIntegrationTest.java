@@ -21,31 +21,37 @@ class SellerServiceCreateMethodIntegrationTest {
     private Seller sellerTest;
 
     @Test
-    void whenCreateSellerWithSameStoreName_thenThrowBusinessException() throws BusinessException {
-
+    void whenCreateSellerWithSameStoreName_thenThrowBusinessException()
+        throws BusinessException {
         // GIVEN
-        sellerTestTwinA = new Seller("storeName19",null,null,null);
-        sellerTestTwinB = new Seller("storeName19",null,null,null);
+        sellerTestTwinA = new Seller("storeName19", null, null, null);
+        sellerTestTwinB = new Seller("storeName19", null, null, null);
 
         // WHEN
         sellerService.create(sellerTestTwinA);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            sellerService.create(sellerTestTwinB);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                sellerService.create(sellerTestTwinB);
+            }
+        );
     }
 
     @Test
     void whenCreateSellerWithoutStoreName_thenThrowBusinessException() {
         // GIVEN
-        sellerTest = new Seller(null,null,null,null);
+        sellerTest = new Seller(null, null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            sellerService.create(sellerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                sellerService.create(sellerTest);
+            }
+        );
     }
 }

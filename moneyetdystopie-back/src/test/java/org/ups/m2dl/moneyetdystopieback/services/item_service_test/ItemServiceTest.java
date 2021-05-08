@@ -1,5 +1,8 @@
 package org.ups.m2dl.moneyetdystopieback.services.item_service_test;
 
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +15,6 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
-
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -39,12 +39,24 @@ class ItemServiceTest {
     }
 
     @Test
-    void whenUseSaveMethod_thenRepositoryItemInvoked() throws BusinessException {
+    void whenUseSaveMethod_thenRepositoryItemInvoked()
+        throws BusinessException {
         // GIVEN
-        sellerTest =  new Seller("storeName51",null,null,null);
+        sellerTest = new Seller("storeName51", null, null, null);
         sellerService.save(sellerTest);
-        itemTest = new Item(null, "title51", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description51", 10, 5.f, null, sellerTest);
-        when(itemService.getItemRepository().save(itemTest)).thenReturn(itemTest);
+        itemTest =
+            new Item(
+                null,
+                "title51",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description51",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+        when(itemService.getItemRepository().save(itemTest))
+            .thenReturn(itemTest);
         // WHEN: save méthode est invoqué
         itemService.save(itemTest);
         // THEN: CustomerRepository est invoqué
@@ -60,5 +72,4 @@ class ItemServiceTest {
         // THEN: CustomerRepository est invoqué
         verify(itemService.getItemRepository()).findAll();
     }
-
 }
