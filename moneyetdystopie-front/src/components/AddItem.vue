@@ -94,10 +94,10 @@
                     amount: this.amount,
                     price: this.price,
                     description: this.description,
-                    sellerAccount: {"storeName": "Lecrochet1" /*this.seller.storeName*/}
+                    sellerAccount: {"storeName": this.seller.storeName}
                 };
                 axios.post(
-                    "http://localhost:8080/item/create", message).then(response => {
+                    "https://money-et-dystopie.herokuapp.com/item/create", message).then(response => {
                     this.seller.items = [...this.seller.items,
                             {
                                 id: response.data.id,

@@ -154,7 +154,7 @@
       },
 
       getAllItemsForCatalogue(){
-        axios.get("http://localhost:8080/item/all").then(response => {
+        axios.get("https://money-et-dystopie.herokuapp.com/item/all").then(response => {
           this.catalogue = [...response.data];
         }).catch(() => {
             this.serveurErrorMessage = 'Impossible de récupérer le formNewItem d\'article du serveur.';
