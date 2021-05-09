@@ -16,7 +16,7 @@
 
             <md-field>
                 <label>Prénom</label>
-                <md-input id="firstname" v-model="firstname" type="text" name="firstname"/>
+                <md-input id="firstName" v-model="firstName" type="text" name="firstName"/>
             </md-field>
 
             <md-field>
@@ -44,7 +44,7 @@
             </md-field>
             <md-field v-if="customer">
                 <label>Adresse postale</label>
-                <md-input v-model="adress" type="text"></md-input>
+                <md-input v-model="address" type="text"></md-input>
             </md-field>
             <div v-if="customer || seller">
                 <md-button v-on:click="creationAccount()">Créer un compte</md-button>
@@ -60,12 +60,12 @@
             return {
                 errors: [],
                 lastName: null,
-                firstname: null,
+                firstName: null,
                 password: null,
                 email: null,
                 storeName: null,
                 pseudo: null,
-                adress: null,
+                address: null,
                 seller: false,
                 customer: false
             };
@@ -73,7 +73,24 @@
         props: ['creation'],
         methods: {
             creationAccount(){
-                this.creation();
+                let userCreation = {
+                    lastName: this.lastName,
+                    firstName: this.firstName,
+                    email: this.email,
+                    password: this.password
+                };
+                if (this.seller){
+                    userCreation.customerAccount = {
+                        pseudo: this.pseudo,
+                        address: this.address
+                    }
+                }
+                if (this.customer){
+                    userCreation.sellerAccount = {
+                        storeName: this.storeName
+                    }
+                }
+                this.creation(userCreation);
             },
             checkForm: function (e) {
                 this.errors = [];
@@ -81,7 +98,7 @@
                 if (!this.lastName) {
                     this.errors.push("Nom requis.");
                 }
-                if (!this.firstname) {
+                if (!this.firstName) {
                     this.errors.push("Prenom requis.");
                 }
                 if (!this.password) {
@@ -98,7 +115,7 @@
                 if (this.customer && !this.pseudo) {
                     this.errors.push("Pseudo requis.");
                 }
-                if (this.customer && !this.adress) {
+                if (this.customer && !this.address) {
                     this.errors.push("Adresse requise.");
                 }
 

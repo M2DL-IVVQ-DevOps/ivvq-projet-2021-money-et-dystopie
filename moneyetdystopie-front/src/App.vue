@@ -48,6 +48,8 @@
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
 
+  const axios = require('axios');
+
   export default {
     name: 'App',
     components: {
@@ -66,50 +68,20 @@
         this.navigation = nav;
       },
 
-      connexionAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastOrder: null,
-          }
-        };
+      connexionAccount : async function(userConnexion){
+        this.user = await axios.post('http://localhost:8080/'+'token/create/', userConnexion).then(response => {
+          return (response.status === 200) ? response.data : undefined;
+        }).catch(() => {
+          return undefined;
+        });
       },
 
-      creationAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastOrder: null,
-          }
-        };
+      creationAccount : async function(userCreation){
+        this.user = await axios.post('http://localhost:8080/'+'user/create/', userCreation).then(response => {
+          return (response.status === 200) ? response.data : undefined;
+        }).catch(() => {
+          return undefined;
+        });
       },
 
       addInCart(idElement, amountSelection) {
