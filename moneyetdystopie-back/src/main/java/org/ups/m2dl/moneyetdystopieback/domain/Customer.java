@@ -26,7 +26,7 @@ public class Customer {
     @Setter
     @Id
     @NotNull(message = "Le pseudo doit être renseigné.")
-    @Size( min = 5, max = 50, message = "Le pseudo doit faire entre 5 et 50 caractère.")
+    @Size( min = 5, max = 50, message = "Le pseudo doit faire entre 5 et 50 caractères.")
     private String pseudo;
 
     /**
@@ -34,8 +34,8 @@ public class Customer {
      */
     @Getter
     @Setter
-    @Size( min = 10, max = 150, message = "L'adresse doit faire entre 10 et 150 caractère.")
-    @NotNull(message = "L'adresse doit être renseigné.")
+    @Size( min = 10, max = 150, message = "L'adresse doit faire entre 10 et 150 caractères.")
+    @NotNull(message = "L'adresse doit être renseignée.")
     private String address;
 
     /**
