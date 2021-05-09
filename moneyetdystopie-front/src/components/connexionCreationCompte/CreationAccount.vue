@@ -72,7 +72,7 @@
         },
         props: ['creation'],
         methods: {
-            creationAccount(){
+            async creationAccount(){
                 let userCreation = {
                     lastName: this.lastName,
                     firstName: this.firstName,
@@ -90,7 +90,9 @@
                         storeName: this.storeName
                     }
                 }
-                this.creation(userCreation);
+                if (await this.creation(userCreation)){
+                    this.purgeFields();
+                }
             },
             checkForm: function (e) {
                 this.errors = [];
@@ -128,6 +130,17 @@
             validEmail: function (email) {
                 var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
+            },
+            purgeFields: function () {
+                this.lastName = null;
+                this.firstName = null;
+                this.password = null;
+                this.email = null;
+                this.storeName = null;
+                this.pseudo = null;
+                this.address = null;
+                this.seller = false;
+                this.customer = false;
             }
         }
     }

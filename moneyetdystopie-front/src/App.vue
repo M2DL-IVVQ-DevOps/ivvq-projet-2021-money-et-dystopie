@@ -7,7 +7,7 @@
     <h1>Achète de l'argent avec ton argent !</h1>
 
     <section v-if="user">
-      <div v-if="user.customer != null && navigation === 'CATALOG'">
+      <div v-if="user.customerAccount != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
@@ -16,21 +16,21 @@
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.customer != null &&  navigation === 'CART'">
+      <div v-if="user.customerAccount != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
         <Items
                 :changeCart="changeInCart"
-                :itemsData="user.customer.cart.items"
+                :itemsData="user.customerAccount.cart.items"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.seller != null && navigation === 'SHOP'">
+      <div v-if="user.sellerAccount != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :seller="user.seller"></AddItem>
+        <AddItem :seller="user.sellerAccount"></AddItem>
         <Items
-                :itemsData="user.seller.items"
+                :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
         />
       </div>
@@ -68,42 +68,47 @@
         this.navigation = nav;
       },
 
-      connexionAccount : async function(userConnexion){
-        this.user = await axios.post('http://localhost:8080/'+'token/create/', userConnexion).then(response => {
-          return (response.status === 200) ? response.data : undefined;
+      connexionAccount : function(userConnexion){
+        axios.post('http://localhost:8080/'+'token/create/', userConnexion).then(response => {
+          this.user = response.data;
+          if (this.user.customerAccount !== null && this.user.customerAccount.cart === null){
+            this.user.customerAccount.cart = {
+              items: []
+            };
+          }
         }).catch(() => {
           return undefined;
         });
       },
 
       creationAccount : async function(userCreation){
-        this.user = await axios.post('http://localhost:8080/'+'user/create/', userCreation).then(response => {
-          return (response.status === 200) ? response.data : undefined;
+        await axios.post('http://localhost:8080/'+'user/create/', userCreation).then(() => {
+          return true;
         }).catch(() => {
-          return undefined;
+          return false;
         });
       },
 
       addInCart(idElement, amountSelection) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id == idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id == idElement);
         let elementSelect = this.itemsData.find(elt => elt.id == idElement);
 
         if(elementInPanier != null){
            elementInPanier.amount += amountSelection;
         }else if(amountSelection>0){
-          this.user.customer.cart.items = [...this.user.customer.cart.items, {...elementSelect, amount: amountSelection}];
+          this.user.customerAccount.cart.items = [...this.user.customerAccount.cart.items, {...elementSelect, amount: amountSelection}];
         }
         elementSelect.amount -= amountSelection;
       },
       changeInCart(idElement, amountRestante) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
         let elementSelect = this.itemsData.find(elt => elt.id === idElement);
         let amountRetire, index;
         if (amountRestante === 0){
-          index = this.user.customer.cart.items.indexOf(elementInPanier);
+          index = this.user.customerAccount.cart.items.indexOf(elementInPanier);
           if(index!==-1){
             elementSelect.amount += elementInPanier.amount;
-            this.user.customer.cart.items.splice(index, 1);
+            this.user.customerAccount.cart.items.splice(index, 1);
           }
         }else{
           amountRetire = elementInPanier.amount - amountRestante;
