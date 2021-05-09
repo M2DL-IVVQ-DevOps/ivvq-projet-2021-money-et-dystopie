@@ -98,7 +98,8 @@ public class TokenService {
         Token newToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
         if ((isTokenValid(ancientToken) && isTokenUserAssociationValid(ancientToken, user)) || userService.checkUserPassword(user)){
-            newToken = createNewTokenForUser(user);
+            User dbUser = userService.findByEmail(user.getEmail());
+            newToken = createNewTokenForUser(dbUser);
             saveToken(newToken);
             if (ancientToken != null){
                 removeToken(ancientToken);
@@ -119,8 +120,7 @@ public class TokenService {
         return true;
     }
 
-    public Cookie createTokenCookie(User user, String tokenValue) throws BusinessException {
-        Token token = performNewTokenRequest(user, tokenValue);
+    public Cookie createTokenCookie(Token token) {
         Cookie cookie = new Cookie("token", token.getValue());
         cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
         cookie.setHttpOnly(true);

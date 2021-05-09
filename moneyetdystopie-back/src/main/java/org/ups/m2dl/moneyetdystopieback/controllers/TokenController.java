@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
@@ -39,8 +40,9 @@ public class TokenController {
                                          @CookieValue(value="token", defaultValue = "none") String tokenValue) {
         try{
             User user = userService.getDto(userBean);
-            response.addCookie(tokenService.createTokenCookie(user, tokenValue));
-            return ResponseEntity.status(HttpStatus.OK).body(true);
+            Token token = tokenService.performNewTokenRequest(user, tokenValue);
+            response.addCookie(tokenService.createTokenCookie(token));
+            return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(token.getUser()));
         }catch (BusinessException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
         }catch (Exception e){
