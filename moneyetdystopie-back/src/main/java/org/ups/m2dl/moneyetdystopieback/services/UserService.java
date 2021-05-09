@@ -21,6 +21,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -139,6 +140,7 @@ public class UserService {
     public UserBean getBean(User user) {
         UserBean userBean = new UserBean();
         BeanUtils.copyProperties(user, userBean);
+        userBean.setPassword("");
 
         if(user.getCustomerAccount() != null){
             userBean.setCustomerAccount(new CustomerBean());
@@ -180,6 +182,9 @@ public class UserService {
 
     public void addTokenToUser(User user, Token token) throws BusinessException {
         token.setUser(user);
+        if (user.getTokenList() == null){
+            user.setTokenList(new ArrayList<>());
+        }
         user.getTokenList().add(token);
         save(user);
     }
