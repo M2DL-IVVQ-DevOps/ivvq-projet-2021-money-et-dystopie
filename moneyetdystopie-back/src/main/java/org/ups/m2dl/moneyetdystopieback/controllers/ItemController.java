@@ -21,11 +21,6 @@ public class ItemController {
     @Setter
     private ItemService itemService;
 
-    @CrossOrigin(
-        origins = {
-            "https://money-et-dystopie.herokuapp.com/", "http://localhost:8081",
-        }
-    )
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody ItemBean item) {
         try {
@@ -44,6 +39,16 @@ public class ItemController {
                 .body(
                     new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
                 );
+        }
+    }
+
+
+    @GetMapping(value="/all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAll() {
+        try{
+            return ResponseEntity.status(HttpStatus.OK).body(itemService.findAll());
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
         }
     }
 }
