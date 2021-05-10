@@ -154,10 +154,10 @@
       },
 
       getAllItemsForCatalogue(){
-        axios.get("https://money-et-dystopie.herokuapp.com/item/all").then(response => {
+        axios.get("/item/all").then(response => {
           this.catalogue = [...response.data];
         }).catch(() => {
-            this.serveurErrorMessage = 'Impossible de récupérer le formNewItem d\'article du serveur.';
+            this.serveurErrorMessage = 'Impossible de récupérer le catalogue d\'article du serveur.';
         });
       },
 

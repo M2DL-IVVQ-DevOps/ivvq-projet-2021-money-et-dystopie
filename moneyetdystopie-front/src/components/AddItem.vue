@@ -8,7 +8,7 @@
         </div>
         <form class="form">
             <div v-if="errors.length">
-                <strong class="errors">Veuillez corriger les erreurs suivante(s):</strong>
+                <strong class="errors">Veuillez corriger les erreurs suivantes :</strong>
                 <ul>
                     <li v-for="(error, index) in errors" v-bind:key="error+index">{{ error }}</li>
                 </ul>
@@ -97,7 +97,7 @@
                     sellerAccount: {"storeName": this.seller.storeName}
                 };
                 axios.post(
-                    "https://money-et-dystopie.herokuapp.com/item/create", message).then(response => {
+                    "/item/create", message).then(response => {
                     this.seller.items = [...this.seller.items,
                             {
                                 id: response.data.id,

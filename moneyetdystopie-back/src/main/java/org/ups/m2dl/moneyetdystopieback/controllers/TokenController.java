@@ -29,11 +29,6 @@ public class TokenController {
     @Setter
     private final UserService userService;
 
-    @CrossOrigin(
-        origins = {
-            "https://money-et-dystopie.herokuapp.com/", "http://localhost:8081",
-        }
-    )
     @PostMapping(
         value = "/create",
         produces = { MediaType.APPLICATION_JSON_VALUE }
@@ -60,11 +55,6 @@ public class TokenController {
         }
     }
 
-    @CrossOrigin(
-        origins = {
-            "https://money-et-dystopie.herokuapp.com/", "http://localhost:8081",
-        }
-    )
     @PostMapping(
         value = "/check",
         produces = { MediaType.APPLICATION_JSON_VALUE }
@@ -93,11 +83,6 @@ public class TokenController {
         }
     }
 
-    @CrossOrigin(
-        origins = {
-            "https://money-et-dystopie.herokuapp.com/", "http://localhost:8081",
-        }
-    )
     @PostMapping(
         value = "/remove",
         produces = { MediaType.APPLICATION_JSON_VALUE }
