@@ -16,14 +16,14 @@ function goToShop() {
         .get('img').eq(3).click();
 }
 
-Given(/^the add item form$/, function () {
+Given(/^the 'add item' form$/, function () {
     goToShop();
     cy.get('.button-action-open')
         .click();
 });
 
 
-When(/^I watch the add item form$/, function () {
+When(/^I watch the 'add item' form$/, function () {
     cy.get('.form');
 });
 
@@ -66,7 +66,7 @@ Then(/^no error should be displayed$/, function () {
     cy.get('.form').get('.errors').should('not.exist');
 });
 
-Then(/^no see add item form$/, function () {
+Then(/^no see 'add item' form$/, function () {
     cy.get('.form').should('not.exist');
 });
 
