@@ -97,7 +97,7 @@
                     sellerAccount: {"storeName": this.seller.storeName}
                 };
                 axios.post(
-                    "https://money-et-dystopie.herokuapp.com/item/create", message).then(response => {
+                    "/item/create", message).then(response => {
                     this.seller.items = [...this.seller.items,
                             {
                                 id: response.data.id,
