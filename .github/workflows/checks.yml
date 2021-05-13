@@ -46,7 +46,7 @@ jobs:
       - name: Wait for back startup
         run: chmod +x wait-for-it.sh && ./wait-for-it.sh -h 127.0.0.1 -p 8080 -t 60
       - name: Run Cypress tests
-        run: cd moneyetdystopie-front && npm test
+        run: cd moneyetdystopie-front && npm run test-novid
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
