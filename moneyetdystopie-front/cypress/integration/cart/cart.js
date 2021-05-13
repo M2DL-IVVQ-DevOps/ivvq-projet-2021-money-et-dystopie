@@ -8,7 +8,7 @@ const CARD_ACTIONS = ".cardAction";
 
 beforeEach(() => {
     mockCatalogue();
-    cy.visit('http://localhost:8080/');
+    cy.visit('http://localhost:8080/index.html');
     cy.get('[id=connection-button]').click();
     cy.wait('@mockCatalogue');
 });
@@ -21,7 +21,7 @@ function goToCart() {
 }
 
 function mockCatalogue() {
-    cy.intercept('GET','https://money-et-dystopie.herokuapp.com/item/all', [
+    cy.intercept('GET','http://localhost:8080/item/all', [
         {
             "id": 1,
             "title": "Titre1",

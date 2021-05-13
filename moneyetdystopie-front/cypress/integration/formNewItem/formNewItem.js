@@ -5,7 +5,7 @@ const {
 } = require("cypress-cucumber-preprocessor/steps");
 
 beforeEach(() => {
-    cy.visit('http://localhost:8080/');
+    cy.visit('http://localhost:8080/index.html');
     cy.get('[id=connection-button]').click();
 });
 
@@ -82,7 +82,7 @@ Then(/^one item added in my shop$/, function () {
 });
 
 function mockItem() {
-    cy.intercept('POST','https://money-et-dystopie.herokuapp.com/item/create', {
+    cy.intercept('POST','http://localhost:8080/item/create', {
         "id": 4,
         "title": "Bitcoin",
         "picture": "https://cdn.dribbble.com/users/791530/screenshots/15336558/media/02b09bcee2c72083607b40f5e9beadc7.png?compress=1&resize=1000x750",
