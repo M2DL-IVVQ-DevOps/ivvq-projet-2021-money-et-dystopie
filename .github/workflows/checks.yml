@@ -37,6 +37,16 @@ jobs:
         run: cd moneyetdystopie-front && npm run eslint
       - name: Correct paths referenced in report
         run: cd moneyetdystopie-front && sed -i 's+/home/runner/work/ivvq-projet-2021-money-et-dystopie/ivvq-projet-2021-money-et-dystopie+/github/workspace+g' target/report.json
+      - name: Build front
+        run: cd moneyetdystopie-front && npm run build
+      - name: Move front dist folder into back static folder
+        run: mv moneyetdystopie-front/dist moneyetdystopie-back/src/main/resources/static
+      - name: Build and run back
+        run: cd moneyetdystopie-back && mvn clean install -DskipTests exec:java -Dexec.mainClass="org.ups.m2dl.moneyetdystopieback.MoneyetdystopieBackApplication" &
+      - name: Wait for back startup
+        run: chmod +x wait-for-it.sh && ./wait-for-it.sh -h 127.0.0.1 -p 8080 -t 60
+      - name: Run Cypress tests
+        run: cd moneyetdystopie-front && npm test
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
