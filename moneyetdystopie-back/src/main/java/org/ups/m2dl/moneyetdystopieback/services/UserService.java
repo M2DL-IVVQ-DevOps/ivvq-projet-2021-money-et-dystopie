@@ -1,14 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
-import java.util.Iterator;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,24 +16,27 @@ import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Iterator;
+import java.util.Set;
+
 @AllArgsConstructor
 @Service
 public class UserService {
 
     @Getter
-    @Setter
     private final UserRepository userRepository;
 
     @Getter
-    @Setter
     private final SellerService sellerService;
 
     @Getter
-    @Setter
     private final CustomerService customerService;
 
     @Getter
-    @Setter
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
