@@ -21,7 +21,7 @@ function goToCart() {
 }
 
 function mockCatalogue() {
-    cy.intercept('GET','http://localhost:8080/item/all', [
+    cy.intercept('GET','/item/all', [
         {
             "id": 1,
             "title": "Titre1",
