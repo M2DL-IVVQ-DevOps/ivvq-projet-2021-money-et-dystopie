@@ -1,5 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.controllers.controllers_integration_test;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,31 +91,22 @@ class ItemControllerCreateIntegrationTest {
         ItemBean resultFromJson = mapper.readValue(jsonResult, ItemBean.class);
 
         // THEN
-        Assertions.assertEquals(
-            itemTest.getTitle(),
-            resultFromJson.getTitle(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPicture(),
-            resultFromJson.getPicture(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getAmount(),
-            resultFromJson.getAmount(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPrice(),
-            resultFromJson.getPrice(),
-            "The returned item does not comply."
-        );
-
-        Assertions.assertEquals(
-            itemTest.getSellerAccount().getStoreName(),
-            resultFromJson.getSellerAccount().getStoreName(),
-            "The returned item does not comply."
+        assertAll("The returned item does not comply.",
+                () -> assertEquals(
+                        itemTest.getTitle(),
+                        resultFromJson.getTitle()),
+                () -> assertEquals(
+                        itemTest.getPicture(),
+                        resultFromJson.getPicture()),
+                () -> assertEquals(
+                        itemTest.getAmount(),
+                        resultFromJson.getAmount()),
+                () -> assertEquals(
+                        itemTest.getPrice(),
+                        resultFromJson.getPrice()),
+                () -> assertEquals(
+                        itemTest.getSellerAccount().getStoreName(),
+                        resultFromJson.getSellerAccount().getStoreName())
         );
     }
 
@@ -165,25 +158,19 @@ class ItemControllerCreateIntegrationTest {
             "The saved item exist."
         );
 
-        Assertions.assertEquals(
-            itemTest.getTitle(),
-            resultItem.getTitle(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPicture(),
-            resultItem.getPicture(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getAmount(),
-            resultItem.getAmount(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPrice(),
-            resultItem.getPrice(),
-            "The returned item does not comply."
+        assertAll("The returned item does not comply.",
+                () -> assertEquals(
+                        itemTest.getTitle(),
+                        resultItem.getTitle()),
+                () -> assertEquals(
+                        itemTest.getPicture(),
+                        resultItem.getPicture()),
+                () -> assertEquals(
+                        itemTest.getAmount(),
+                        resultItem.getAmount()),
+                () -> assertEquals(
+                        itemTest.getPrice(),
+                        resultItem.getPrice())
         );
 
         // THEN
