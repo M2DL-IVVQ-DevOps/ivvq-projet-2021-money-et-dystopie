@@ -9,7 +9,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +24,9 @@ import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 public class ItemService {
 
     @Getter
-    @Setter
     private final ItemRepository itemRepository;
 
     @Getter
-    @Setter
     private final SellerService sellerService;
 
     @Transactional
@@ -65,6 +62,27 @@ public class ItemService {
         }
     }
 
+    @Transactional
+    public Item update(Item item) throws BusinessException {
+        if (item == null) {
+            throw new BusinessException(
+                    "L'article référencé n'a pu être trouvé."
+            );
+        }
+        // On vérifie que les mises à jour respectent les règles définies
+        this.valid(item);
+        // On vérifie que l'item existe bien déjà en base
+        if (findById(item.getId()) == null) {
+            throw new BusinessException(
+                    "L'article référencé n'a pu être trouvé."
+            );
+        }
+
+        item = this.save(item);
+        return item;
+    }
+
+    @Transactional
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
