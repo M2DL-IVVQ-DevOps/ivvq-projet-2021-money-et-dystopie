@@ -22,11 +22,18 @@ public class Command {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /** Etat de la commande. */
+    /** État de la commande. */
     @Getter
     @Setter
     @NotNull
     private CommandState state;
+
+    /** Acheteur. */
+    @Getter
+    @Setter
+    @NotNull
+    @ManyToOne
+    private Customer customer;
 
     /** Liste des articles de la commande. */
     @Getter
