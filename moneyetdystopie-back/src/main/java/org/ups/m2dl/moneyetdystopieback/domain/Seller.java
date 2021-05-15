@@ -42,7 +42,7 @@ public class Seller {
     @Setter
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany
+    @OneToMany(mappedBy = "sellerAccount", cascade = CascadeType.REMOVE)
     private List<Item> items;
 
     /** Liste des produits en vente. */
