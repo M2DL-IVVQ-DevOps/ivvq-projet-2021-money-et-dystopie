@@ -78,8 +78,7 @@ public class ItemService {
             );
         }
 
-        item = this.save(item);
-        return item;
+        return this.save(item);
     }
 
     @Transactional
@@ -124,7 +123,7 @@ public class ItemService {
         }
     }
 
-    public ItemBean getBean(Item item) {
+    public static ItemBean getBean(Item item) {
         ItemBean itemBean = new ItemBean();
         BeanUtils.copyProperties(item, itemBean);
 
@@ -139,7 +138,7 @@ public class ItemService {
         return itemBean;
     }
 
-    public Item getDto(ItemBean itemBean) {
+    public static Item getDto(ItemBean itemBean) {
         Item item = new Item();
         BeanUtils.copyProperties(itemBean, item);
 
