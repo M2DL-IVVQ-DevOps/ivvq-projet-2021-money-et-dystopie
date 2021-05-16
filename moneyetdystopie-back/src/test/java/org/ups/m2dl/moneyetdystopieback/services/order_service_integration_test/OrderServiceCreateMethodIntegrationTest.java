@@ -102,7 +102,6 @@ class OrderServiceCreateMethodIntegrationTest {
             // When : Le service enregistre la commande
             () -> orderService.create(orderTest)
         );
-        // TODO Vérifier le message ?
     }
 
     @Test
@@ -116,7 +115,7 @@ class OrderServiceCreateMethodIntegrationTest {
             0, // Volontairement à 0
             5.f,
             null,
-            null
+            seller
         );
         orderTest =
             new Command(
@@ -130,7 +129,6 @@ class OrderServiceCreateMethodIntegrationTest {
             // When : Le service enregistre la commande
             () -> orderService.create(orderTest)
         );
-        // TODO Vérifier le message ?
     }
 
     @ParameterizedTest
@@ -155,7 +153,7 @@ class OrderServiceCreateMethodIntegrationTest {
             10,
             5.f,
             null,
-            null
+            seller
         );
         // Given : Une commande dans un état non autorisé
         orderTest = new Command(null, state, customer, List.of(validItem));
@@ -164,7 +162,6 @@ class OrderServiceCreateMethodIntegrationTest {
             // When : Le service enregistre la commande
             () -> orderService.create(orderTest)
         );
-        // TODO Vérifier le message ?
     }
 
     @Test

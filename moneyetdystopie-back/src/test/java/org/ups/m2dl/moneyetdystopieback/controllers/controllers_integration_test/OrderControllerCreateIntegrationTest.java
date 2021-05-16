@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -158,7 +159,7 @@ class OrderControllerCreateIntegrationTest {
             jsonResult,
             CommandBean.class
         );
-        Command result = orderService.getDto(resultFromJson);
+        Command result = OrderService.getDto(resultFromJson);
 
         // THEN
         assertAll(
@@ -176,6 +177,52 @@ class OrderControllerCreateIntegrationTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "title47,description47,1,2.f,false," })
-    void whenCreateInvalidOrder_thenErrorReturned() {}
+    @EnumSource(
+            value = CommandState.class,
+            names = {
+                    "IN_PROGRESS",
+                    "WAITING_FOR_SHIPMENT",
+                    "WAITING_FOR_DELIVERY",
+                    "COMPLETED",
+            }
+    )
+    void whenCreateOrderWithInvalidState_thenErrorReturned(CommandState state) throws Exception {
+        // GIVEN
+        itemTest =
+                new Item(
+                        null,
+                        "title39",
+                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                        "description39",
+                        10,
+                        5.f,
+                        null,
+                        seller
+                );
+        order =
+                new Command(
+                        null,
+                        state,
+                        customer,
+                        List.of(itemTest)
+                );
+
+        jsonInput = new Gson().toJson(OrderService.getBean(order));
+
+        // WHEN
+        mockMvc
+                .perform(
+                        post("/order/create")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonInput)
+                )
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentType(contentType))
+                .andDo(
+                        mvcResult -> {
+                            jsonResult = mvcResult.getResponse().getContentAsString();
+                        }
+                );
+
+    }
 }

@@ -17,6 +17,7 @@ import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
+import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.OrderRepository;
 
@@ -38,6 +39,12 @@ public class OrderService {
         if (order.getItems() == null || order.getItems().isEmpty()) {
             throw new BusinessException(
                 "La commande doit comporter au moins un article."
+            );
+        }
+
+        if(order.getState() != CommandState.WAITING_FOR_PAYMENT) {
+            throw new BusinessException(
+                    "La commande doit être en attente de paiement pour être créée."
             );
         }
 
