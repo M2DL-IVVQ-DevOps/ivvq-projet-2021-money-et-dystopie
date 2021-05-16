@@ -52,7 +52,6 @@
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
-  import axios from "axios";
 
   const axios = require('axios');
 
@@ -74,8 +73,8 @@
         this.navigation = nav;
       },
 
-      connexionAccount : function(userConnexion){
-        axios.post('http://localhost:8080/'+'token/create/', userConnexion).then(response => {
+      connexionAccount : async function(userConnexion){
+        await axios.post('/token/create/', userConnexion).then(response => {
           this.user = response.data;
           if (this.user.customerAccount !== null && this.user.customerAccount.cart === null){
             this.user.customerAccount.cart = {
@@ -88,10 +87,12 @@
       },
 
       creationAccount : async function(userCreation){
-        await axios.post('http://localhost:8080/'+'user/create/', userCreation).then(() => {
-          return true;
-        }).catch(() => {
-          return false;
+        await axios.post('/user/create/', userCreation).then(response => {
+          console.log("Réponse : " + response);
+          return "";
+        }).catch(error => {
+          console.log("Erreur : " + error);
+          return error.response.data.message;
         });
       },
 

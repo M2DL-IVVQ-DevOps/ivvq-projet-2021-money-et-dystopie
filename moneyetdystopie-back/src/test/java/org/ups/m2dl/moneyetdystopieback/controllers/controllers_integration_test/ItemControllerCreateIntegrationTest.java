@@ -24,7 +24,7 @@ import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class ItemControllerCreateIntegrationTest {
+class  ItemControllerCreateIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;

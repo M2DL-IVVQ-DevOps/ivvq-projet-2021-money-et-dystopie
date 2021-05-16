@@ -120,6 +120,7 @@ public class TokenService {
             ) ||
             userService.checkUserPassword(user)
         ) {
+            user = userService.findByEmail(user.getEmail());
             newToken = createNewTokenForUser(user);
             saveToken(newToken);
             if (ancientToken != null) {

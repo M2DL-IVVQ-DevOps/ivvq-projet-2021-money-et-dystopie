@@ -229,4 +229,8 @@ public class UserService {
         user.getTokenList().remove(token);
         save(user);
     }
+
+    public void deleteUser(User user){
+        userRepository.delete(user);
+    }
 }

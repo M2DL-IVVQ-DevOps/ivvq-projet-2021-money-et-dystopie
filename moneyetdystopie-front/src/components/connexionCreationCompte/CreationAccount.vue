@@ -46,6 +46,9 @@
                 <label>Adresse postale</label>
                 <md-input v-model="address" type="text"></md-input>
             </md-field>
+            <div v-if="accountCreationError">
+                <label v-text="accountCreationErrorMessage"></label>
+            </div>
             <div v-if="customer || seller">
                 <md-button v-on:click="creationAccount()">Créer un compte</md-button>
             </div>
@@ -67,31 +70,38 @@
                 pseudo: null,
                 address: null,
                 seller: false,
-                customer: false
+                customer: false,
+                accountCreationError: false,
+                accountCreationErrorMessage: null
             };
         },
         props: ['creation'],
         methods: {
             async creationAccount(){
+                this.accountCreationError = false;
+                this.accountCreationErrorMessage = "";
                 let userCreation = {
                     lastName: this.lastName,
                     firstName: this.firstName,
                     email: this.email,
                     password: this.password
                 };
-                if (this.seller){
+                if (this.customer){
                     userCreation.customerAccount = {
                         pseudo: this.pseudo,
                         address: this.address
                     }
                 }
-                if (this.customer){
+                if (this.seller){
                     userCreation.sellerAccount = {
                         storeName: this.storeName
                     }
                 }
-                if (await this.creation(userCreation)){
-                    this.purgeFields();
+                let returnedMessage = await this.creation(userCreation);
+                console.log("Reçu : " + returnedMessage);
+                if (returnedMessage !== ""){
+                    this.accountCreationError = returnedMessage;
+                    this.accountCreationErrorMessage = true;
                 }
             },
             checkForm: function (e) {
@@ -141,6 +151,8 @@
                 this.address = null;
                 this.seller = false;
                 this.customer = false;
+                this.error = false;
+                this.errorMessage = "";
             }
         }
     }

@@ -38,12 +38,12 @@
         },
         props: ['connexion'],
         methods: {
-            connexionAccount(){
+            async connexionAccount(){
                 let userConnexion = {
                     email: this.email,
                     password: this.password
                 };
-               this.connexion(userConnexion);
+               await this.connexion(userConnexion);
             },
             checkForm: function (e) {
                 this.errors = [];

@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class SellerBean {
     /** Compte utilisateur associé au commerçant. */
     @Getter
     @Setter
+    @JsonIgnore
     private UserBean userAccount;
 
     /** Liste des produits en vente. */

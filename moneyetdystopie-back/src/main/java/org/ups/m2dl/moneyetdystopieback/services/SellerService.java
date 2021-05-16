@@ -19,7 +19,6 @@ import org.ups.m2dl.moneyetdystopieback.repositories.SellerRepository;
 public class SellerService {
 
     @Getter
-    @Setter
     private final SellerRepository sellerRepository;
 
     public Seller create(Seller seller) throws BusinessException {
