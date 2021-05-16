@@ -4,15 +4,22 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @Entity
+@NoArgsConstructor
 public class Token {
 
     /** Id du token unique et autogénéré. */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @NotNull
+    @Getter
+    @Setter
     private Long id;
 
     /**
@@ -24,55 +31,27 @@ public class Token {
         min = MoneyDystopieConstants.TOKEN_LENGTH,
         max = MoneyDystopieConstants.TOKEN_LENGTH
     )
+    @Getter
+    @Setter
     private String value;
 
     /** Date après laquelle le token n'est plus valable. */
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
+    @Getter
+    @Setter
     private Date expirationDate;
 
     /** Utilisateur lié au token. */
     @ManyToOne(fetch = FetchType.EAGER)
     @NotNull
+    @Getter
+    @Setter
     private User user;
-
-    public Token() {}
 
     public Token(String value, Date expirationDate) {
         this.value = value;
         this.expirationDate = (Date) expirationDate.clone();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public Date getExpirationDate() {
-        return (Date) expirationDate.clone();
-    }
-
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = (Date) expirationDate.clone();
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     @Override
