@@ -22,44 +22,65 @@ class CustomerServiceValidMethodTest {
     private Customer customerTest;
 
     @ParameterizedTest
-    @ValueSource(strings = {"1234","012345678901234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "1234", "012345678901234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenValidCustomerWithBadPseudo_thenThrowBusinessException(String pseudo)  {
-
+    void whenValidCustomerWithBadPseudo_thenThrowBusinessException(
+        String pseudo
+    ) {
         // GIVEN
-        customerTest = new Customer(pseudo,"numberCityCountry18", null, null, null);
+        customerTest =
+            new Customer(pseudo, "numberCityCountry18", null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.valid(customerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.valid(customerTest);
+            }
+        );
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"123456789","0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"})
+    @ValueSource(
+        strings = {
+            "123456789",
+            "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+        }
+    )
     @NullSource
-    void whenValidCustomerWithBadAddress_thenThrowBusinessException(String address)  {
-
+    void whenValidCustomerWithBadAddress_thenThrowBusinessException(
+        String address
+    ) {
         // GIVEN
-        customerTest = new Customer("pseudo58",address, null, null, null);
+        customerTest = new Customer("pseudo58", address, null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.valid(customerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.valid(customerTest);
+            }
+        );
     }
 
     @Test
     void whenValidCustomer_thenNoThrowBusinessException() {
         // GIVEN
-        customerTest = new Customer("pseudo18", "numberCityCountry18", null, null, null);
+        customerTest =
+            new Customer("pseudo18", "numberCityCountry18", null, null, null);
 
-        //THEN
-        Assertions.assertDoesNotThrow( () -> {
-            //WHEN
-            customerService.valid(customerTest);
-        });
+        // THEN
+        Assertions.assertDoesNotThrow(
+            () -> {
+                // WHEN
+                customerService.valid(customerTest);
+            }
+        );
     }
 }

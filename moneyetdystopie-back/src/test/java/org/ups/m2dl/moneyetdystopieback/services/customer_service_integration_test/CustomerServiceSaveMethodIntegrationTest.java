@@ -21,39 +21,69 @@ class CustomerServiceSaveMethodIntegrationTest {
     @Test
     void whenSaveCustomer_thenCanFindWithDatas() throws BusinessException {
         // GIVEN
-        customerTest = new Customer("pseudo14", "numberCityCountry14", null, null, null);
+        customerTest =
+            new Customer("pseudo14", "numberCityCountry14", null, null, null);
 
         // WHEN
         customerService.save(customerTest);
-        Customer resultFindById = customerService.findByPseudo(customerTest.getPseudo());
+        Customer resultFindById = customerService.findByPseudo(
+            customerTest.getPseudo()
+        );
 
-        //THEN
-        Assertions.assertNotNull( resultFindById, "More or less customers than expected were obtained.");
-        Assertions.assertEquals( customerTest.getPseudo(), resultFindById.getPseudo(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( customerTest.getAddress(), resultFindById.getAddress(), "The information retrieved does not match that expected.");
-        Assertions.assertNull( resultFindById.getCart(), "The information retrieved does not match that expected.");
-        Assertions.assertTrue( resultFindById.getPastCommands().isEmpty(), "The information retrieved does not match that expected.");
-        Assertions.assertNull( resultFindById.getUserAccount(), "The information retrieved does not match that expected.");
+        // THEN
+        Assertions.assertNotNull(
+            resultFindById,
+            "More or less customers than expected were obtained."
+        );
+        Assertions.assertEquals(
+            customerTest.getPseudo(),
+            resultFindById.getPseudo(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertEquals(
+            customerTest.getAddress(),
+            resultFindById.getAddress(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertNull(
+            resultFindById.getCart(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertTrue(
+            resultFindById.getPastCommands().isEmpty(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertNull(
+            resultFindById.getUserAccount(),
+            "The information retrieved does not match that expected."
+        );
     }
 
     @Test
     void whenCreateCustomerNull_thenThrowBusinessException() {
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.save(null);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.save(null);
+            }
+        );
     }
 
     @Test
     void whenSaveCustomerWithoutPseudo_thenThrowBusinessException() {
         // GIVEN
-        customerTest = new Customer(null, "numberCityCountry15", null, null, null);
+        customerTest =
+            new Customer(null, "numberCityCountry15", null, null, null);
 
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            customerService.save(customerTest);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                customerService.save(customerTest);
+            }
+        );
     }
 }

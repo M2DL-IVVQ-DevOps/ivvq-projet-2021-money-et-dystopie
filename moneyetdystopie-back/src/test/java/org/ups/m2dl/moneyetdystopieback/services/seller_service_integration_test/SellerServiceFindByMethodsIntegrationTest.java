@@ -20,16 +20,20 @@ class SellerServiceFindByMethodsIntegrationTest {
 
     @Test
     void whenCreateSaveSeller_thenCanFind() throws BusinessException {
-
         // GIVEN
-        sellerTest = new Seller("storeName20",null,null,null);
+        sellerTest = new Seller("storeName20", null, null, null);
 
         // WHEN
         sellerService.save(sellerTest);
-        Seller resultFindBy = sellerService.findByStoreName(sellerTest.getStoreName());
+        Seller resultFindBy = sellerService.findByStoreName(
+            sellerTest.getStoreName()
+        );
 
         // THEN
-        Assertions.assertNotNull( resultFindBy, "The saved seller was not found.");
+        Assertions.assertNotNull(
+            resultFindBy,
+            "The saved seller was not found."
+        );
     }
 
     @Test
@@ -37,6 +41,9 @@ class SellerServiceFindByMethodsIntegrationTest {
         // GIVEN WHEN
         Seller resultFindBy = sellerService.findByStoreName("Bonjour");
 
-        Assertions.assertNull( resultFindBy, "A seller was returned despite his non-existence.");
+        Assertions.assertNull(
+            resultFindBy,
+            "A seller was returned despite his non-existence."
+        );
     }
 }

@@ -3,7 +3,8 @@
         <md-card-content>
 
             <md-card-media>
-                <img class="picture" :src="itemData.picture" alt="Avatar">
+                <img class="picture" :src="itemData.picture" alt="Avatar" @error="imageLoadError">
+                <div class="seller">{{ itemData.sellerAccount.storeName}}</div>
                 <div class="title">{{ itemData.title }}</div>
                 <div class="price">{{ itemData.price }}</div>
             </md-card-media>
@@ -16,7 +17,7 @@
                     <option :value="index-1" v-for="index in itemData.amount+1" :key="index" >{{index-1}}</option>
                 </select> <span class="max-amount"> / {{itemData.amount}}</span>
             </md-field>
-            <md-button v-on:click="selectForCart()" class="md-button">AJOUTER</md-button>
+            <md-button class="cardAction md-button" v-on:click="selectForCart()">AJOUTER</md-button>
         </md-card-actions>
     </md-card>
 </template>
@@ -35,6 +36,9 @@
                 let amount = this.amountSelect;
                 this.amountSelect = 0;
                 this.selectionItem(this.itemData.id, amount);
+            },
+            imageLoadError(){
+                this.itemData.picture = "https://st3.depositphotos.com/23594922/31822/v/600/depositphotos_318221368-stock-illustration-missing-picture-page-for-website.jpg";
             }
         }
     }

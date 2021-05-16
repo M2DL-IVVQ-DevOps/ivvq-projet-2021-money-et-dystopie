@@ -20,16 +20,21 @@ class CustomerServiceFindByMethodsIntegrationTest {
 
     @Test
     void whenCreateSaveCustomer_thenCanFind() throws BusinessException {
-
         // GIVEN
-        customerTest = new Customer("pseudo12", "numberCityCountry12", null, null, null);
+        customerTest =
+            new Customer("pseudo12", "numberCityCountry12", null, null, null);
 
         // WHEN
         customerService.save(customerTest);
-        Customer resultFindBy = customerService.findByPseudo(customerTest.getPseudo());
+        Customer resultFindBy = customerService.findByPseudo(
+            customerTest.getPseudo()
+        );
 
         // THEN
-        Assertions.assertNotNull( resultFindBy, "The saved customer was not found.");
+        Assertions.assertNotNull(
+            resultFindBy,
+            "The saved customer was not found."
+        );
     }
 
     @Test
@@ -37,6 +42,9 @@ class CustomerServiceFindByMethodsIntegrationTest {
         // GIVEN WHEN
         Customer resultFindBy = customerService.findByPseudo("pseudo13");
 
-        Assertions.assertNull(  resultFindBy, "A customer was returned despite his non-existence.");
+        Assertions.assertNull(
+            resultFindBy,
+            "A customer was returned despite his non-existence."
+        );
     }
 }

@@ -27,28 +27,60 @@ class ItemServiceSaveMethodIntegrationTest {
     @Test
     void whenSaveItem_thenCanFindWithDatas() throws BusinessException {
         // GIVEN
-        sellerTest =  new Seller("storeName51",null,null,null);
+        sellerTest = new Seller("storeName51", null, null, null);
         sellerService.save(sellerTest);
-        itemTest = new Item(null, "title51", "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png", "description51", 10, 5.f, null, sellerTest);
+        itemTest =
+            new Item(
+                null,
+                "title51",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description51",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         // WHEN
         itemTest = itemService.save(itemTest);
         Item resultFindById = itemService.findById(itemTest.getId());
 
-        //THEN
-        Assertions.assertNotNull( resultFindById, "Less item than expected were obtained.");
-        Assertions.assertEquals( itemTest.getTitle(), resultFindById.getTitle(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( itemTest.getPicture(), resultFindById.getPicture(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( itemTest.getAmount(), resultFindById.getAmount(), "The information retrieved does not match that expected.");
-        Assertions.assertEquals( itemTest.getPrice(), resultFindById.getPrice(), "The information retrieved does not match that expected.");
+        // THEN
+        Assertions.assertNotNull(
+            resultFindById,
+            "Less item than expected were obtained."
+        );
+        Assertions.assertEquals(
+            itemTest.getTitle(),
+            resultFindById.getTitle(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertEquals(
+            itemTest.getPicture(),
+            resultFindById.getPicture(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertEquals(
+            itemTest.getAmount(),
+            resultFindById.getAmount(),
+            "The information retrieved does not match that expected."
+        );
+        Assertions.assertEquals(
+            itemTest.getPrice(),
+            resultFindById.getPrice(),
+            "The information retrieved does not match that expected."
+        );
     }
 
     @Test
     void whenCreateItemNull_thenThrowBusinessException() {
         // THEN
-        Assertions.assertThrows(BusinessException.class, () -> {
-            // WHEN
-            itemService.save(null);
-        });
+        Assertions.assertThrows(
+            BusinessException.class,
+            () -> {
+                // WHEN
+                itemService.save(null);
+            }
+        );
     }
 }

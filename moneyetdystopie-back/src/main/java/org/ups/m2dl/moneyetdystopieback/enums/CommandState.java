@@ -5,5 +5,5 @@ public enum CommandState {
     WAITING_FOR_PAYMENT,
     WAITING_FOR_SHIPMENT,
     WAITING_FOR_DELIVERY,
-    COMPLETED
+    COMPLETED,
 }

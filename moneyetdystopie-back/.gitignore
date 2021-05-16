@@ -32,4 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-moneyetdystopie-back/src/main/resources/static/
+src/main/resources/static/
