@@ -90,7 +90,9 @@ public class OrderService {
     public static CommandBean getBean(Command order) {
         CommandBean orderBean = new CommandBean();
         BeanUtils.copyProperties(order, orderBean);
-        orderBean.setCustomer(CustomerService.getBean(order.getCustomer()));
+        CustomerBean c = new CustomerBean();
+        BeanUtils.copyProperties(order.getCustomer(), c);
+        orderBean.setCustomer(c);
         orderBean.setItems(order.getItems().stream().map(ItemService::getBean).collect(Collectors.toList()));
         return orderBean;
     }
@@ -98,7 +100,9 @@ public class OrderService {
     public static Command getDto(CommandBean orderBean) {
         Command order = new Command();
         BeanUtils.copyProperties(orderBean, order);
-        order.setCustomer(CustomerService.getDto(orderBean.getCustomer()));
+        Customer c = new Customer();
+        BeanUtils.copyProperties(orderBean.getCustomer(), c);
+        order.setCustomer(c);
         order.setItems(orderBean.getItems().stream().map(ItemService::getDto).collect(Collectors.toList()));
         return order;
     }
