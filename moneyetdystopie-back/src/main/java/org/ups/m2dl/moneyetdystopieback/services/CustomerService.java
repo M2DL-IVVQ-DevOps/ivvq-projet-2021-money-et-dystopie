@@ -5,7 +5,9 @@ import lombok.Getter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
+import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 
@@ -74,31 +76,5 @@ public class CustomerService {
             Iterator<ConstraintViolation<Customer>> iterator = constraintViolations.iterator();
             throw new BusinessException(iterator.next().getMessage());
         }
-    }
-
-    public static CustomerBean getBean(Customer customer) {
-        CustomerBean customerBean = new CustomerBean();
-        BeanUtils.copyProperties(customer, customerBean);
-        customerBean.setUserAccount(UserService.getBean(customer.getUserAccount()));
-        // FIXME La conversion Bean <-> DTO induit une boucle infinie.
-        //  Le code ci dessous est commenté pour éviter un StackOverFlow.
-        //  La conversion est incomplète du coup.
-        //if(customer.getPastCommands() != null) {
-        //    customerBean.setPastCommands(customer.getPastCommands().stream().map(OrderService::getBean).collect(Collectors.toList()));
-        //}
-        return customerBean;
-    }
-
-    public static Customer getDto(CustomerBean customerBean) {
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerBean, customer);
-        customer.setUserAccount(UserService.getDto(customerBean.getUserAccount()));
-        // FIXME La conversion Bean <-> DTO induit une boucle infinie.
-        //  Le code ci dessous est commenté pour éviter un StackOverFlow.
-        //  La conversion est incomplète du coup.
-        //if(customerBean.getPastCommands() != null) {
-        //    customer.setPastCommands(customerBean.getPastCommands().stream().map(OrderService::getDto).collect(Collectors.toList()));
-        //}
-        return customer;
     }
 }
