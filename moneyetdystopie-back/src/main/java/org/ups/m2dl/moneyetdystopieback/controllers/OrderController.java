@@ -31,19 +31,15 @@ public class OrderController {
             Command orderDto = OrderService.getDto(order);
             Command resultDto = orderService.create(orderDto);
             CommandBean result = OrderService.getBean(resultDto);
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(
-                            result
-                    );
+            return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
-                    .body(
-                            new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                    );
+                .badRequest()
+                .body(
+                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                );
         }
     }
 }

@@ -26,22 +26,22 @@ class ItemServiceUpdateMethodIntegrationTest {
     private int itemsNumber;
 
     @Test
-    void whenUpdateItemWithDifferentAmount_thenItemUpdated() throws BusinessException {
+    void whenUpdateItemWithDifferentAmount_thenItemUpdated()
+        throws BusinessException {
         // GIVEN
         sellerTest = new Seller("storeName49", null, null, null);
         sellerService.save(sellerTest);
 
-        Item expected =
-            new Item(
-                null,
-                "title49",
-                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                "description49",
-                10,
-                5.f,
-                null,
-                sellerTest
-            );
+        Item expected = new Item(
+            null,
+            "title49",
+            "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+            "description49",
+            10,
+            5.f,
+            null,
+            sellerTest
+        );
         itemService.create(expected);
         itemsNumber = itemService.findAll().size();
 
@@ -50,34 +50,34 @@ class ItemServiceUpdateMethodIntegrationTest {
         Item actual = itemService.update(expected);
         // THEN
         Assertions.assertEquals(
-                itemsNumber,
-                itemService.findAll().size(),
-                "A new item has been created instead of updating the actual one."
+            itemsNumber,
+            itemService.findAll().size(),
+            "A new item has been created instead of updating the actual one."
         );
         Assertions.assertEquals(
-                expected.getAmount(),
-                actual.getAmount(),
-                "The update has not been taken in account."
+            expected.getAmount(),
+            actual.getAmount(),
+            "The update has not been taken in account."
         );
     }
 
     @Test
-    void whenUpdateItemWithSameContent_thenItemUpdated() throws BusinessException {
+    void whenUpdateItemWithSameContent_thenItemUpdated()
+        throws BusinessException {
         // GIVEN
         sellerTest = new Seller("storeName50", null, null, null);
         sellerService.save(sellerTest);
 
-        Item expected =
-                new Item(
-                        null,
-                        "title1",
-                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                        "description50",
-                        10,
-                        5.f,
-                        null,
-                        sellerTest
-                );
+        Item expected = new Item(
+            null,
+            "title1",
+            "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+            "description50",
+            10,
+            5.f,
+            null,
+            sellerTest
+        );
         itemService.create(expected);
         itemsNumber = itemService.findAll().size();
 
@@ -85,34 +85,34 @@ class ItemServiceUpdateMethodIntegrationTest {
         Item actual = itemService.update(expected);
         // THEN
         Assertions.assertEquals(
-                itemsNumber,
-                itemService.findAll().size(),
-                "A new item has been created instead of updating the actual one."
+            itemsNumber,
+            itemService.findAll().size(),
+            "A new item has been created instead of updating the actual one."
         );
         Assertions.assertEquals(
-                expected.getId(),
-                actual.getId(),
-                "The update has not been taken in account."
+            expected.getId(),
+            actual.getId(),
+            "The update has not been taken in account."
         );
     }
 
     @Test
-    void whenUpdateUnknownItem_thenThrowBusinessException() throws BusinessException {
+    void whenUpdateUnknownItem_thenThrowBusinessException()
+        throws BusinessException {
         // GIVEN
         sellerTest = new Seller("storeName50", null, null, null);
         sellerService.save(sellerTest);
 
-        Item expected =
-            new Item(
-                    88L, // Invalid ID
-                "title50",
-                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                "description50",
-                10,
-                5.f,
-                null,
-                null
-            );
+        Item expected = new Item(
+            88L, // Invalid ID
+            "title50",
+            "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+            "description50",
+            10,
+            5.f,
+            null,
+            null
+        );
 
         // THEN
         Assertions.assertThrows(
@@ -128,11 +128,11 @@ class ItemServiceUpdateMethodIntegrationTest {
     void whenUpdateItemNull_thenThrowBusinessException() {
         // THEN
         Assertions.assertThrows(
-                BusinessException.class,
-                () -> {
-                    // WHEN
-                    itemService.update(null);
-                }
+            BusinessException.class,
+            () -> {
+                // WHEN
+                itemService.update(null);
+            }
         );
     }
 }

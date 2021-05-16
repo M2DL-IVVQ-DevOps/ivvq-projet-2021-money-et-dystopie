@@ -91,22 +91,22 @@ class ItemControllerCreateIntegrationTest {
         ItemBean resultFromJson = mapper.readValue(jsonResult, ItemBean.class);
 
         // THEN
-        assertAll("The returned item does not comply.",
-                () -> assertEquals(
-                        itemTest.getTitle(),
-                        resultFromJson.getTitle()),
-                () -> assertEquals(
-                        itemTest.getPicture(),
-                        resultFromJson.getPicture()),
-                () -> assertEquals(
-                        itemTest.getAmount(),
-                        resultFromJson.getAmount()),
-                () -> assertEquals(
-                        itemTest.getPrice(),
-                        resultFromJson.getPrice()),
-                () -> assertEquals(
-                        itemTest.getSellerAccount().getStoreName(),
-                        resultFromJson.getSellerAccount().getStoreName())
+        assertAll(
+            "The returned item does not comply.",
+            () -> assertEquals(itemTest.getTitle(), resultFromJson.getTitle()),
+            () ->
+                assertEquals(
+                    itemTest.getPicture(),
+                    resultFromJson.getPicture()
+                ),
+            () ->
+                assertEquals(itemTest.getAmount(), resultFromJson.getAmount()),
+            () -> assertEquals(itemTest.getPrice(), resultFromJson.getPrice()),
+            () ->
+                assertEquals(
+                    itemTest.getSellerAccount().getStoreName(),
+                    resultFromJson.getSellerAccount().getStoreName()
+                )
         );
     }
 
@@ -158,19 +158,12 @@ class ItemControllerCreateIntegrationTest {
             "The saved item exist."
         );
 
-        assertAll("The returned item does not comply.",
-                () -> assertEquals(
-                        itemTest.getTitle(),
-                        resultItem.getTitle()),
-                () -> assertEquals(
-                        itemTest.getPicture(),
-                        resultItem.getPicture()),
-                () -> assertEquals(
-                        itemTest.getAmount(),
-                        resultItem.getAmount()),
-                () -> assertEquals(
-                        itemTest.getPrice(),
-                        resultItem.getPrice())
+        assertAll(
+            "The returned item does not comply.",
+            () -> assertEquals(itemTest.getTitle(), resultItem.getTitle()),
+            () -> assertEquals(itemTest.getPicture(), resultItem.getPicture()),
+            () -> assertEquals(itemTest.getAmount(), resultItem.getAmount()),
+            () -> assertEquals(itemTest.getPrice(), resultItem.getPrice())
         );
 
         // THEN

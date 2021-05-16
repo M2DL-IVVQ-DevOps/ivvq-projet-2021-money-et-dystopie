@@ -1,5 +1,12 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.Iterator;
+import java.util.Set;
+import java.util.stream.Collectors;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -7,22 +14,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
 import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
-import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.OrderRepository;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -33,6 +29,7 @@ public class OrderService {
 
     @Getter
     private final ItemService itemService;
+
     @Getter
     private final CustomerService customerService;
 
@@ -40,13 +37,13 @@ public class OrderService {
     public Command create(Command order) throws BusinessException {
         if (order.getItems() == null || order.getItems().isEmpty()) {
             throw new BusinessException(
-                    "La commande doit comporter au moins un article."
+                "La commande doit comporter au moins un article."
             );
         }
 
         this.valid(order);
 
-        for(Item item : order.getItems()) {
+        for (Item item : order.getItems()) {
             itemService.create(item);
         }
 
@@ -60,15 +57,15 @@ public class OrderService {
     public Command save(Command order) throws BusinessException {
         if (order == null) {
             throw new BusinessException(
-                    "Une commande non définie ne peut être sauvegardé."
+                "Une commande non définie ne peut être sauvegardé."
             );
         }
         try {
             return orderRepository.save(order);
         } catch (Exception e) {
             throw new BusinessException(
-                    "Une erreur est survenue lors de l'enregistrement de la commande." +
-                            (e.getMessage() == null ? e.getMessage() : "")
+                "Une erreur est survenue lors de l'enregistrement de la commande." +
+                (e.getMessage() == null ? e.getMessage() : "")
             );
         }
     }
@@ -78,7 +75,7 @@ public class OrderService {
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<Command>> constraintViolations = validator.validate(
-                order
+            order
         );
 
         if (!constraintViolations.isEmpty()) {
@@ -93,7 +90,13 @@ public class OrderService {
         CustomerBean c = new CustomerBean();
         BeanUtils.copyProperties(order.getCustomer(), c);
         orderBean.setCustomer(c);
-        orderBean.setItems(order.getItems().stream().map(ItemService::getBean).collect(Collectors.toList()));
+        orderBean.setItems(
+            order
+                .getItems()
+                .stream()
+                .map(ItemService::getBean)
+                .collect(Collectors.toList())
+        );
         return orderBean;
     }
 
@@ -103,8 +106,13 @@ public class OrderService {
         Customer c = new Customer();
         BeanUtils.copyProperties(orderBean.getCustomer(), c);
         order.setCustomer(c);
-        order.setItems(orderBean.getItems().stream().map(ItemService::getDto).collect(Collectors.toList()));
+        order.setItems(
+            orderBean
+                .getItems()
+                .stream()
+                .map(ItemService::getDto)
+                .collect(Collectors.toList())
+        );
         return order;
     }
-
 }

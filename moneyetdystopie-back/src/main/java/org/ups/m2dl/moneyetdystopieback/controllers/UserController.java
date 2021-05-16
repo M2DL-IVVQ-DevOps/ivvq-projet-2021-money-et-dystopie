@@ -27,8 +27,8 @@ public class UserController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    userService.getBean(
-                        userService.create(userService.getDto(user))
+                    UserService.getBean(
+                        userService.create(UserService.getDto(user))
                     )
                 );
         } catch (BusinessException e) {

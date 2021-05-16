@@ -1,5 +1,11 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.Iterator;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -15,13 +21,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Iterator;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service

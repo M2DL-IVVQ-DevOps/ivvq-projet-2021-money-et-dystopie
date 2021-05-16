@@ -1,7 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
@@ -63,7 +62,7 @@ public class Customer {
     private List<Command> pastCommands;
 
     public void addPastCommand(Command command) {
-        if(pastCommands == null) {
+        if (pastCommands == null) {
             pastCommands = new ArrayList<>();
         }
         pastCommands.add(command);

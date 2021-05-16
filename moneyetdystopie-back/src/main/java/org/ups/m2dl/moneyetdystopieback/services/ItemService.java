@@ -66,7 +66,7 @@ public class ItemService {
     public Item update(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
-                    "L'article référencé n'a pu être trouvé."
+                "L'article référencé n'a pu être trouvé."
             );
         }
         // On vérifie que les mises à jour respectent les règles définies
@@ -74,7 +74,7 @@ public class ItemService {
         // On vérifie que l'item existe bien déjà en base
         if (findById(item.getId()) == null) {
             throw new BusinessException(
-                    "L'article référencé n'a pu être trouvé."
+                "L'article référencé n'a pu être trouvé."
             );
         }
 

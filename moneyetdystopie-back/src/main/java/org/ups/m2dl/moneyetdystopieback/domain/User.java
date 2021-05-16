@@ -1,15 +1,14 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -75,9 +74,13 @@ public class User {
     @OneToOne(cascade = CascadeType.REMOVE)
     private Customer customerAccount;
 
-    /** Tokens (cookies) de connexion associés à l'utilisateur. **/
+    /** Tokens (cookies) de connexion associés à l'utilisateur. * */
     @Getter
     @Setter
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @OneToMany(
+        mappedBy = "user",
+        fetch = FetchType.LAZY,
+        cascade = CascadeType.REMOVE
+    )
     private List<Token> tokenList;
 }

@@ -1,7 +1,14 @@
 package org.ups.m2dl.moneyetdystopieback.controllers.controllers_integration_test;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,14 +30,6 @@ import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
 import org.ups.m2dl.moneyetdystopieback.services.OrderService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 class OrderControllerCreateIntegrationTest {
@@ -40,14 +39,19 @@ class OrderControllerCreateIntegrationTest {
 
     @Autowired
     private OrderRepository orderRepository;
+
     @Autowired
     private CustomerRepository customerRepository;
+
     @Autowired
     private SellerRepository sellerRepository;
+
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private UserService userService;
+
     @Autowired
     private OrderService orderService;
 
@@ -64,8 +68,8 @@ class OrderControllerCreateIntegrationTest {
     private ObjectMapper mapper;
 
     private MediaType contentType = new MediaType(
-            MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype()
+        MediaType.APPLICATION_JSON.getType(),
+        MediaType.APPLICATION_JSON.getSubtype()
     );
 
     @BeforeEach
@@ -75,10 +79,28 @@ class OrderControllerCreateIntegrationTest {
 
     @BeforeEach
     public void createBeans() throws BusinessException {
-        customer = new Customer("acheteur", "adresserueville", null, null, null);
-        User buyerAccount = new User("lastName", "firstName", "buyer@email.fr", "Password1!", null, customer, new ArrayList<>());
-        seller = new Seller("storeName", null, new ArrayList<>(), new ArrayList<>());
-        User sellerAccount = new User("lastName", "firstName", "seller@email.fr", "Password1!", seller, null, new ArrayList<>());
+        customer =
+            new Customer("acheteur", "adresserueville", null, null, null);
+        User buyerAccount = new User(
+            "lastName",
+            "firstName",
+            "buyer@email.fr",
+            "Password1!",
+            null,
+            customer,
+            new ArrayList<>()
+        );
+        seller =
+            new Seller("storeName", null, new ArrayList<>(), new ArrayList<>());
+        User sellerAccount = new User(
+            "lastName",
+            "firstName",
+            "seller@email.fr",
+            "Password1!",
+            seller,
+            null,
+            new ArrayList<>()
+        );
         buyerAccount = userService.create(buyerAccount);
         sellerAccount = userService.create(sellerAccount);
         customer = buyerAccount.getCustomerAccount();
@@ -97,59 +119,63 @@ class OrderControllerCreateIntegrationTest {
     void whenCreateOrder_thenOrderReturn() throws Exception {
         // GIVEN
         itemTest =
-                new Item(
-                        null,
-                        "title39",
-                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                        "description39",
-                        10,
-                        5.f,
-                        null,
-                        seller
-                );
-        order = new Command(null, CommandState.WAITING_FOR_PAYMENT, customer, List.of(itemTest));
+            new Item(
+                null,
+                "title39",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description39",
+                10,
+                5.f,
+                null,
+                seller
+            );
+        order =
+            new Command(
+                null,
+                CommandState.WAITING_FOR_PAYMENT,
+                customer,
+                List.of(itemTest)
+            );
 
-        jsonInput = new Gson().toJson(orderService.getBean(order));
+        jsonInput = new Gson().toJson(OrderService.getBean(order));
 
         // WHEN
         mockMvc
-                .perform(
-                        post("/order/create")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonInput)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                post("/order/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonInput)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
-        CommandBean resultFromJson = mapper.readValue(jsonResult, CommandBean.class);
+        CommandBean resultFromJson = mapper.readValue(
+            jsonResult,
+            CommandBean.class
+        );
         Command result = orderService.getDto(resultFromJson);
 
         // THEN
-        assertAll("The returned item does not comply.",
-                () -> assertEquals(
-                        order.getState(),
-                        result.getState()),
-                () -> assertEquals(
-                        order.getCustomer().getPseudo(),
-                        result.getCustomer().getPseudo()),
-                () -> assertEquals(
-                        order.getItems().size(),
-                        result.getItems().size())
+        assertAll(
+            "The returned item does not comply.",
+            () -> assertEquals(order.getState(), result.getState()),
+            () ->
+                assertEquals(
+                    order.getCustomer().getPseudo(),
+                    result.getCustomer().getPseudo()
+                ),
+            () ->
+                assertEquals(order.getItems().size(), result.getItems().size())
         );
         assertNotNull(result.getId(), "The returned item does not have ID.");
     }
 
     @ParameterizedTest
-    @CsvSource(
-            {
-                    "title47,description47,1,2.f,false,",
-            }
-    )
+    @CsvSource({ "title47,description47,1,2.f,false," })
     void whenCreateInvalidOrder_thenErrorReturned() {}
 }
-

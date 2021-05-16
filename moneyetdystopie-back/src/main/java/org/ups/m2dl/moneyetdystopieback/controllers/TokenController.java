@@ -39,7 +39,7 @@ public class TokenController {
         @CookieValue(value = "token", defaultValue = "none") String tokenValue
     ) {
         try {
-            User user = userService.getDto(userBean);
+            User user = UserService.getDto(userBean);
             response.addCookie(
                 tokenService.createTokenCookie(user, tokenValue)
             );
@@ -66,7 +66,7 @@ public class TokenController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    userService.getBean(
+                    UserService.getBean(
                         tokenService.getUserByTokenValue(tokenValue)
                     )
                 );
