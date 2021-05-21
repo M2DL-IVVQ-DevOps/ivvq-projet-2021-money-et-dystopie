@@ -17,8 +17,11 @@ import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 import javax.servlet.http.Cookie;
+
+import java.nio.charset.StandardCharsets;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -64,7 +67,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         UserBean userBeanTest = new UserBean(null, null, "Tokenemail1@email.email", "TokenPasswordpassword1", null, null);
         jsonUserBeanTest = new Gson().toJson(userBeanTest);
 
@@ -89,7 +91,7 @@ class TokenControllerCreateIntegrationTest {
     }
 
     @Test
-    void givenInvalidData_whenCreateToken_thenUserNotReturned() throws Exception {
+    void givenInvalidData_whenCreateToken_thenInvalidConnexionError() throws Exception {
         // GIVEN
         userTest = new User("TokenlastName2", "TokenfirstName2", "Tokenemail2@email.email", "TokenPasswordpassword2", null, null, null);
         sellerTest = new Seller("TokenstoreName2",null,null,null);
@@ -100,7 +102,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         UserBean userBeanTest = new UserBean(null, null, "Tokenemail2@email.email", "TokenWrongPassword", null, null);
         jsonUserBeanTest = new Gson().toJson(userBeanTest);
 
@@ -114,6 +115,7 @@ class TokenControllerCreateIntegrationTest {
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(MoneyDystopieConstants.INVALID_CONNEXION_ERROR,new String(jsonResult.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8));
     }
 
     @Test
@@ -128,7 +130,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
         Cookie cookie = tokenService.createTokenCookie(tokenTest);
@@ -153,7 +154,7 @@ class TokenControllerCreateIntegrationTest {
     }
 
     @Test
-    void givenInvalidData_whenCheckToken_thenUserNotReturned() throws Exception {
+    void givenInvalidData_whenCheckToken_thenExpiredConnexionError() throws Exception {
         // GIVEN
         userTest = new User("TokenlastName4", "TokenfirstName4", "Tokenemail4@email.email", "TokenPasswordpassword4", null, null, null);
         sellerTest = new Seller("TokenstoreName4",null,null,null);
@@ -164,7 +165,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
         tokenTest.setValue(tokenTest.getValue() + "8");
@@ -180,6 +180,7 @@ class TokenControllerCreateIntegrationTest {
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,new String(jsonResult.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8));
     }
 
     @Test
@@ -194,7 +195,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
         Cookie cookie = tokenService.createTokenCookie(tokenTest);
@@ -225,7 +225,6 @@ class TokenControllerCreateIntegrationTest {
         jsonUserTest = new Gson().toJson(userTest);
 
         userService.create(userTest);
-
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
         tokenTest.setValue(tokenTest.getValue() + "8");
@@ -241,6 +240,7 @@ class TokenControllerCreateIntegrationTest {
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT,new String(jsonResult.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8));
     }
 
 }

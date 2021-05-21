@@ -49,7 +49,7 @@ public class TokenService {
             user = token.getUser();
         } else {
             throw new BusinessException(
-                "Votre session a expiré, veuillez vous reconnecter."
+                MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR
             );
         }
         return user;
@@ -131,7 +131,7 @@ public class TokenService {
                 removeToken(ancientToken);
             }
             throw new BusinessException(
-                "Impossible de vous connecter avec les identifiants renseignés."
+                    MoneyDystopieConstants.INVALID_CONNEXION_ERROR
             );
         }
         return newToken;
@@ -147,7 +147,7 @@ public class TokenService {
 
     public Cookie createTokenCookie(Token token) {
         Cookie cookie = new Cookie("token", token.getValue());
-        cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
+        cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES*60);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         return cookie;

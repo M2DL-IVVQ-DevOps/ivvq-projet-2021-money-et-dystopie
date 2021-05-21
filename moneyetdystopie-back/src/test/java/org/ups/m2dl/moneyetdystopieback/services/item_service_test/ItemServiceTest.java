@@ -15,6 +15,7 @@ import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
+import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,9 +34,11 @@ class ItemServiceTest {
 
     private Seller sellerTest;
 
+    private TokenService tokenService;
+
     @BeforeEach
     void setup() {
-        itemService = new ItemService(itemRepository, sellerService);
+        itemService = new ItemService(itemRepository, sellerService, tokenService);
     }
 
     @Test

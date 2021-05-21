@@ -17,6 +17,8 @@ import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 
@@ -25,15 +27,16 @@ import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 public class ItemService {
 
     @Getter
-    @Setter
     private final ItemRepository itemRepository;
 
     @Getter
-    @Setter
     private final SellerService sellerService;
 
-    @Transactional
-    public Item create(Item item) throws BusinessException {
+    @Getter
+    private final TokenService tokenService;
+
+        @Transactional
+        public Item create(Item item, String tokenValue) throws BusinessException {
         if (
             item.getSellerAccount() == null ||
             item.getSellerAccount().getStoreName().isBlank()
@@ -45,9 +48,17 @@ public class ItemService {
         );
         if (seller == null) {
             throw new BusinessException(
-                "La boutique référencée n'a pu être trouvée."
+                    "La boutique référencée n'a pu être trouvée."
             );
         }
+        User user = seller.getUserAccount();
+        Token token = tokenService.getTokenByValue(tokenValue);
+        if (!tokenService.isTokenUserAssociationValid(token,user) || !tokenService.isTokenValid(token)){
+            throw new BusinessException(
+                    "Vous devez être connecté pour effectuer cette action."
+            );
+        }
+
         item.setSellerAccount(seller);
         this.valid(item);
 
