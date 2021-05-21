@@ -58,3 +58,4 @@ jobs:
             -Dsonar.host.url=${{secrets.SONAR_URL_FRONT}}
             -Dsonar.login=${{secrets.SONAR_LOGIN_FRONT}}
             -Dsonar.qualitygate.wait=true
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
