@@ -4,7 +4,6 @@ import java.nio.file.AccessDeniedException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +42,12 @@ public class TokenController {
             response.addCookie(tokenService.createTokenCookie(token));
             return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(token.getUser()));
         }catch (BusinessException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
                 .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
                 );
         }
     }
@@ -71,12 +70,12 @@ public class TokenController {
         } catch (BusinessException e) {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new AccessDeniedException(e.getMessage()));
+                .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
                 );
         }
     }
@@ -96,7 +95,7 @@ public class TokenController {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
                 );
         }
     }

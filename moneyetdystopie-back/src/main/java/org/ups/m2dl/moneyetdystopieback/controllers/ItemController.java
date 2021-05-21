@@ -22,13 +22,15 @@ public class ItemController {
     private ItemService itemService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(@RequestBody ItemBean item) {
+    public ResponseEntity<Object> create(
+            @RequestBody ItemBean item,
+            @CookieValue(value = "token", defaultValue = "") String tokenValue) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                     itemService.getBean(
-                        itemService.create(itemService.getDto(item))
+                        itemService.create(itemService.getDto(item), tokenValue)
                     )
                 );
         } catch (BusinessException e) {
@@ -37,7 +39,7 @@ public class ItemController {
             return ResponseEntity
                 .badRequest()
                 .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                        MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
                 );
         }
     }
@@ -48,7 +50,7 @@ public class ItemController {
         try{
             return ResponseEntity.status(HttpStatus.OK).body(itemService.findAll());
         }catch (Exception e){
-            return ResponseEntity.badRequest().body(new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT));
+            return ResponseEntity.badRequest().body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

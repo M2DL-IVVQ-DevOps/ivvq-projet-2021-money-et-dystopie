@@ -37,7 +37,7 @@ public class UserController {
             return ResponseEntity
                 .badRequest()
                 .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                        MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
                 );
         }
     }
