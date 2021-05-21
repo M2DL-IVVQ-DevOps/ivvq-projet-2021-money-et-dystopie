@@ -25,6 +25,7 @@ FROM openjdk:11-jre
 WORKDIR /app
 COPY --from=maven /back/app.jar app.jar
 COPY ./wait-for-it.sh .
+RUN chmod +x wait-for-it.sh
 
 ENV profile="dev"
 
