@@ -6,6 +6,10 @@ node_modules
 cypress/videos
 cypress/screenshots
 
+# Code coverage
+.nyc_output/*
+coverage/*
+
 # local env files
 .env.local
 .env.*.local
