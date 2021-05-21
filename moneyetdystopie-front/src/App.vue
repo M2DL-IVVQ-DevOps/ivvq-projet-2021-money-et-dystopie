@@ -85,7 +85,6 @@
           return undefined;
         });
       },
-
       creationAccount : async function(userCreation){
         await axios.post('/user/create/', userCreation).then(response => {
           console.log("Réponse : " + response);

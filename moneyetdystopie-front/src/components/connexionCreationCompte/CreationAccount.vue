@@ -103,6 +103,7 @@
                     this.accountCreationError = returnedMessage;
                     this.accountCreationErrorMessage = true;
                 }
+                this.creation(userCreation);
             },
             checkForm: function (e) {
                 this.errors = [];
