@@ -74,25 +74,26 @@
       },
 
       connexionAccount : async function(userConnexion){
-        await axios.post('/token/create/', userConnexion).then(response => {
-          this.user = response.data;
-          if (this.user.customerAccount !== null && this.user.customerAccount.cart === null){
-            this.user.customerAccount.cart = {
-              items: []
-            };
-          }
-        }).catch(() => {
-          return undefined;
+        this.user = await axios.post('/token/create/', userConnexion).then(response => {
+          return response.data;
+        }).catch((error) =>{
+          this.serveurErrorMessage = error.response.data;
+          return null;
         });
+        if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
+          this.user.customerAccount.cart = {
+            items: []
+          };
+        }
       },
       creationAccount : async function(userCreation){
-        await axios.post('/user/create/', userCreation).then(response => {
-          console.log("Réponse : " + response);
-          return "";
-        }).catch(error => {
-          console.log("Erreur : " + error);
-          return error.response.data.message;
-        });
+        try {
+          await axios.post('/user/create/', userCreation);
+          return true;
+        }catch(error)  {
+          this.serveurErrorMessage = error.response.data;
+          return false;
+        }
       },
 
       addInCart(idElement, amountSelection) {
@@ -108,7 +109,7 @@
       },
 
       changeInCart(idElement, amountRestante) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
         let elementSelect = this.catalogue.find(elt => elt.id === idElement);
         let amountRetire, index;
         if (amountRestante === 0){

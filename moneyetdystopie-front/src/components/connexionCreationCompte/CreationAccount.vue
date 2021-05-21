@@ -78,8 +78,10 @@
         props: ['creation'],
         methods: {
             async creationAccount(){
-                this.accountCreationError = false;
-                this.accountCreationErrorMessage = "";
+                this.checkForm();
+                if (this.errors.length){
+                    return;
+                }
                 let userCreation = {
                     lastName: this.lastName,
                     firstName: this.firstName,
@@ -97,13 +99,9 @@
                         storeName: this.storeName
                     }
                 }
-                let returnedMessage = await this.creation(userCreation);
-                console.log("Reçu : " + returnedMessage);
-                if (returnedMessage !== ""){
-                    this.accountCreationError = returnedMessage;
-                    this.accountCreationErrorMessage = true;
+                if(await this.creation(userCreation)){
+                    this.purgeFields();
                 }
-                this.creation(userCreation);
             },
             checkForm: function (e) {
                 this.errors = [];
