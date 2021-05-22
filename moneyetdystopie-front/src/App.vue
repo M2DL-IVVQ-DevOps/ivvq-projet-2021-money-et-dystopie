@@ -11,6 +11,9 @@
       <div v-if="user.customer != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
+        <div class="div-button-rafraichir-catalogue">
+          <md-button v-on:click="getAllItemsForCatalogue()" class="md-primary md-raised" >Rafraîchir</md-button>
+        </div>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
@@ -20,6 +23,12 @@
       <div v-if="user.customer != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
+        <ConfirmationCommand
+                v-if="user.customer.cart.items.length"
+                :customer="user.customer"
+                :getAllItemsForCatalogue="getAllItemsForCatalogue"
+                :changeServeurErrorMessage="changeServeurErrorMessage"
+        ></ConfirmationCommand>
         <Items
                 :changeCart="changeInCart"
                 :itemsData="user.customer.cart.items"
@@ -59,11 +68,13 @@
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
   import Commands from "./components/items/Commands";
+  import ConfirmationCommand from "./components/ConfirmationCommand";
   import axios from "axios";
 
   export default {
     name: 'App',
     components: {
+      ConfirmationCommand,
       Commands,
       ConnexionCreationAccount,
       Items,
@@ -281,5 +292,9 @@
   .button-action:hover {
     background: #ffd246;
     color: black;
+  }
+  .div-button-rafraichir-catalogue{
+    text-align: right;
+    margin: 0 10% 0 0;
   }
 </style>

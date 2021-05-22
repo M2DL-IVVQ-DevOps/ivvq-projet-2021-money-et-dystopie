@@ -1,6 +1,6 @@
 <template id="app">
     <div v-if="!itemInCreation" class="div-button-action-new-item">
-        <md-button class="button-action-open" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
+        <md-button v-on:click="beginCreation()" class="md-primary md-raised" >Ajouter un article à ma boutique</md-button>
     </div>
     <div v-else class="base">
         <div class="div-button-action-new-item">
@@ -112,8 +112,8 @@
                         this.endCreation();
                     })
                     .catch(error => {
-                        if(error!=null && error.response!=null){
-                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
+                        if(error!=null && error.response!=null && error.response.data!=null){
+                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response.data);
                         }else{
                             this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur.');
                         }
