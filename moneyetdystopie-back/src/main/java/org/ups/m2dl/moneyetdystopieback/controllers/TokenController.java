@@ -22,12 +22,7 @@ import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 public class TokenController {
 
     @Getter
-    @Setter
     private final TokenService tokenService;
-
-    @Getter
-    @Setter
-    private final UserService userService;
 
     @PostMapping(
         value = "/create",
