@@ -42,7 +42,7 @@ public class Seller {
     @Setter
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "sellerAccount", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "sellerAccount")
     private List<Item> items;
 
     /** Liste des produits en vente. */
@@ -54,13 +54,30 @@ public class Seller {
     private List<Command> commands;
 
     public void addItem(Item item) {
-        if (items == null) {
-            items = new ArrayList<>();
+        if (this.items == null) {
+            this.items = new ArrayList<>();
         }
-        items.add(item);
+        this.items.add(item);
     }
 
     public void removeItem(Item item) {
         items.remove(item);
+    }
+
+    public boolean addCommand(Command command) {
+        int i = 0;
+        if (this.commands == null) {
+            this.commands = new ArrayList<>();
+        }
+
+        while(i<this.commands.size() && this.commands.get(i).getId().equals(command.getId())){
+            i++;
+        }
+
+        if(i==this.commands.size()){
+            this.commands.add(command);
+            return true;
+        }
+        return false;
     }
 }

@@ -58,7 +58,7 @@ public class Customer {
     @Getter
     @Setter
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "customer")
     private List<Command> pastCommands;
 
     public void addPastCommand(Command command) {

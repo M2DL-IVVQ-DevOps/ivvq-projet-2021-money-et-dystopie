@@ -31,11 +31,11 @@ public class ItemService {
 
     @Transactional
     public Item create(Item item) throws BusinessException {
-        if (
-            item.getSellerAccount() == null ||
-            item.getSellerAccount().getStoreName().isBlank()
-        ) {
-            throw new BusinessException("La boutique n'est pas référencée.");
+
+        if(item.getSellerAccount() == null){
+            throw new BusinessException(
+                    "La boutique n'est pas référencée."
+            );
         }
         Seller seller = sellerService.findByStoreName(
             item.getSellerAccount().getStoreName()
@@ -46,6 +46,7 @@ public class ItemService {
             );
         }
         item.setSellerAccount(seller);
+
         this.valid(item);
 
         item = this.save(item);
@@ -60,25 +61,6 @@ public class ItemService {
             item.getSellerAccount().removeItem(item);
             throw businessException;
         }
-    }
-
-    @Transactional
-    public Item update(Item item) throws BusinessException {
-        if (item == null) {
-            throw new BusinessException(
-                "L'article référencé n'a pu être trouvé."
-            );
-        }
-        // On vérifie que les mises à jour respectent les règles définies
-        this.valid(item);
-        // On vérifie que l'item existe bien déjà en base
-        if (findById(item.getId()) == null) {
-            throw new BusinessException(
-                "L'article référencé n'a pu être trouvé."
-            );
-        }
-
-        return this.save(item);
     }
 
     @Transactional
@@ -134,7 +116,6 @@ public class ItemService {
                 itemBean.getSellerAccount()
             );
         }
-
         return itemBean;
     }
 

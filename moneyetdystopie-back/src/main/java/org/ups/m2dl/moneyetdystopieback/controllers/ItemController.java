@@ -42,27 +42,6 @@ public class ItemController {
         }
     }
 
-    @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> update(@RequestBody ItemBean item) {
-        try {
-            return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(
-                    ItemService.getBean(
-                        itemService.update(ItemService.getDto(item))
-                    )
-                );
-        } catch (BusinessException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity
-                .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
-        }
-    }
-
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> getAll() {
         try {

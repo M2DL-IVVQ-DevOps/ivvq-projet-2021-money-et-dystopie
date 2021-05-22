@@ -65,13 +65,13 @@ public class User {
     /** Compte commercant associé. */
     @Getter
     @Setter
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     private Seller sellerAccount;
 
     /** Compte acheteur associé. */
     @Getter
     @Setter
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne
     private Customer customerAccount;
 
     /** Tokens (cookies) de connexion associés à l'utilisateur. * */
@@ -79,8 +79,7 @@ public class User {
     @Setter
     @OneToMany(
         mappedBy = "user",
-        fetch = FetchType.LAZY,
-        cascade = CascadeType.REMOVE
+        fetch = FetchType.LAZY
     )
     private List<Token> tokenList;
 }

@@ -13,33 +13,30 @@ import org.springframework.web.bind.annotation.RestController;
 import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
-import org.ups.m2dl.moneyetdystopieback.services.OrderService;
+import org.ups.m2dl.moneyetdystopieback.services.CommandService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/order")
-public class OrderController {
+@RequestMapping("/command")
+public class CommandController {
 
     @Getter
     @Setter
-    private OrderService orderService;
+    private CommandService commandService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(@RequestBody CommandBean order) {
+    public ResponseEntity<Object> create(@RequestBody CommandBean command) {
         try {
-            Command orderDto = OrderService.getDto(order);
-            Command resultDto = orderService.create(orderDto);
-            CommandBean result = OrderService.getBean(resultDto);
+            Command commandDto = CommandService.getDto(command);
+            Command resultDto = commandService.create(commandDto);
+            CommandBean result = CommandService.getBean(resultDto);
             return ResponseEntity.status(HttpStatus.OK).body(result);
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity
-                .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT);
         }
     }
 }

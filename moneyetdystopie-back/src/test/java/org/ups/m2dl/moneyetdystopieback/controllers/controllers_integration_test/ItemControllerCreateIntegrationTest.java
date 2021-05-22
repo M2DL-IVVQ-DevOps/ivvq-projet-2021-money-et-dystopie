@@ -108,6 +108,9 @@ class ItemControllerCreateIntegrationTest {
                     resultFromJson.getSellerAccount().getStoreName()
                 )
         );
+
+        //THEN
+        Assertions.assertFalse(jsonResult.isBlank());
     }
 
     @Test

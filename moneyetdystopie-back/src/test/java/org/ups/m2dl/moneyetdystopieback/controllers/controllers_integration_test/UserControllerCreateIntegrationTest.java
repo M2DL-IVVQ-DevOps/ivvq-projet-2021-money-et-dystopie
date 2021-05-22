@@ -6,9 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +23,7 @@ import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerCreateIntegrationTest {
@@ -56,7 +55,7 @@ class UserControllerCreateIntegrationTest {
         MediaType.APPLICATION_JSON.getSubtype()
     );
 
-    @BeforeEach
+    @BeforeAll
     void setup() {
         mapper = new ObjectMapper();
     }
