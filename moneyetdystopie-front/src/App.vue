@@ -3,6 +3,7 @@
           'catalog-background': user && navigation === 'CATALOG',
           'card-background': user && navigation === 'CART',
           'shop-background': user && navigation === 'SHOP',
+          'command-background': user && navigation === 'MY_COMMANDS',
           'connexionCreationAccount-background': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
 
@@ -34,6 +35,11 @@
                 :navigation="navigation"
         />
       </div>
+      <div v-if="user.customer != null && navigation === 'MY_COMMANDS'">
+        <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
+        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Commands :commands="user.customer.pastCommands"></Commands>
+      </div>
     </section>
 
     <section v-else>
@@ -52,12 +58,13 @@
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
-
-  const axios = require('axios');
+  import Commands from "./components/items/Commands";
+  import axios from "axios";
 
   export default {
     name: 'App',
     components: {
+      Commands,
       ConnexionCreationAccount,
       Items,
       Menu,
@@ -72,7 +79,6 @@
       changeNavigation(nav){
         this.navigation = nav;
       },
-
       connexionAccount : async function(userConnexion){
         await axios.post('/token/create/', userConnexion).then(response => {
           this.user = response.data;
@@ -81,7 +87,6 @@
         }).catch((error) =>{
           this.serveurErrorMessage = error.response.data;
         });
-
       },
       creationAccount : async function(userCreation){
         try {
@@ -182,6 +187,9 @@
   }
   .card-background{
     background-color: #f8cedc;
+  }
+  .command-background{
+    background-color: #c5c6ff;
   }
   h1{
     color: white;
