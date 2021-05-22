@@ -10,7 +10,7 @@
     <section v-if="user">
       <div v-if="user.customerAccount != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
@@ -19,7 +19,7 @@
       </div>
       <div v-if="user.customerAccount != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Items
                 :changeCart="changeInCart"
                 :itemsData="user.customerAccount.cart.items"
@@ -28,17 +28,17 @@
       </div>
       <div v-if="user.sellerAccount != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.seller"></AddItem>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.sellerAccount"></AddItem>
         <Items
                 :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.customer != null && navigation === 'MY_COMMANDS'">
+      <div v-if="user.customerAccount != null && navigation === 'MY_COMMANDS'">
         <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
-        <Commands :commands="user.customer.pastCommands"></Commands>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <Commands :commands="user.customerAccount.pastCommands"></Commands>
       </div>
     </section>
 
@@ -83,6 +83,7 @@
         await axios.post('/token/create/', userConnexion).then(response => {
           this.user = response.data;
           this.initUser();
+          this.initNavigation();
           this.getAllItemsForCatalogue();
         }).catch((error) =>{
           this.serveurErrorMessage = error.response.data;
@@ -99,8 +100,8 @@
       },
 
       addInCart(idElement, amountSelection) {
-        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id == idElement);
-        let elementSelect = this.itemsData.find(elt => elt.id == idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
+        let elementSelect = this.catalogue.find(elt => elt.id === idElement);
 
         if(elementInPanier != null){
            elementInPanier.amount += amountSelection;
@@ -147,7 +148,13 @@
           };
         }
       },
-
+      initNavigation(){
+        if (this.user.sellerAccount !== null){
+          this.navigation = "SHOP";
+        }else{
+          this.navigation = "CATALOG";
+        }
+      },
       changeServeurErrorMessage(value){
         this.serveurErrorMessage = value;
       },

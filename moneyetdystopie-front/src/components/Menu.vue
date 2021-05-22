@@ -24,31 +24,41 @@
                 maxScene: [
                     {
                         name:'Catalog',
-                        navigation: 'CATALOG'
+                        navigation: 'CATALOG',
+                        valid: 'customer'
                     },{
                         name:'Mon panier',
-                        navigation: 'CART'
+                        navigation: 'CART',
+                        valid: 'customer'
                     },{
                         name:'Ma boutique',
-                        navigation: 'SHOP'
+                        navigation: 'SHOP',
+                        valid: 'seller'
                     },{
                         name:'Mes achats',
-                        navigation: 'MY_COMMANDS'
+                        navigation: 'MY_COMMANDS',
+                        valid: 'customer'
                     }
                 ]
             }
         },
-        props: ['changeNavigation'],
+        props: ['changeNavigation', 'isSeller', 'isCustomer'],
         mounted () {
-            setTimeout(() => {
-                this.scene = this.maxScene - 3
-            }, 1000)
+            console.log("MaxScene initial = " + this.maxScene);
+            this.maxScene = this.maxScene.filter(scene => this.isValid(scene.valid));
+            console.log("MaxScene final = " + this.maxScene);
         },
         methods: {
             selectionMenu(index, nav){
                 this.scene = index;
                 this.changeNavigation(nav);
-            }
+            },
+            isValid(validity){
+                console.log("Les paramètres sont : " + validity);
+                console.log("MaxScene : " + this.maxScene);
+                console.log("Résultat : " + (validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
+                return ((validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
+            },
         }
     }
 </script>
