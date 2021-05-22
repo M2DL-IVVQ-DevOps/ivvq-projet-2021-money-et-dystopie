@@ -74,17 +74,14 @@
       },
 
       connexionAccount : async function(userConnexion){
-        this.user = await axios.post('/token/create/', userConnexion).then(response => {
-          return response.data;
+        await axios.post('/token/create/', userConnexion).then(response => {
+          this.user = response.data;
+          this.initUser();
+          this.getAllItemsForCatalogue();
         }).catch((error) =>{
           this.serveurErrorMessage = error.response.data;
-          return null;
         });
-        if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
-          this.user.customerAccount.cart = {
-            items: []
-          };
-        }
+
       },
       creationAccount : async function(userCreation){
         try {
@@ -130,11 +127,20 @@
       },
 
       getAllItemsForCatalogue(){
+
         axios.get("/item/all").then(response => {
           this.catalogue = [...response.data];
         }).catch(() => {
             this.serveurErrorMessage = 'Impossible de récupérer le catalogue d\'article du serveur.';
         });
+      },
+
+      initUser(){
+        if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
+          this.user.customerAccount.cart = {
+            items: []
+          };
+        }
       },
 
       changeServeurErrorMessage(value){
