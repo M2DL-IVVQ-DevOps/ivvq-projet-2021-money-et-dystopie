@@ -42,15 +42,7 @@ public class ItemCommandService {
 
         this.valid(itemCommand);
 
-        // Décrémente la quantité d'item de la boutique en question
-        if(itemCommand.getItem().getAmount() < itemCommand.getAmount()){
-            throw new BusinessException(
-                    "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie."
-            );
-        }
-
-        itemCommand.getItem().setAmount(itemCommand.getItem().getAmount() - itemCommand.getAmount());
-
+        decreaseStock(itemCommand);
 
         itemService.save(itemCommand.getItem());
         return save(itemCommand);
@@ -85,6 +77,18 @@ public class ItemCommandService {
             Iterator<ConstraintViolation<ItemCommand>> iterator = constraintViolations.iterator();
             throw new BusinessException(iterator.next().getMessage());
         }
+    }
+
+    public void decreaseStock(ItemCommand itemCommand) throws BusinessException {
+        final Item item = itemCommand.getItem();
+
+        // Décrémente la quantité d'item de la boutique en question
+        if(item.getAmount() < itemCommand.getAmount()){
+            throw new BusinessException(
+                    "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie."
+            );
+        }
+        item.setAmount(item.getAmount() - itemCommand.getAmount());
     }
 
     public static ItemCommandBean getBean(ItemCommand itemCommand) {

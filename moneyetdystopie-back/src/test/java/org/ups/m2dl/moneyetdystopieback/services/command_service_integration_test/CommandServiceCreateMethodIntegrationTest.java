@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.ups.m2dl.moneyetdystopieback.domain.*;
+import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.*;
 import org.ups.m2dl.moneyetdystopieback.services.*;
@@ -36,6 +37,7 @@ class CommandServiceCreateMethodIntegrationTest {
 
     private Command commandTest;
 
+    private static final String VALID_CARD_NUMBER = "9999999999999995";
 
     private Item itemTest;
 
@@ -79,7 +81,7 @@ class CommandServiceCreateMethodIntegrationTest {
         Assertions.assertThrows(
             BusinessException.class,
             // When : Le service enregistre la commande
-            () -> commandService.create(commandTest)
+            () -> commandService.create(commandTest, VALID_CARD_NUMBER)
         );
     }
 
@@ -101,7 +103,7 @@ class CommandServiceCreateMethodIntegrationTest {
         Assertions.assertThrows(
             BusinessException.class,
             // When : Le service enregistre la commande
-            () -> commandService.create(commandTest)
+            () -> commandService.create(commandTest, VALID_CARD_NUMBER)
         );
     }
 
@@ -113,16 +115,16 @@ class CommandServiceCreateMethodIntegrationTest {
                 5,
                 itemTest
         );
-        // Given : Une commande dans un état non autorisé
+        // Given : Une commande dans un état autorisé
         commandTest =
             new Command(
                 null,
-                null,
+                CommandState.WAITING_FOR_PAYMENT,
                     customerTest,
                 List.of(itemCommandTest)
             );
         // When : Le service enregistre la commande
-        Command actual = commandService.create(commandTest);
+        Command actual = commandService.create(commandTest, VALID_CARD_NUMBER);
         // Then : Le repository référence la commande
         Assertions.assertTrue(commandRepository.existsById(actual.getId()));
         // Then : La commande est associée à l'utilisateur

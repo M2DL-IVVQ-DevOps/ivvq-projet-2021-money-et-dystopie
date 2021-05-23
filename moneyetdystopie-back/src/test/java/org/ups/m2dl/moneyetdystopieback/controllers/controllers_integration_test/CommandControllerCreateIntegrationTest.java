@@ -43,14 +43,15 @@ class CommandControllerCreateIntegrationTest {
     private ItemCommand itemCommandTest;
     private Item itemTest;
 
-    private String jsonInput;
     private String jsonResult;
     private ObjectMapper mapper;
 
-    private MediaType contentType = new MediaType(
+    private final MediaType contentType = new MediaType(
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype()
     );
+
+    private static final String VALID_CARD_NUMBER = "9999999999999995";
 
     @BeforeEach
     void setup() {
@@ -101,19 +102,18 @@ class CommandControllerCreateIntegrationTest {
     void whenCreateCommand_thenCommandReturn() throws Exception {
         // GIVEN
         itemCommandTest = new ItemCommand(null, 4, itemTest);
-        jsonInput =
-            "{\n" +
-            "\"customer\": { \"pseudo\": \"" +
-            userTest.getCustomerAccount().getPseudo() +
-            "\"}," +
-            "\"itemCommands\": [{" +
-            "\"amount\": " +
-            itemCommandTest.getAmount() +
-            "," +
-            "\"item\": {\"id\": " +
-            itemCommandTest.getItem().getId() +
-            "}" +
-            "}]}";
+        String jsonInput = "{\n" +
+                "\"customer\": { \"pseudo\": \"" +
+                userTest.getCustomerAccount().getPseudo() +
+                "\"}," +
+                "\"itemCommands\": [{" +
+                "\"amount\": " +
+                itemCommandTest.getAmount() +
+                "," +
+                "\"item\": {\"id\": " +
+                itemCommandTest.getItem().getId() +
+                "}" +
+                "}]}";
 
         // WHEN
         mockMvc
@@ -121,6 +121,7 @@ class CommandControllerCreateIntegrationTest {
                 post("/command/create")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonInput)
+                    .queryParam("cardNumber", VALID_CARD_NUMBER)
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))

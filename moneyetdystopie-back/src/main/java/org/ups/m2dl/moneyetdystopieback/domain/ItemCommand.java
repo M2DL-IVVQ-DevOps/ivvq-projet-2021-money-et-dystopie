@@ -21,7 +21,7 @@ public class ItemCommand {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    /** Quantité commandé. */
+    /** Quantité commandée. */
     @Getter
     @Setter
     @Positive

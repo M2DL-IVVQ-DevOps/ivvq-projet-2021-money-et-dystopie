@@ -10,7 +10,7 @@ public class CardService {
 
     private final int[] cardNumber;
 
-    public CardService(@NotNull String cardNumberToVerify) {
+    public CardService(String cardNumberToVerify) {
         cardNumber =
             cardNumberToVerify
                 .chars()
