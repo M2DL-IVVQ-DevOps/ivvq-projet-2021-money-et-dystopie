@@ -39,7 +39,13 @@ public class CommandService {
     private final SellerService sellerService;
 
     @Transactional
-    public Command create(Command command) throws BusinessException {
+    public Command create(Command command, String cardNumber) throws BusinessException {
+        final CardService cardService = new CardService(cardNumber);
+        if(!cardService.isCardNumberValid()) {
+            throw new BusinessException(
+                    "Le numéro de carte bleue renseigné est incorrect. Paiement refusé."
+            );
+        }
 
         if(command.getCustomer() == null){
             throw new BusinessException(
