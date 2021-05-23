@@ -4,7 +4,8 @@ module.exports = {
   ],
   plugins: [
     ['babel-plugin-istanbul', {
-      "extension": ['.js', '.vue']
+      "extension": ['.vue'],
+      "exclude": ['.js']
     }]
   ]
 }
