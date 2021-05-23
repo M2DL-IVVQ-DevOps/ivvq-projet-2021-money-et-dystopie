@@ -27,7 +27,7 @@ import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class TokenControllerCreateIntegrationTest {
 
     @Autowired
@@ -62,19 +62,19 @@ class TokenControllerCreateIntegrationTest {
         // GIVEN
         userTest =
             new User(
-                "TokenlastName111",
-                "TokenfirstName111",
-                "Tokenemail111@email.email",
-                "TokenPasswordpassword111",
+                "TokenlastName1",
+                "TokenfirstName1",
+                "Tokenemail1@email.email",
+                "TokenPasswordpassword1",
                 null,
                 null,
                 null
             );
-        sellerTest = new Seller("TokenstoreName111", null, null, null);
+        sellerTest = new Seller("TokenstoreName1", null, null, null);
         customerTest =
             new Customer(
-                "Tokenpseudo111",
-                "TokennumberCityCountry111",
+                "Tokenpseudo1",
+                "TokennumberCityCountry1",
                 null,
                 null,
                 null
@@ -88,8 +88,8 @@ class TokenControllerCreateIntegrationTest {
         UserBean userBeanTest = new UserBean(
             null,
             null,
-            "Tokenemail111@email.email",
-            "TokenPasswordpassword111",
+            "Tokenemail1@email.email",
+            "TokenPasswordpassword1",
             null,
             null
         );
@@ -137,24 +137,106 @@ class TokenControllerCreateIntegrationTest {
     }
 
     @Test
+    void givenValidToken_whenCreateToken_thenUserReturned() throws Exception {
+        // GIVEN
+        userTest =
+                new User(
+                        "TokenlastName1",
+                        "TokenfirstName1",
+                        "Tokenemail1@email.email",
+                        "TokenPasswordpassword1",
+                        null,
+                        null,
+                        null
+                );
+        sellerTest = new Seller("TokenstoreName1", null, null, null);
+        customerTest =
+                new Customer(
+                        "Tokenpseudo1",
+                        "TokennumberCityCountry1",
+                        null,
+                        null,
+                        null
+                );
+        userTest.setCustomerAccount(customerTest);
+        userTest.setSellerAccount(sellerTest);
+
+        jsonUserTest = new Gson().toJson(userTest);
+
+        userService.create(userTest);
+        Token tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        Cookie cookie = tokenService.createTokenCookie(tokenTest);
+        UserBean userBeanTest = new UserBean(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        jsonUserBeanTest = new Gson().toJson(userBeanTest);
+
+        // WHEN
+        mockMvc
+                .perform(
+                        post("/token/create").cookie(cookie)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(jsonUserBeanTest)
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(contentType))
+                .andExpect(cookie().exists("token"))
+                .andDo(
+                        mvcResult -> {
+                            jsonResult = mvcResult.getResponse().getContentAsString();
+                        }
+                );
+
+        // THEN
+        UserBean resultFromJson = mapper.readValue(jsonResult, UserBean.class);
+        Assertions.assertEquals(userTest.getEmail(), resultFromJson.getEmail());
+        Assertions.assertEquals(
+                userTest.getFirstName(),
+                resultFromJson.getFirstName()
+        );
+        Assertions.assertEquals(
+                userTest.getLastName(),
+                resultFromJson.getLastName()
+        );
+        Assertions.assertEquals(
+                userTest.getCustomerAccount().getAddress(),
+                resultFromJson.getCustomerAccount().getAddress()
+        );
+        Assertions.assertEquals(
+                userTest.getCustomerAccount().getPseudo(),
+                resultFromJson.getCustomerAccount().getPseudo()
+        );
+        Assertions.assertEquals(
+                userTest.getSellerAccount().getStoreName(),
+                resultFromJson.getSellerAccount().getStoreName()
+        );
+    }
+
+    @Test
     void givenInvalidData_whenCreateToken_thenInvalidConnexionError()
         throws Exception {
         // GIVEN
         userTest =
             new User(
-                "TokenlastName222",
-                "TokenfirstName222",
-                "Tokenemail222@email.email",
-                "TokenPasswordpassword222",
+                "TokenlastName2",
+                "TokenfirstName2",
+                "Tokenemail2@email.email",
+                "TokenPasswordpassword2",
                 null,
                 null,
                 null
             );
-        sellerTest = new Seller("TokenstoreName222", null, null, null);
+        sellerTest = new Seller("TokenstoreName2", null, null, null);
         customerTest =
             new Customer(
-                "Tokenpseudo222",
-                "TokennumberCityCountry222",
+                "Tokenpseudo2",
+                "TokennumberCityCountry2",
                 null,
                 null,
                 null
@@ -168,7 +250,7 @@ class TokenControllerCreateIntegrationTest {
         UserBean userBeanTest = new UserBean(
             null,
             null,
-            "Tokenemail222@email.email",
+            "Tokenemail2@email.email",
             "TokenWrongPassword",
             null,
             null
