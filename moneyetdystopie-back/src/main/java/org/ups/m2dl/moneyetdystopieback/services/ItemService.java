@@ -37,25 +37,20 @@ public class ItemService {
 
         @Transactional
         public Item create(Item item, String tokenValue) throws BusinessException {
-        if (
-            item.getSellerAccount() == null ||
-            item.getSellerAccount().getStoreName().isBlank()
-        ) {
+        Token token = tokenService.getTokenByValue(tokenValue);
+        if (!tokenService.isTokenValid(token)){
+            throw new BusinessException(
+                    "Vous devez être connecté pour effectuer cette action."
+            );
+        }
+        User dbUser = token.getUser();
+        if (dbUser.getSellerAccount() == null || dbUser.getSellerAccount().getStoreName().isBlank()) {
             throw new BusinessException("La boutique n'est pas référencée.");
         }
-        Seller seller = sellerService.findByStoreName(
-            item.getSellerAccount().getStoreName()
-        );
+        Seller seller = sellerService.findByStoreName(dbUser.getSellerAccount().getStoreName());
         if (seller == null) {
             throw new BusinessException(
                     "La boutique référencée n'a pu être trouvée."
-            );
-        }
-        User user = seller.getUserAccount();
-        Token token = tokenService.getTokenByValue(tokenValue);
-        if (!tokenService.isTokenUserAssociationValid(token,user) || !tokenService.isTokenValid(token)){
-            throw new BusinessException(
-                    "Vous devez être connecté pour effectuer cette action."
             );
         }
 

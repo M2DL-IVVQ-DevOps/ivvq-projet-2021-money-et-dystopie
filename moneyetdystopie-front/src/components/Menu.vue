@@ -44,9 +44,7 @@
         },
         props: ['changeNavigation', 'isSeller', 'isCustomer'],
         mounted () {
-            console.log("MaxScene initial = " + this.maxScene);
             this.maxScene = this.maxScene.filter(scene => this.isValid(scene.valid));
-            console.log("MaxScene final = " + this.maxScene);
         },
         methods: {
             selectionMenu(index, nav){
@@ -54,9 +52,6 @@
                 this.changeNavigation(nav);
             },
             isValid(validity){
-                console.log("Les paramètres sont : " + validity);
-                console.log("MaxScene : " + this.maxScene);
-                console.log("Résultat : " + (validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
                 return ((validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
             },
         }

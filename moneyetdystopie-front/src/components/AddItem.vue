@@ -62,25 +62,25 @@
                 amount: null,
             };
         },
-        props: ['seller', 'changeServeurErrorMessage', 'getAllItemsForCatalogue'],
+        props: ['seller', 'serveurErrorMessage', 'serveurSuccessMessage', 'getAllItemsForCatalogue'],
         methods: {
             checkForm: function () {
                 this.errors = [];
 
                 if (!this.title || this.title.length < 2 || this.title.length > 100) {
-                    this.errors.push('Le titre doit faire entre 2 et 100 caractère.');
+                    this.errors.push("Le titre doit comporter entre 2 et 100 caractères.");
                 }
                 if (!this.picture) {
-                    this.errors.push('Image requise.');
+                    this.errors.push("Vous devez saisir l'URL d'une image.");
                 }
                 if (!this.description || this.description.length < 2 || this.description.length > 200) {
-                    this.errors.push("La description doit faire entre 10 et 200 caractère.");
+                    this.errors.push("La description doit faire entre 10 et 200 caractères.");
                 }
                 if (!this.amount || this.amount<0) {
-                    this.errors.push("La quantité doit être renseignée.");
+                    this.errors.push("Vous devez saisir une quantité positif.");
                 }
                 if (!this.price || this.price<0) {
-                    this.errors.push("Le prix doit être renseignée.");
+                    this.errors.push("Vous devez saisir un prix positif.");
                 }
             },
             addItem: function () {
@@ -98,24 +98,25 @@
                 };
                 axios.post(
                     "/item/create", message).then(response => {
-                    this.seller.items = [...this.seller.items,
-                            {
-                                id: response.data.id,
-                                amount: response.data.amount,
-                                description: response.data.description,
-                                picture: response.data.picture,
-                                price: response.data.price,
-                                title: response.data.title,
-                                sellerAccount:{storeName: response.data.sellerAccount.storeName}
-                            }];
+                        this.seller.items = [...this.seller.items, {
+                            id: response.data.id,
+                            amount: response.data.amount,
+                            description: response.data.description,
+                            picture: response.data.picture,
+                            price: response.data.price,
+                            title: response.data.title,
+                            sellerAccount:{storeName: response.data.sellerAccount.storeName}
+                        }];
                         this.getAllItemsForCatalogue();
+                        this.serveurSuccessMessage("Le nouvel objet '" + this.title + "' a été créé.");
+                        this.purgeFieldsItemCreation();
                         this.endCreation();
                     })
                     .catch(error => {
-                        if(error!=null && error.response!=null){
-                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
+                        if(error !== null && error.response !== null && error.response.date !== null){
+                            this.serveurErrorMessage("Impossible d'enregistrer l'article : " + error.response.data);
                         }else{
-                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur.');
+                            this.serveurErrorMessage("Impossible d'enregistrer l'article : Erreur serveur");
                         }
                     });
             },
@@ -124,6 +125,14 @@
             },
             endCreation(){
                 this.itemInCreation = false;
+            },
+            purgeFieldsItemCreation: function () {
+                this.errors = [];
+                this.description = null;
+                this.title = null;
+                this.picture = null;
+                this.price = null;
+                this.amount = null;
             }
         }
     }

@@ -100,7 +100,7 @@
                     }
                 }
                 if(await this.creation(userCreation)){
-                    this.purgeFields();
+                    this.purgeFieldsAccountCreation();
                 }
             },
             checkForm: function (e) {
@@ -140,7 +140,7 @@
                 var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
             },
-            purgeFields: function () {
+            purgeFieldsAccountCreation: function () {
                 this.lastName = null;
                 this.firstName = null;
                 this.password = null;
@@ -151,7 +151,6 @@
                 this.seller = false;
                 this.customer = false;
                 this.error = false;
-                this.errorMessage = "";
             }
         }
     }

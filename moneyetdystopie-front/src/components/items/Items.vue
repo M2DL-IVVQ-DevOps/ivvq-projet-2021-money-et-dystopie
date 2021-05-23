@@ -32,7 +32,7 @@
         props:['changeCart', 'itemsData', 'navigation'],
         methods: {
             noitem(){
-                return this.itemsData.length == 0;
+                return this.itemsData === null ||this.itemsData.length === 0;
             }
         }
     }

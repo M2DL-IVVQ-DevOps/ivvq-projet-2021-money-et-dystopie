@@ -111,21 +111,17 @@ public class TokenService {
 
     public Token performNewTokenRequest(User user, String ancientTokenValue)
         throws BusinessException {
-        Token newToken;
+        Token returnedToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
-        if (
-            (
-                isTokenValid(ancientToken) &&
-                isTokenUserAssociationValid(ancientToken, user)
-            ) ||
-            userService.checkUserPassword(user)
-        ) {
+        if (userService.checkUserPassword(user)){
             user = userService.findByEmail(user.getEmail());
-            newToken = createNewTokenForUser(user);
-            saveToken(newToken);
+            returnedToken = createNewTokenForUser(user);
+            saveToken(returnedToken);
             if (ancientToken != null) {
                 removeToken(ancientToken);
             }
+        } else if ((user.getEmail() == null || user.getPassword() == null) && isTokenValid(ancientToken)){
+            returnedToken = ancientToken;
         } else {
             if (ancientToken != null) {
                 removeToken(ancientToken);
@@ -134,7 +130,7 @@ public class TokenService {
                     MoneyDystopieConstants.INVALID_CONNEXION_ERROR
             );
         }
-        return newToken;
+        return returnedToken;
     }
 
     public boolean removeTokenByValue(String tokenValue)
@@ -150,6 +146,7 @@ public class TokenService {
         cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES*60);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
+        cookie.setPath("/");
         return cookie;
     }
 }

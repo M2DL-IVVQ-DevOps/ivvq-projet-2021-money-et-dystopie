@@ -29,7 +29,7 @@
       <div v-if="user.sellerAccount != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
-        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.sellerAccount"></AddItem>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :serveurErrorMessage="setErrorMessage" :serveurSuccessMessage="setSuccessMessage" :seller="user.sellerAccount"></AddItem>
         <Items
                 :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
@@ -46,8 +46,13 @@
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
 
-    <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="serveurErrorMessage" md-persistent>
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="serveurErrorMessage" md-persistent style="background-color: #BA240F">
       <span>{{serveurErrorMessage}}</span>
+      <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
+    </md-snackbar>
+
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="successMessage" md-persistent  style="background-color: #13650E">
+      <span>{{successMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
   </div>
@@ -86,15 +91,24 @@
           this.initNavigation();
           this.getAllItemsForCatalogue();
         }).catch((error) =>{
-          this.serveurErrorMessage = error.response.data;
+          if(error !== null && error.response !== null && error.response.date !== null){
+            this.setErrorMessage("Connexion impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Connexion impossible : Erreur serveur");
+          }
         });
       },
       creationAccount : async function(userCreation){
         try {
           await axios.post('/user/create/', userCreation);
+          this.setSuccessMessage("Votre compte a bien été créé.");
           return true;
         }catch(error)  {
-          this.serveurErrorMessage = error.response.data;
+          if(error !== null && error.response !== null && error.response.date !== null){
+            this.setErrorMessage("Impossible de créer le compte : " + error.response.data)
+          }else{
+            this.setErrorMessage("Impossible de créer le compte : Erreur serveur")
+          }
           return false;
         }
       },
@@ -130,14 +144,28 @@
 
       closeSnackBar(){
         this.serveurErrorMessage = null;
+        this.successMessage= null;
+      },
+
+      setErrorMessage(message){
+        this.serveurErrorMessage = message;
+      },
+
+      setSuccessMessage(message){
+        this.successMessage = message;
       },
 
       getAllItemsForCatalogue(){
 
         axios.get("/item/all").then(response => {
           this.catalogue = [...response.data];
-        }).catch(() => {
-            this.serveurErrorMessage = 'Impossible de récupérer le catalogue d\'article du serveur.';
+        }).catch(error => {
+          if(error !== null && error.response !== null && error.response.date !== null) {
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");
+          }
+
         });
       },
 
@@ -146,6 +174,7 @@
           this.user.customerAccount.cart = {
             items: []
           };
+          this.user.sellerAccount.items = [];
         }
       },
       initNavigation(){
@@ -155,13 +184,6 @@
           this.navigation = "CATALOG";
         }
       },
-      changeServeurErrorMessage(value){
-        this.serveurErrorMessage = value;
-      },
-
-      isServeurErrorMessage(){
-        return this.serveurErrorMessage && this.serveurErrorMessage.length > 0;
-      }
     },
     data: function () {
       return {
@@ -169,6 +191,7 @@
         user: null,
         catalogue: [],
         serveurErrorMessage: null,
+        successMessage: null
       }
     },
   }
