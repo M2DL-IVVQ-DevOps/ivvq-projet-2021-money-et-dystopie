@@ -51,14 +51,14 @@ jobs:
           working-directory: ./moneyetdystopie-front
           start: npm run serve
           wait-on: 'http://localhost:8080'
-          command: npm run test
-      - name: Upload Artifact
+          command: npm run test --config videoUploadOnPasses=false
+      - name: Upload artifacts
         if: ${{ failure() }}
         uses: actions/upload-artifact@v2
         with:
           name: failed-test-videos
           path: ./moneyetdystopie-front/cypress/videos
-          retention-days: 3
+          retention-days: 2
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
