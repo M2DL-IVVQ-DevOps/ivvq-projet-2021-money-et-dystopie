@@ -16,7 +16,7 @@
 
 <script>
     export default {
-        name: 'ItemBoutique',
+        name: 'ItemBasic',
         data: function () {
             return {
                 amountSelect: 0

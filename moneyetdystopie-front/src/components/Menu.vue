@@ -4,12 +4,10 @@
             <li class="scene_nav_item">
                 <div v-for="(onglet,index) in maxScene"
                      :key="index">
-                    <div @click="selectionMenu(index, onglet.navigation)" class="scene_nav_button"
-                            :class="{'o-active': scene === index}">
-                        <div v-if="scene===index" class="text" :class="{'revert': index%2 != 0}">
+                    <div @click="selectionMenu(index, onglet.navigation)" class="scene_nav_button o-active">
+                        <div class="text" :class="{'revert': index%2 != 0}">
                             {{onglet.name}}
                         </div>
-                        <img class="icon" v-else :src="getImage(onglet.icon)" :class="{'revert': index%2 != 0}" alt="Icone d'article"/>
                     </div>
                 </div>
             </li>
@@ -26,16 +24,16 @@
                 maxScene: [
                     {
                         name:'Catalog',
-                        icon:'dollar',
                         navigation: 'CATALOG'
                     },{
                         name:'Mon panier',
-                        icon:'panier',
                         navigation: 'CART'
                     },{
                         name:'Ma boutique',
-                        icon:'panier',
                         navigation: 'SHOP'
+                    },{
+                        name:'Mes achats',
+                        navigation: 'MY_COMMANDS'
                     }
                 ]
             }
@@ -47,10 +45,6 @@
             }, 1000)
         },
         methods: {
-            getImage(img){
-                var images = require.context('../assets/', false, /\.svg$/)
-                return images('./' + img + ".svg")
-            },
             selectionMenu(index, nav){
                 this.scene = index;
                 this.changeNavigation(nav);
@@ -84,9 +78,10 @@
 
     .scene_nav_button {
         display: block;
+        font-size: 18px;
         width: 140px;
-        height: 140px;
-        padding: 52px 0 0 0;
+        height: 100px;
+        padding: 30px 0 0 0;
         border: none;
         background: #9a96b2;
         outline: none;
@@ -110,10 +105,6 @@
 
     .scene_nav_button:hover {
         background: #ffd246;
-    }
-
-    .icon{
-        width: 45px;
     }
 
     .text{

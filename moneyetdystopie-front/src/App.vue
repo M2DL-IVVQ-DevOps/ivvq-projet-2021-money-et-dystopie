@@ -3,6 +3,7 @@
           'catalog-background': user && navigation === 'CATALOG',
           'card-background': user && navigation === 'CART',
           'shop-background': user && navigation === 'SHOP',
+          'command-background': user && navigation === 'MY_COMMANDS',
           'connexionCreationAccount-background': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
 
@@ -10,6 +11,9 @@
       <div v-if="user.customer != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
+        <div class="div-button-rafraichir-catalogue">
+          <md-button v-on:click="getAllItemsForCatalogue()" class="md-primary md-raised" >Rafraîchir</md-button>
+        </div>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
@@ -19,6 +23,13 @@
       <div v-if="user.customer != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
         <Menu :changeNavigation="changeNavigation"></Menu>
+        <ConfirmationCommand
+                v-if="user.customer.cart.items.length"
+                :customer="user.customer"
+                :getAllItemsForCatalogue="getAllItemsForCatalogue"
+                :changeServeurErrorMessage="changeServeurErrorMessage"
+                :getPastCommands="getPastCommands"
+        ></ConfirmationCommand>
         <Items
                 :changeCart="changeInCart"
                 :itemsData="user.customer.cart.items"
@@ -33,6 +44,11 @@
                 :itemsData="user.seller.items"
                 :navigation="navigation"
         />
+      </div>
+      <div v-if="user.customer != null && navigation === 'MY_COMMANDS'">
+        <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
+        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Commands :commands="user.customer.pastCommands"></Commands>
       </div>
     </section>
 
@@ -52,11 +68,15 @@
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
+  import Commands from "./components/items/Commands";
+  import ConfirmationCommand from "./components/ConfirmationCommand";
   import axios from "axios";
 
   export default {
     name: 'App',
     components: {
+      ConfirmationCommand,
+      Commands,
       ConnexionCreationAccount,
       Items,
       Menu,
@@ -71,7 +91,6 @@
       changeNavigation(nav){
         this.navigation = nav;
       },
-
       connexionAccount(){
         this.user = {
           email: 'monMail',
@@ -90,10 +109,12 @@
               state: 'IN_PROGRESS',
               items: []
             },
+            pastCommands: [],
             pastOrder: null,
           }
         };
         this.getAllItemsForCatalogue();
+        this.getPastCommands();
       },
 
       creationAccount(){
@@ -113,11 +134,9 @@
               id: '2152',
               state: 'IN_PROGRESS',
               items: []
-            },
-            pastOrder: null,
+            }
           }
         };
-        this.getAllItemsForCatalogue();
       },
 
       addInCart(idElement, amountSelection) {
@@ -147,6 +166,29 @@
           elementInPanier.amount = amountRestante;
           elementSelect.amount += amountRetire;
         }
+      },
+
+      getPastCommands(){
+        axios.get("/customer/getPastCommands?pseudo=" + this.user.customer.pseudo).then(response => {
+          this.user.customer.pastCommands = response.data;
+          for(let i=0; i<this.user.customer.pastCommands.length; i++){
+            let listItemCommands = [];
+            for(let j=0; j<this.user.customer.pastCommands[i].itemCommands.length; j++) {
+              listItemCommands = [...listItemCommands,
+                {
+                  ...this.user.customer.pastCommands[i].itemCommands[j].item,
+                  'amount': this.user.customer.pastCommands[i].itemCommands[j].amount
+                }];
+            }
+            this.user.customer.pastCommands[i].itemCommands = listItemCommands;
+          }
+        }).catch( error => {
+          if(error!=null && error.response!=null && error.response.data!=null){
+            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+          }else{
+            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées.');
+          }
+        });
       },
 
       closeSnackBar(){
@@ -201,6 +243,9 @@
   .card-background{
     background-color: #f8cedc;
   }
+  .command-background{
+    background-color: #c5c6ff;
+  }
   h1{
     color: white;
     position: absolute;
@@ -226,5 +271,9 @@
   .button-action:hover {
     background: #ffd246;
     color: black;
+  }
+  .div-button-rafraichir-catalogue{
+    text-align: right;
+    margin: 0 10% 0 0;
   }
 </style>

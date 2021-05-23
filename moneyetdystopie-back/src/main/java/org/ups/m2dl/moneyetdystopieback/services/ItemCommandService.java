@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.bean.ItemCommandBean;
+import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
@@ -96,6 +97,13 @@ public class ItemCommandService {
                     itemCommand.getItem(),
                     itemCommandBean.getItem()
             );
+            if(itemCommand.getItem().getSellerAccount() != null){
+                itemCommandBean.getItem().setSellerAccount(new SellerBean());
+                BeanUtils.copyProperties(
+                        itemCommand.getItem().getSellerAccount(),
+                        itemCommandBean.getItem().getSellerAccount()
+                );
+            }
         }
 
         return itemCommandBean;

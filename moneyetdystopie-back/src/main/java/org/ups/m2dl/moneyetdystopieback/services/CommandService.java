@@ -115,9 +115,10 @@ public class CommandService {
         CommandBean commandBean = new CommandBean();
         BeanUtils.copyProperties(command, commandBean);
 
-        //not null
-        for(ItemCommand itemCommand : command.getItemCommands()){
-            commandBean.addItemsCommand(ItemCommandService.getBean(itemCommand));
+        if(command.getItemCommands() != null){
+            for(ItemCommand itemCommand : command.getItemCommands()){
+                commandBean.addItemsCommand(ItemCommandService.getBean(itemCommand));
+            }
         }
 
         if (command.getCustomer() != null) {
@@ -131,13 +132,22 @@ public class CommandService {
         return commandBean;
     }
 
+    public static List<CommandBean> getBean(List<Command> commands) {
+        List<CommandBean> commandBeans = new ArrayList<>();
+        for (Command command: commands){
+            commandBeans.add(getBean(command));
+        }
+        return commandBeans;
+    }
+
     public static Command getDto(CommandBean commandBean) {
         Command command = new Command();
         BeanUtils.copyProperties(commandBean, command);
 
-        //not null
-        for(ItemCommandBean itemCommandBean : commandBean.getItemCommands()){
-            command.addItemsCommand(ItemCommandService.getDto(itemCommandBean));
+        if(commandBean.getItemCommands() != null){
+            for(ItemCommandBean itemCommandBean : commandBean.getItemCommands()){
+                command.addItemsCommand(ItemCommandService.getDto(itemCommandBean));
+            }
         }
 
         if (commandBean.getCustomer() != null) {

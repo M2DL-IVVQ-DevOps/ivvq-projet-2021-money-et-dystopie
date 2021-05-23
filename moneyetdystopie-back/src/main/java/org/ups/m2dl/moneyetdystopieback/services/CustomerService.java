@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -8,8 +9,14 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
+import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
+import org.ups.m2dl.moneyetdystopieback.bean.ItemCommandBean;
+import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
+import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 
@@ -70,5 +77,15 @@ public class CustomerService {
             Iterator<ConstraintViolation<Customer>> iterator = constraintViolations.iterator();
             throw new BusinessException(iterator.next().getMessage());
         }
+    }
+
+    public List<Command> getPastCommands(String customerPseudo) throws BusinessException {
+        Customer customer = findByPseudo(customerPseudo);
+        if(customer == null){
+            throw new BusinessException(
+                    "L'acheuteur '" + customerPseudo + "' n'a pu être trouvé."
+            );
+        }
+        return customer.getPastCommands();
     }
 }
