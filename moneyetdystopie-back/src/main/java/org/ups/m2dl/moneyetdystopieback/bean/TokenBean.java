@@ -24,11 +24,18 @@ public class TokenBean {
     private String value;
 
     /** Date après laquelle le token n'est plus valable. */
-    @Setter
     private Date expirationDate;
 
     /** Utilisateur lié au token. */
     @Getter
     @Setter
     private User user;
+
+    public Date getExpirationDate() {
+        return (Date) expirationDate.clone();
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = (Date) expirationDate.clone();
+    }
 }

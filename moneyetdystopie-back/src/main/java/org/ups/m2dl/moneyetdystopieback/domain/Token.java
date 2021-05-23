@@ -38,8 +38,6 @@ public class Token {
     /** Date après laquelle le token n'est plus valable. */
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    @Getter
-    @Setter
     private Date expirationDate;
 
     /** Utilisateur lié au token. */
@@ -51,6 +49,14 @@ public class Token {
 
     public Token(String value, Date expirationDate) {
         this.value = value;
+        this.expirationDate = (Date) expirationDate.clone();
+    }
+
+    public Date getExpirationDate() {
+        return (Date) expirationDate.clone();
+    }
+
+    public void setExpirationDate(Date expirationDate) {
         this.expirationDate = (Date) expirationDate.clone();
     }
 
