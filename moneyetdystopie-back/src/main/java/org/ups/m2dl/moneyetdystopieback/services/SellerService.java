@@ -8,7 +8,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;

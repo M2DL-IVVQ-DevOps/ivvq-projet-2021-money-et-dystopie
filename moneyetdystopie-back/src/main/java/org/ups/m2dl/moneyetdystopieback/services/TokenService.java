@@ -113,21 +113,24 @@ public class TokenService {
         throws BusinessException {
         Token returnedToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
-        if (userService.checkUserPassword(user)){
+        if (userService.checkUserPassword(user)) {
             user = userService.findByEmail(user.getEmail());
             returnedToken = createNewTokenForUser(user);
             saveToken(returnedToken);
             if (ancientToken != null) {
                 removeToken(ancientToken);
             }
-        } else if ((user.getEmail() == null || user.getPassword() == null) && isTokenValid(ancientToken)){
+        } else if (
+            (user.getEmail() == null || user.getPassword() == null) &&
+            isTokenValid(ancientToken)
+        ) {
             returnedToken = ancientToken;
         } else {
             if (ancientToken != null) {
                 removeToken(ancientToken);
             }
             throw new BusinessException(
-                    MoneyDystopieConstants.INVALID_CONNEXION_ERROR
+                MoneyDystopieConstants.INVALID_CONNEXION_ERROR
             );
         }
         return returnedToken;
@@ -143,7 +146,9 @@ public class TokenService {
 
     public Cookie createTokenCookie(Token token) {
         Cookie cookie = new Cookie("token", token.getValue());
-        cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES*60);
+        cookie.setMaxAge(
+            MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES * 60
+        );
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");

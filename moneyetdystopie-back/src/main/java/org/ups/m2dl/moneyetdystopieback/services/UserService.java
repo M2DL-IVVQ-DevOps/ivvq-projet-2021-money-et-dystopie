@@ -1,5 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -22,8 +23,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
-
-import java.util.ArrayList;
 
 @AllArgsConstructor
 @Service
@@ -217,7 +216,7 @@ public class UserService {
     public void addTokenToUser(User user, Token token)
         throws BusinessException {
         token.setUser(user);
-        if (user.getTokenList() == null){
+        if (user.getTokenList() == null) {
             user.setTokenList(new ArrayList<>());
         }
         user.getTokenList().add(token);
@@ -230,7 +229,7 @@ public class UserService {
         save(user);
     }
 
-    public void deleteUser(User user){
+    public void deleteUser(User user) {
         userRepository.delete(user);
     }
 }

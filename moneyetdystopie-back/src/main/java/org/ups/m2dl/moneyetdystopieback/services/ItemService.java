@@ -9,7 +9,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,22 +34,27 @@ public class ItemService {
     @Getter
     private final TokenService tokenService;
 
-        @Transactional
-        public Item create(Item item, String tokenValue) throws BusinessException {
+    @Transactional
+    public Item create(Item item, String tokenValue) throws BusinessException {
         Token token = tokenService.getTokenByValue(tokenValue);
-        if (!tokenService.isTokenValid(token)){
+        if (!tokenService.isTokenValid(token)) {
             throw new BusinessException(
-                    "Vous devez être connecté pour effectuer cette action."
+                "Vous devez être connecté pour effectuer cette action."
             );
         }
         User dbUser = token.getUser();
-        if (dbUser.getSellerAccount() == null || dbUser.getSellerAccount().getStoreName().isBlank()) {
+        if (
+            dbUser.getSellerAccount() == null ||
+            dbUser.getSellerAccount().getStoreName().isBlank()
+        ) {
             throw new BusinessException("La boutique n'est pas référencée.");
         }
-        Seller seller = sellerService.findByStoreName(dbUser.getSellerAccount().getStoreName());
+        Seller seller = sellerService.findByStoreName(
+            dbUser.getSellerAccount().getStoreName()
+        );
         if (seller == null) {
             throw new BusinessException(
-                    "La boutique référencée n'a pu être trouvée."
+                "La boutique référencée n'a pu être trouvée."
             );
         }
 

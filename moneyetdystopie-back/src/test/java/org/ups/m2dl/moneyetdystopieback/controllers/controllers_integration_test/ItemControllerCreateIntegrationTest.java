@@ -6,6 +6,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,13 +30,9 @@ import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
-import javax.servlet.http.Cookie;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-
 @SpringBootTest
 @AutoConfigureMockMvc
-class  ItemControllerCreateIntegrationTest {
+class ItemControllerCreateIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -73,7 +72,16 @@ class  ItemControllerCreateIntegrationTest {
     void givenConnectedUser_whenSaveItem_thenItemReturn() throws Exception {
         // GIVEN
         sellerTest = new Seller("CreateItemstoreName391", null, null, null);
-        userTest = new User("CreateItemlastName1", "CreateItemfirstName1", "CreateItememail1@email.com", "CreateItemPassword1", sellerTest, null, new ArrayList<>());
+        userTest =
+            new User(
+                "CreateItemlastName1",
+                "CreateItemfirstName1",
+                "CreateItememail1@email.com",
+                "CreateItemPassword1",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
 
         userService.create(userTest);
         tokenTest = tokenService.createNewTokenForUser(userTest);
@@ -97,7 +105,8 @@ class  ItemControllerCreateIntegrationTest {
         // WHEN
         mockMvc
             .perform(
-                post("/item/create").cookie(cookie)
+                post("/item/create")
+                    .cookie(cookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonUserTest)
             )
@@ -141,52 +150,78 @@ class  ItemControllerCreateIntegrationTest {
     }
 
     @Test
-    void givenNotConnectedUser_whenSaveItem_thenItemNotReturn() throws Exception {
+    void givenNotConnectedUser_whenSaveItem_thenItemNotReturn()
+        throws Exception {
         // GIVEN
         sellerTest = new Seller("CreateItemstoreName392", null, null, null);
-        userTest = new User("CreateItemlastName2", "CreateItemfirstName2", "CreateItememail12@email.com", "CreateItemPassword2", sellerTest, null, new ArrayList<>());
+        userTest =
+            new User(
+                "CreateItemlastName2",
+                "CreateItemfirstName2",
+                "CreateItememail12@email.com",
+                "CreateItemPassword2",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
 
         userService.create(userTest);
 
         itemTest =
-                new Item(
-                        null,
-                        "title39",
-                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                        "description39",
-                        10,
-                        5.f,
-                        null,
-                        sellerTest
-                );
+            new Item(
+                null,
+                "title39",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description39",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         jsonUserTest = new Gson().toJson(itemTest);
 
         // WHEN
         mockMvc
-                .perform(
-                        post("/item/create")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonUserTest)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                post("/item/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
-        Assertions.assertEquals(MoneyDystopieConstants.NOT_CONNECTED_ERROR,new String(jsonResult.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8));
+        Assertions.assertEquals(
+            MoneyDystopieConstants.NOT_CONNECTED_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
     }
 
     @Test
-    void givenConnectedUser_whenSaveUser_thenItemIsSavedSellerModified() throws Exception {
+    void givenConnectedUser_whenSaveUser_thenItemIsSavedSellerModified()
+        throws Exception {
         // GIVEN
         sellerTest = new Seller("CreateItemstoreName403", null, null, null);
-        userTest = new User("CreateItemlastName3", "CreateItemfirstNam3", "CreateItememail2@email.com", "CreateItemPassword3", sellerTest, null, new ArrayList<>());
+        userTest =
+            new User(
+                "CreateItemlastName3",
+                "CreateItemfirstNam3",
+                "CreateItememail2@email.com",
+                "CreateItemPassword3",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
 
         userService.create(userTest);
         tokenTest = tokenService.createNewTokenForUser(userTest);
@@ -211,7 +246,8 @@ class  ItemControllerCreateIntegrationTest {
         // WHEN
         mockMvc
             .perform(
-                post("/item/create").cookie(cookie)
+                post("/item/create")
+                    .cookie(cookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonUserTest)
             )
@@ -280,47 +316,62 @@ class  ItemControllerCreateIntegrationTest {
     }
 
     @Test
-    void givenNotConnectedUser_whenSaveUser_thenItemIsSavedSellerNotModified() throws Exception {
+    void givenNotConnectedUser_whenSaveUser_thenItemIsSavedSellerNotModified()
+        throws Exception {
         // GIVEN
         sellerTest = new Seller("CreateItemstoreName404", null, null, null);
-        userTest = new User("CreateItemlastName4", "CreateItemfirstName4", "CreateItememail4@email.com", "CreateItemPassword4", sellerTest, null, new ArrayList<>());
+        userTest =
+            new User(
+                "CreateItemlastName4",
+                "CreateItemfirstName4",
+                "CreateItememail4@email.com",
+                "CreateItemPassword4",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
 
         userService.create(userTest);
 
         itemTest =
-                new Item(
-                        null,
-                        "title40",
-                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                        "description40",
-                        10,
-                        5.f,
-                        null,
-                        sellerTest
-                );
+            new Item(
+                null,
+                "title40",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description40",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
         itemsNumber = itemService.findAll().size();
 
         jsonUserTest = new Gson().toJson(itemTest);
 
         // WHEN
         mockMvc
-                .perform(
-                        post("/item/create")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonUserTest)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
-
+            .perform(
+                post("/item/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
-        Assertions.assertEquals(MoneyDystopieConstants.NOT_CONNECTED_ERROR,new String(jsonResult.getBytes(StandardCharsets.ISO_8859_1),StandardCharsets.UTF_8));
+        Assertions.assertEquals(
+            MoneyDystopieConstants.NOT_CONNECTED_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
     }
 
     @ParameterizedTest

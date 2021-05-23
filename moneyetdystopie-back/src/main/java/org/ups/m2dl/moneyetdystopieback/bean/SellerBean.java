@@ -1,7 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
-import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

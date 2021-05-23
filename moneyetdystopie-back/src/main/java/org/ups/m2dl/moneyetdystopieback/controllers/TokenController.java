@@ -1,6 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.controllers;
 
-import java.nio.file.AccessDeniedException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,15 +39,17 @@ public class TokenController {
             User user = userService.getDto(userBean);
             Token token = tokenService.performNewTokenRequest(user, tokenValue);
             response.addCookie(tokenService.createTokenCookie(token));
-            return ResponseEntity.status(HttpStatus.OK).body(userService.getBean(token.getUser()));
-        }catch (BusinessException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(userService.getBean(token.getUser()));
+        } catch (BusinessException e) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
-                .body(
-                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 
@@ -74,9 +75,7 @@ public class TokenController {
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 
@@ -94,9 +93,7 @@ public class TokenController {
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    MoneyDystopieConstants.DEFAULT_ERROR_CONTENT
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }
