@@ -25,11 +25,11 @@
                 active: false,
             };
         },
-        props: ['customer','getAllItemsForCatalogue','changeServeurErrorMessage'],
+        props: ['customer','getAllItemsForCatalogue','changeServeurErrorMessage','getPastCommands'],
         methods:{
             onConfirm () {
                 let message ={
-                    customer: { pseudo: 'dsfdsfsd2' /*this.customer.pseudo*/},
+                    customer: { pseudo: this.customer.pseudo},
                     itemCommands: []
                 };
                 for(let i=0; i<this.customer.cart.items.length; i++){
@@ -44,6 +44,7 @@
                 axios.post("/command/create", message).then(() => {
                     this.customer.cart.items = [];
                     this.getAllItemsForCatalogue();
+                    this.getPastCommands();
                 }).catch(error => {
                     if(error!=null && error.response!=null && error.response.data!=null){
                         this.changeServeurErrorMessage('Impossible de confirmer l\'achat : ' + error.response.data);

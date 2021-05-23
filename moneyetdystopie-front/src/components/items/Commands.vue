@@ -10,7 +10,6 @@
 </template>
 
 <script>
-
     import CommandItems from "./CommandItems";
     export default {
         name: "Commands",

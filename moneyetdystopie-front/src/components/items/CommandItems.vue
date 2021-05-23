@@ -6,7 +6,7 @@
             </md-card-media>
             <Items
                     :changeCart="null"
-                    :itemsData="command.items"
+                    :itemsData="command.itemCommands"
                     :navigation="null"
             ></Items>
         </md-card-content>

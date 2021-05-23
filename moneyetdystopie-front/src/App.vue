@@ -28,6 +28,7 @@
                 :customer="user.customer"
                 :getAllItemsForCatalogue="getAllItemsForCatalogue"
                 :changeServeurErrorMessage="changeServeurErrorMessage"
+                :getPastCommands="getPastCommands"
         ></ConfirmationCommand>
         <Items
                 :changeCart="changeInCart"
@@ -90,7 +91,6 @@
       changeNavigation(nav){
         this.navigation = nav;
       },
-
       connexionAccount(){
         this.user = {
           email: 'monMail',
@@ -109,54 +109,12 @@
               state: 'IN_PROGRESS',
               items: []
             },
-            pastCommands: [
-              {
-                id : 4,
-                state : 'IN_PROGRESS',
-                items : [
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  }
-                ]
-              },
-              {
-                id : 5,
-                state : 'IN_PROGRESS',
-                items : [
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  },
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  }
-                ]
-              }
-            ],
+            pastCommands: [],
             pastOrder: null,
           }
         };
         this.getAllItemsForCatalogue();
+        this.getPastCommands();
       },
 
       creationAccount(){
@@ -176,11 +134,9 @@
               id: '2152',
               state: 'IN_PROGRESS',
               items: []
-            },
-            pastOrder: null,
+            }
           }
         };
-        this.getAllItemsForCatalogue();
       },
 
       addInCart(idElement, amountSelection) {
@@ -210,6 +166,29 @@
           elementInPanier.amount = amountRestante;
           elementSelect.amount += amountRetire;
         }
+      },
+
+      getPastCommands(){
+        axios.get("/customer/getPastCommands?pseudo=" + this.user.customer.pseudo).then(response => {
+          this.user.customer.pastCommands = response.data;
+          for(let i=0; i<this.user.customer.pastCommands.length; i++){
+            let listItemCommands = [];
+            for(let j=0; j<this.user.customer.pastCommands[i].itemCommands.length; j++) {
+              listItemCommands = [...listItemCommands,
+                {
+                  ...this.user.customer.pastCommands[i].itemCommands[j].item,
+                  'amount': this.user.customer.pastCommands[i].itemCommands[j].amount
+                }];
+            }
+            this.user.customer.pastCommands[i].itemCommands = listItemCommands;
+          }
+        }).catch( error => {
+          if(error!=null && error.response!=null && error.response.data!=null){
+            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+          }else{
+            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées.');
+          }
+        });
       },
 
       closeSnackBar(){
