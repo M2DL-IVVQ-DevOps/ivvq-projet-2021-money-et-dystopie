@@ -77,7 +77,7 @@ public class User {
 
     @Getter
     @Setter
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Token> tokenList;
 }
