@@ -40,7 +40,12 @@ jobs:
       - name: Build front
         run: cd moneyetdystopie-front && npm run build
       - name: Launch Cypress tests
-        run: cd moneyetdystopie-front && npm run serve-and-test
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: ./moneyetdystopie-front
+          start: npm run serve
+          wait-on: 'http://localhost:8080'
+          command: npm run test-novid
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
