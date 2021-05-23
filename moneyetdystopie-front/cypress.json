@@ -1,4 +1,3 @@
 {
-  "testFiles": "**/*.feature",
-  "defaultCommandTimeout": 8000
+  "testFiles": "**/*.feature"
 }
