@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
-
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -60,28 +59,29 @@ class CommandControllerCreateIntegrationTest {
 
     @BeforeEach
     public void createBeans() throws BusinessException {
-        userTest = new User(
+        userTest =
+            new User(
+                "lastName",
+                "firstName",
+                "buyer@email.fr",
+                "Password1!",
+                null,
+                new Customer("acheteur", "adresserueville", null, null, null),
+                new ArrayList<>()
+            );
+
+        User userSellerTest = new User(
             "lastName",
             "firstName",
-            "buyer@email.fr",
+            "seller@email.fr",
             "Password1!",
+            new Seller("storeName54", null, null, null),
             null,
-                new Customer("acheteur", "adresserueville", null, null, null),
             new ArrayList<>()
         );
 
-
-        User userSellerTest = new User(
-                "lastName",
-                "firstName",
-                "seller@email.fr",
-                "Password1!",
-                new Seller("storeName54", null, null, null),
-                null,
-                new ArrayList<>()
-        );
-
-        itemTest = new Item(
+        itemTest =
+            new Item(
                 null,
                 "title1",
                 "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
@@ -90,7 +90,7 @@ class CommandControllerCreateIntegrationTest {
                 5.f,
                 null,
                 userSellerTest.getSellerAccount()
-        );
+            );
 
         userService.create(userTest);
         userService.create(userSellerTest);
@@ -100,28 +100,35 @@ class CommandControllerCreateIntegrationTest {
     @Test
     void whenCreateCommand_thenCommandReturn() throws Exception {
         // GIVEN
-        itemCommandTest = new ItemCommand(null,4, itemTest);
-        jsonInput = "{\n" +
-                "\"customer\": { \"pseudo\": \"" + userTest.getCustomerAccount().getPseudo() + "\"}," +
-                "\"itemCommands\": [{" +
-                    "\"amount\": " + itemCommandTest.getAmount() + "," +
-                    "\"item\": {\"id\": " + itemCommandTest.getItem().getId() + "}" +
-                "}]}";
+        itemCommandTest = new ItemCommand(null, 4, itemTest);
+        jsonInput =
+            "{\n" +
+            "\"customer\": { \"pseudo\": \"" +
+            userTest.getCustomerAccount().getPseudo() +
+            "\"}," +
+            "\"itemCommands\": [{" +
+            "\"amount\": " +
+            itemCommandTest.getAmount() +
+            "," +
+            "\"item\": {\"id\": " +
+            itemCommandTest.getItem().getId() +
+            "}" +
+            "}]}";
 
         // WHEN
         mockMvc
-                .perform(
-                        post("/command/create")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(jsonInput)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                post("/command/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonInput)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         CommandBean resultFromJson = mapper.readValue(
             jsonResult,
@@ -129,7 +136,9 @@ class CommandControllerCreateIntegrationTest {
         );
         Command result = CommandService.getDto(resultFromJson);
 
-        Seller sellerTest = sellerService.findByStoreName(itemTest.getSellerAccount().getStoreName());
+        Seller sellerTest = sellerService.findByStoreName(
+            itemTest.getSellerAccount().getStoreName()
+        );
 
         // THEN
         assertAll(
@@ -140,9 +149,13 @@ class CommandControllerCreateIntegrationTest {
                     result.getCustomer().getPseudo()
                 ),
             () ->
-                 assertEquals(itemTest.getAmount() - itemCommandTest.getAmount(), itemService.findById(itemCommandTest.getItem().getId()).getAmount()),
-            () ->
-                 assertEquals(1, sellerTest.getCommands().size())
+                assertEquals(
+                    itemTest.getAmount() - itemCommandTest.getAmount(),
+                    itemService
+                        .findById(itemCommandTest.getItem().getId())
+                        .getAmount()
+                ),
+            () -> assertEquals(1, sellerTest.getCommands().size())
         );
         assertNotNull(result.getId(), "The returned item does not have ID.");
     }

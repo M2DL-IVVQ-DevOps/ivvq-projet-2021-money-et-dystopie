@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
-import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.CommandService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
@@ -28,15 +27,20 @@ public class CommandController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody CommandBean command) {
         try {
-            Command commandDto = CommandService.getDto(command);
-            Command resultDto = commandService.create(commandDto);
-            CommandBean result = CommandService.getBean(resultDto);
-            return ResponseEntity.status(HttpStatus.OK).body(result);
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(
+                    CommandService.getBean(
+                        commandService.create(CommandService.getDto(command))
+                    )
+                );
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT);
+            return ResponseEntity
+                .badRequest()
+                .body(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT);
         }
     }
 }

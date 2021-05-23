@@ -1,27 +1,33 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
-import javax.validation.constraints.NotNull;
 import java.util.Arrays;
+import javax.validation.constraints.NotNull;
 
 public class CardService {
 
-    /**
-     * Le nombre de numéros attendus pour un numéro de CB correct
-     */
+    /** Le nombre de numéros attendus pour un numéro de CB correct */
     private static final int CARD_NUMBER_LENGTH = 16;
 
     private final int[] cardNumber;
 
     public CardService(@NotNull String cardNumberToVerify) {
-        cardNumber = cardNumberToVerify.chars().map(Character::getNumericValue).toArray();
+        cardNumber =
+            cardNumberToVerify
+                .chars()
+                .map(Character::getNumericValue)
+                .toArray();
     }
 
     private void applyLuhnAlgorithm() {
-//         Doubler un chiffre sur deux en partant de l'avant-dernier jusqu'au début
-        for(int position = cardNumber.length - 2; position >= 0; position -= 2) {
+        //         Doubler un chiffre sur deux en partant de l'avant-dernier jusqu'au début
+        for (
+            int position = cardNumber.length - 2;
+            position >= 0;
+            position -= 2
+        ) {
             int digitDoubled = cardNumber[position] * 2;
-//        Si le double d'un chiffre est supérieur ou égal à 10, lui retirer 9.
-            if(digitDoubled >= 10) {
+            //        Si le double d'un chiffre est supérieur ou égal à 10, lui retirer 9.
+            if (digitDoubled >= 10) {
                 cardNumber[position] = digitDoubled - 9;
             } else {
                 cardNumber[position] = digitDoubled;
@@ -35,7 +41,7 @@ public class CardService {
     }
 
     public boolean isCardNumberValid() {
-        if(cardNumber.length != CARD_NUMBER_LENGTH) {
+        if (cardNumber.length != CARD_NUMBER_LENGTH) {
             return false;
         }
         applyLuhnAlgorithm();

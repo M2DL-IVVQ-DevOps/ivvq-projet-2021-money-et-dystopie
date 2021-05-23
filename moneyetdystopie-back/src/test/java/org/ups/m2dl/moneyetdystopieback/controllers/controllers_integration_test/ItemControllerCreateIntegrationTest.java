@@ -109,7 +109,7 @@ class ItemControllerCreateIntegrationTest {
                 )
         );
 
-        //THEN
+        // THEN
         Assertions.assertFalse(jsonResult.isBlank());
     }
 
