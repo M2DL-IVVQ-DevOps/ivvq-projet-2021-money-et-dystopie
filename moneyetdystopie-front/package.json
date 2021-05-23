@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint",
     "test": "cypress run",
     "test-novid": "cypress run --config video=false",
+    "serve-and-test": "start-server-and-test serve http://localhost:8080 test-novid",
     "eslint": "eslint --ext .js,.vue -f json -o target/report.json src"
   },
   "dependencies": {
@@ -30,6 +31,7 @@
     "cypress-cucumber-preprocessor": "^4.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "start-server-and-test": "^1.12.2",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
