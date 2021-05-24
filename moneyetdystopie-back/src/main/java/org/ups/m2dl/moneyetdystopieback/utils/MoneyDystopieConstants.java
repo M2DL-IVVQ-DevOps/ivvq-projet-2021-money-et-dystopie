@@ -8,7 +8,7 @@ public class MoneyDystopieConstants {
     public static final int TOKEN_DURABILITY_IN_MINUTES = 10;
     public static final String COOKIE_NAME = "token";
 
-    // ERRORS
+    // TOKEN ERRORS
     public static final String DEFAULT_ERROR_CONTENT = "Erreur du serveur.";
     public static final String NOT_CONNECTED_ERROR =
         "Vous devez être connecté pour effectuer cette action.";
@@ -17,6 +17,7 @@ public class MoneyDystopieConstants {
     public static final String EXPIRED_CONNEXION_ERROR =
         "Votre session a expiré, veuillez vous reconnecter.";
 
+    // SHOP ERRORS
     public static final String UNREFERENCED_SHOP_ERROR =
         "La boutique n'est pas référencée.";
     public static final String UNFOUND_REFERENCED_SHOP_ERROR =
@@ -26,23 +27,27 @@ public class MoneyDystopieConstants {
     public static final String REGISTER_UNDEFINED_SHOP_ERROR =
         "Une boutique non défini ne peut être sauvegardé.";
 
+    // ITEM ERRORS
     public static final String UNDEFINED_ITEM_ERROR =
         "Un article non défini ne peut être sauvegardé.";
     public static final String REGISTER_ITEM_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'article.";
 
+    // CUSTOMER ERRORS
     public static final String REGISTER_CUSTOMER_ERROR =
-        "Une erreur est survenue lors de l'enregistrement de l'acheteur.";
+        "Une erreur est survenue lors de l'enregistrement du client.";
     public static final String UNDEFINED_CUSTOMER_ERROR =
-        "Un acheteur non défini ne peut être sauvegardé.";
+        "Impossible de trouver les données du client.";
 
+    // USER ERRORS
     public static final String USER_NOT_CUSTOMER_OR_SELLER_ERROR =
-        "Le compte doit être acheteur ou commerçant.";
+        "Le compte doit être client ou commerçant.";
     public static final String UNDEFINED_USER_ERROR =
         "Un utilisateur non défini ne peut être sauvegardé.";
     public static final String REGISTER_USER_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'utilisateur.";
 
+    // PASSWORD ERRORS
     public static final String PASSWORD_SIZE_ERROR =
         "Votre mot de passe doit faire au moins 8 caractères.";
     public static final String PASSWORD_UPPERCASE_ERROR =
@@ -51,4 +56,9 @@ public class MoneyDystopieConstants {
         "Votre mot de passe doit contenir au moins une minuscule.";
     public static final String PASSWORD_DIGIT_ERROR =
         "Votre mot de passe doit contenir au moins un chiffre.";
+
+    // COMMAND ERRORS
+    public static final String WRONG_CART_NUMBER_ERROR = "Le numéro de carte bleue renseigné est incorrect. Paiement refusé.";
+    public static final String UNDEFINED_COMMAND_ERROR = "Une commande non définie ne peut être sauvegardé.";
+    public static final String REGISTER_COMMAND_ERROR ="Une erreur est survenue lors de l'enregistrement de la commande.";
 }

@@ -18,6 +18,7 @@ import org.ups.m2dl.moneyetdystopieback.domain.*;
 import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CommandRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
@@ -43,20 +44,20 @@ public class CommandService {
         final CardService cardService = new CardService(cardNumber);
         if(!cardService.isCardNumberValid()) {
             throw new BusinessException(
-                    "Le numéro de carte bleue renseigné est incorrect. Paiement refusé."
+                    MoneyDystopieConstants.WRONG_CART_NUMBER_ERROR
             );
         }
 
         if(command.getCustomer() == null){
             throw new BusinessException(
-                    "Le client n'est pas référencée."
+                    MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
             );
         }
         Customer customer = user.getCustomerAccount();
 
         if (customer == null) {
             throw new BusinessException(
-                    "Le client référencé n'a pu être trouvée."
+                    MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
             );
         }
         command.setCustomer(customer);
@@ -89,15 +90,14 @@ public class CommandService {
     public Command save(Command command) throws BusinessException {
         if (command == null) {
             throw new BusinessException(
-                "Une commande non définie ne peut être sauvegardé."
+                MoneyDystopieConstants.UNDEFINED_COMMAND_ERROR
             );
         }
         try {
             return commandRepository.save(command);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de la commande." +
-                (e.getMessage() == null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_COMMAND_ERROR
             );
         }
     }
