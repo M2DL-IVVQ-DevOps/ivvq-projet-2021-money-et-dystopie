@@ -24,8 +24,8 @@
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
         <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <ConfirmationCommand
-                v-if="user.customer.cart.items.length"
-                :customer="user.customer"
+                v-if="user.customerAccount.cart.items.length"
+                :customer="user.customerAccount"
                 :getAllItemsForCatalogue="getAllItemsForCatalogue"
                 :changeServeurErrorMessage="changeServeurErrorMessage"
                 :getPastCommands="getPastCommands"
@@ -155,9 +155,9 @@
       },
 
       getPastCommands(){
-        axios.get("/customer/getPastCommands?pseudo=" + this.user.customer.pseudo).then(response => {
-          this.user.customer.pastCommands = response.data;
-          for(let pastCommand of this.user.customer.pastCommands) {
+        axios.get("/customer/getPastCommands?pseudo=" + this.user.customerAccount.pseudo).then(response => {
+          this.user.customerAccount.pastCommands = response.data;
+          for(let pastCommand of this.user.customerAccount.pastCommands) {
             let listItemCommands = [];
             for(let itemCommand of pastCommand.itemCommands) {
               listItemCommands = [...listItemCommands,
