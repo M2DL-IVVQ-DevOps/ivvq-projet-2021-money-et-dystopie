@@ -12,7 +12,7 @@
     <artifactId>moneyetdystopie-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>moneyetdystopie-back</name>
-    <description>Back-end - Money et dystopie !</description>
+    <description>Partie serveur de Money et dystopie !</description>
     <properties>
         <java.version>11</java.version>
     </properties>
