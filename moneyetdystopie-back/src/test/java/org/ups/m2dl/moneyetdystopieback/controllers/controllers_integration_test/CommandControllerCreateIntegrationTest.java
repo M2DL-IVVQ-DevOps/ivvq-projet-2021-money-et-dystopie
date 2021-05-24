@@ -19,6 +19,8 @@ import org.ups.m2dl.moneyetdystopieback.domain.*;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.*;
 
+import javax.servlet.http.Cookie;
+
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -43,6 +45,8 @@ class CommandControllerCreateIntegrationTest {
     private ItemCommand itemCommandTest;
     private Item itemTest;
     private Token tokenTest;
+    private Token tokenSellerTest;
+    private Cookie cookieTest;
 
     private String jsonResult;
     private ObjectMapper mapper;
@@ -96,11 +100,14 @@ class CommandControllerCreateIntegrationTest {
 
 
         userService.create(userTest);
+        tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        cookieTest = tokenService.createTokenCookie(tokenTest);
 
         userService.create(userSellerTest);
-        tokenTest = tokenService.createNewTokenForUser(userSellerTest);
-        tokenService.saveToken(tokenTest);
-        itemTest = itemService.create(itemTest, tokenTest.getValue());
+        tokenSellerTest = tokenService.createNewTokenForUser(userSellerTest);
+        tokenService.saveToken(tokenSellerTest);
+        itemTest = itemService.create(itemTest, tokenSellerTest.getUser());
     }
 
     @Test
@@ -123,7 +130,7 @@ class CommandControllerCreateIntegrationTest {
         // WHEN
         mockMvc
             .perform(
-                post("/command/create")
+                post("/command/create").cookie(cookieTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonInput)
                     .queryParam("cardNumber", VALID_CARD_NUMBER)

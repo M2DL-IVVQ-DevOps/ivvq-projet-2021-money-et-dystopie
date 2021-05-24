@@ -36,10 +36,9 @@ public class ItemService {
     private final TokenService tokenService;
 
     @Transactional
-    public Item create(Item item, String tokenValue) throws BusinessException {
-        User dbUser = tokenService.getUserByTokenValue(tokenValue);
+    public Item create(Item item, User dbUser) throws BusinessException {
         if (
-            dbUser.getSellerAccount() == null ||
+            dbUser == null || dbUser.getSellerAccount() == null ||
             dbUser.getSellerAccount().getStoreName().isBlank()
         ) {
             throw new BusinessException(

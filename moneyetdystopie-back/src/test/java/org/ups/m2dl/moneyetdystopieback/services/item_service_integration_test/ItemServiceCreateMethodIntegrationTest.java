@@ -88,8 +88,8 @@ class ItemServiceCreateMethodIntegrationTest {
         itemsNumber = itemService.findAll().size();
 
         // WHEN
-        itemService.create(itemTestTwinA, tokenTest.getValue());
-        itemService.create(itemTestTwinB, tokenTest.getValue());
+        itemService.create(itemTestTwinA, tokenTest.getUser());
+        itemService.create(itemTestTwinB, tokenTest.getUser());
 
         // THEN
         Assertions.assertEquals(
@@ -134,7 +134,7 @@ class ItemServiceCreateMethodIntegrationTest {
             BusinessException.class,
             () -> {
                 // WHEN
-                itemService.create(itemTestTwinA, "");
+                itemService.create(itemTestTwinA, new User());
             }
         );
     }
@@ -159,7 +159,7 @@ class ItemServiceCreateMethodIntegrationTest {
             BusinessException.class,
             () -> {
                 // WHEN
-                itemService.create(itemTest, "");
+                itemService.create(itemTest, new User());
             }
         );
     }

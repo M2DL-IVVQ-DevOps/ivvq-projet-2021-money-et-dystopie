@@ -39,7 +39,7 @@ public class CommandService {
     private final SellerService sellerService;
 
     @Transactional
-    public Command create(Command command, String cardNumber) throws BusinessException {
+    public Command create(Command command, String cardNumber, User user) throws BusinessException {
         final CardService cardService = new CardService(cardNumber);
         if(!cardService.isCardNumberValid()) {
             throw new BusinessException(
@@ -52,12 +52,11 @@ public class CommandService {
                     "Le client n'est pas référencée."
             );
         }
-        Customer customer = customerService.findByPseudo(
-                command.getCustomer().getPseudo()
-        );
+        Customer customer = user.getCustomerAccount();
+
         if (customer == null) {
             throw new BusinessException(
-                    "Le client référencée n'a pu être trouvée."
+                    "Le client référencé n'a pu être trouvée."
             );
         }
         command.setCustomer(customer);

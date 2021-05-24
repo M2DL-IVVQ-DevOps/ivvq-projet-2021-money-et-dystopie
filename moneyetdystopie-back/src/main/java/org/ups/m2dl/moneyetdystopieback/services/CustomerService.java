@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
@@ -75,11 +76,11 @@ public class CustomerService {
         }
     }
 
-    public List<Command> getPastCommands(String customerPseudo) throws BusinessException {
-        Customer customer = findByPseudo(customerPseudo);
+    public List<Command> getPastCommands(User user) throws BusinessException {
+        Customer customer = user.getCustomerAccount();
         if(customer == null){
             throw new BusinessException(
-                    "L'acheuteur '" + customerPseudo + "' n'a pu être trouvé."
+                    MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR
             );
         }
         return customer.getPastCommands();

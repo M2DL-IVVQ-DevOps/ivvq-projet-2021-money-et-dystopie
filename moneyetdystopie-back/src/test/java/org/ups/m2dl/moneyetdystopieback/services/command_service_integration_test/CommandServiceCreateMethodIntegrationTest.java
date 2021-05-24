@@ -48,14 +48,21 @@ class CommandServiceCreateMethodIntegrationTest {
     private ItemCommand itemCommandTest;
     private Customer customerTest;
     private Token tokenTest;
+    private Token tokenCustomerTest;
+    private User userTest;
+    private User userCustomerTest;
 
     @BeforeEach
     void setup() throws BusinessException {
         customerTest = new Customer("acheteur", "adresserueville", null, null, null);
+        userCustomerTest = new User("nom2", "prenom2", "mail2@mail.net", "Password2", null, customerTest, null);
+
+        userService.create(userCustomerTest);
+        tokenCustomerTest = tokenService.createNewTokenForUser(userCustomerTest);
+        tokenService.saveToken(tokenCustomerTest);
 
         Seller sellerTest = new Seller("storeName54", null, null, null);
-
-        User userTest = new User("nom", "prenom", "mail@mail.net", "Password1", sellerTest, null, null);
+        userTest = new User("nom", "prenom", "mail@mail.net", "Password1", sellerTest, null, null);
 
         itemTest = new Item(
                 null,
@@ -72,8 +79,8 @@ class CommandServiceCreateMethodIntegrationTest {
         tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
 
-        customerService.create(customerTest);
-        itemService.create(itemTest, tokenTest.getValue());
+        //customerService.create(customerTest);
+        itemService.create(itemTest, tokenTest.getUser());
     }
 
     @Test
@@ -90,7 +97,7 @@ class CommandServiceCreateMethodIntegrationTest {
         Assertions.assertThrows(
             BusinessException.class,
             // When : Le service enregistre la commande
-            () -> commandService.create(commandTest, VALID_CARD_NUMBER)
+            () -> commandService.create(commandTest, VALID_CARD_NUMBER,userCustomerTest)
         );
     }
 
@@ -112,7 +119,7 @@ class CommandServiceCreateMethodIntegrationTest {
         Assertions.assertThrows(
             BusinessException.class,
             // When : Le service enregistre la commande
-            () -> commandService.create(commandTest, VALID_CARD_NUMBER)
+            () -> commandService.create(commandTest, VALID_CARD_NUMBER,userCustomerTest)
         );
     }
 
@@ -133,7 +140,7 @@ class CommandServiceCreateMethodIntegrationTest {
                 List.of(itemCommandTest)
             );
         // When : Le service enregistre la commande
-        Command actual = commandService.create(commandTest, VALID_CARD_NUMBER);
+        Command actual = commandService.create(commandTest, VALID_CARD_NUMBER,userCustomerTest);
         // Then : Le repository référence la commande
         Assertions.assertTrue(commandRepository.existsById(actual.getId()));
         // Then : La commande est associée à l'utilisateur
