@@ -58,7 +58,7 @@ jobs:
         with:
           name: failed-test-videos
           path: ./moneyetdystopie-front/cypress/videos
-          retention-days: 2
+          retention-days: 1
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
