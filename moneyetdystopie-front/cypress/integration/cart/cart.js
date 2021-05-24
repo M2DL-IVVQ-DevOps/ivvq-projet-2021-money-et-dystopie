@@ -8,6 +8,7 @@ const CARD_ACTIONS = ".cardAction";
 
 beforeEach(() => {
     mockCatalogue();
+    mockConnexion();
     cy.visit('http://localhost:8080/index.html');
     cy.get('[id=connection-button]').click();
     cy.wait('@mockCatalogue');
@@ -54,6 +55,29 @@ function mockCatalogue() {
             }
         }
     ]).as('mockCatalogue');
+}
+
+
+function mockConnexion() {
+    cy.intercept('POST','/user/create/',
+            {
+                "lastName": "FRANZESE",
+                "firstName": "Alessandra",
+                "email": "2monMail2@efef.gr",
+                "password": "",
+                "sellerAccount": {
+                    "storeName": "Lecrochet1",
+                    "items": null,
+                    "commands": null
+                },
+                "customerAccount": {
+                    "pseudo": "dsfdsfsd2",
+                    "address": "54ruejenesaisou",
+                    "cart": null,
+                    "pastCommands": null
+                }
+            }
+        ).as('mockConnexion');
 }
 
 Given(/^an empty cart$/, function () {
