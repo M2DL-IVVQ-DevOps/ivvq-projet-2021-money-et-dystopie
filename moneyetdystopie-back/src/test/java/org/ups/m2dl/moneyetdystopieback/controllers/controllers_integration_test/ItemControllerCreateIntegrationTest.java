@@ -73,19 +73,20 @@ class ItemControllerCreateIntegrationTest {
     void setup() {
         mapper = new ObjectMapper();
     }
+
     @BeforeEach
     void initTestBeans() throws BusinessException {
         sellerTest = new Seller("CreateItemstoreName", null, null, null);
         userTest =
-                new User(
-                        "CreateItemlastName",
-                        "CreateItemfirstName",
-                        "CreateItememail1@email.com",
-                        "CreateItemPassword1",
-                        sellerTest,
-                        null,
-                        new ArrayList<>()
-                );
+            new User(
+                "CreateItemlastName",
+                "CreateItemfirstName",
+                "CreateItememail1@email.com",
+                "CreateItemPassword1",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
 
         userService.create(userTest);
         tokenTest = tokenService.createNewTokenForUser(userTest);
@@ -97,16 +98,16 @@ class ItemControllerCreateIntegrationTest {
     void givenConnectedUser_whenSaveItem_thenItemReturn() throws Exception {
         // GIVEN
         itemTest =
-                new Item(
-                        null,
-                        "title",
-                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                        "description",
-                        10,
-                        5.f,
-                        null,
-                        sellerTest
-                );
+            new Item(
+                null,
+                "title",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
 
         jsonUserTest = new Gson().toJson(itemTest);
 

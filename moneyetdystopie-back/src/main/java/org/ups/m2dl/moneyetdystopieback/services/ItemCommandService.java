@@ -1,5 +1,11 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.Iterator;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -13,13 +19,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemCommandRepository;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Iterator;
-import java.util.Set;
-
 @AllArgsConstructor
 @Service
 public class ItemCommandService {
@@ -31,14 +30,14 @@ public class ItemCommandService {
     private final ItemService itemService;
 
     @Transactional
-    public ItemCommand create(ItemCommand itemCommand) throws BusinessException {
-
-        if(itemCommand.getItem() == null) {
-            throw new BusinessException(
-                    "L'item référencé n'a pu être trouvé."
-            );
+    public ItemCommand create(ItemCommand itemCommand)
+        throws BusinessException {
+        if (itemCommand.getItem() == null) {
+            throw new BusinessException("L'item référencé n'a pu être trouvé.");
         }
-        itemCommand.setItem(itemService.findById(itemCommand.getItem().getId()));
+        itemCommand.setItem(
+            itemService.findById(itemCommand.getItem().getId())
+        );
 
         this.valid(itemCommand);
 
@@ -70,7 +69,7 @@ public class ItemCommandService {
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<ItemCommand>> constraintViolations = validator.validate(
-                itemCommand
+            itemCommand
         );
 
         if (!constraintViolations.isEmpty()) {
@@ -79,13 +78,14 @@ public class ItemCommandService {
         }
     }
 
-    public void decreaseStock(ItemCommand itemCommand) throws BusinessException {
+    public void decreaseStock(ItemCommand itemCommand)
+        throws BusinessException {
         final Item item = itemCommand.getItem();
 
         // Décrémente la quantité d'item de la boutique en question
-        if(item.getAmount() < itemCommand.getAmount()){
+        if (item.getAmount() < itemCommand.getAmount()) {
             throw new BusinessException(
-                    "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie."
+                "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie."
             );
         }
         item.setAmount(item.getAmount() - itemCommand.getAmount());
@@ -98,14 +98,14 @@ public class ItemCommandService {
         if (itemCommand.getItem() != null) {
             itemCommandBean.setItem(new ItemBean());
             BeanUtils.copyProperties(
-                    itemCommand.getItem(),
-                    itemCommandBean.getItem()
+                itemCommand.getItem(),
+                itemCommandBean.getItem()
             );
-            if(itemCommand.getItem().getSellerAccount() != null){
+            if (itemCommand.getItem().getSellerAccount() != null) {
                 itemCommandBean.getItem().setSellerAccount(new SellerBean());
                 BeanUtils.copyProperties(
-                        itemCommand.getItem().getSellerAccount(),
-                        itemCommandBean.getItem().getSellerAccount()
+                    itemCommand.getItem().getSellerAccount(),
+                    itemCommandBean.getItem().getSellerAccount()
                 );
             }
         }
@@ -120,8 +120,8 @@ public class ItemCommandService {
         if (itemCommandBean.getItem() != null) {
             itemCommand.setItem(new Item());
             BeanUtils.copyProperties(
-                    itemCommandBean.getItem(),
-                    itemCommand.getItem()
+                itemCommandBean.getItem(),
+                itemCommand.getItem()
             );
         }
 

@@ -58,7 +58,10 @@ public class MoneyDystopieConstants {
         "Votre mot de passe doit contenir au moins un chiffre.";
 
     // COMMAND ERRORS
-    public static final String WRONG_CART_NUMBER_ERROR = "Le numéro de carte bleue renseigné est incorrect. Paiement refusé.";
-    public static final String UNDEFINED_COMMAND_ERROR = "Une commande non définie ne peut être sauvegardé.";
-    public static final String REGISTER_COMMAND_ERROR ="Une erreur est survenue lors de l'enregistrement de la commande.";
+    public static final String WRONG_CART_NUMBER_ERROR =
+        "Le numéro de carte bleue renseigné est incorrect. Paiement refusé.";
+    public static final String UNDEFINED_COMMAND_ERROR =
+        "Une commande non définie ne peut être sauvegardé.";
+    public static final String REGISTER_COMMAND_ERROR =
+        "Une erreur est survenue lors de l'enregistrement de la commande.";
 }

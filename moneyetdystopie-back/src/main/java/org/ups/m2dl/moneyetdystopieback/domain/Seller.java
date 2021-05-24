@@ -70,11 +70,14 @@ public class Seller {
             this.commands = new ArrayList<>();
         }
 
-        while(i<this.commands.size() && this.commands.get(i).getId().equals(command.getId())){
+        while (
+            i < this.commands.size() &&
+            this.commands.get(i).getId().equals(command.getId())
+        ) {
             i++;
         }
 
-        if(i==this.commands.size()){
+        if (i == this.commands.size()) {
             this.commands.add(command);
             return true;
         }

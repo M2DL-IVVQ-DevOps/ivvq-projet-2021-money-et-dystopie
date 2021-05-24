@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -46,10 +45,10 @@ public class Command {
     @Size(min = 1)
     @LazyCollection(LazyCollectionOption.FALSE)
     @NotNull(message = "La commande doit comporter au moins un article.")
-    private  List<ItemCommand> itemCommands;
+    private List<ItemCommand> itemCommands;
 
-    public void addItemsCommand(ItemCommand itemCommand){
-        if(this.itemCommands == null){
+    public void addItemsCommand(ItemCommand itemCommand) {
+        if (this.itemCommands == null) {
             this.itemCommands = new ArrayList<>();
         }
         this.itemCommands.add(itemCommand);

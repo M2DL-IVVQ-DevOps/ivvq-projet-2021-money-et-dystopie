@@ -181,7 +181,7 @@ class TokenServiceTest {
     @Test
     void givenCorrectTokenAndNullUser_whenIsTokenUserAssociationValid_thenFalseReturned() {
         // given : un token correct et un utilisateur null
-        Token token = new Token(null,"token", new Date(),null);
+        Token token = new Token(null, "token", new Date(), null);
         // when : on vérifie l'association token / utilisateur
         boolean response = tokenService.isTokenUserAssociationValid(
             token,

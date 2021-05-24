@@ -1,5 +1,12 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -13,14 +20,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -38,7 +37,8 @@ public class ItemService {
     @Transactional
     public Item create(Item item, User dbUser) throws BusinessException {
         if (
-            dbUser == null || dbUser.getSellerAccount() == null ||
+            dbUser == null ||
+            dbUser.getSellerAccount() == null ||
             dbUser.getSellerAccount().getStoreName().isBlank()
         ) {
             throw new BusinessException(

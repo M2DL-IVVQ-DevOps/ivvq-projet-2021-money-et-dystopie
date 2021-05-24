@@ -23,22 +23,31 @@ public class CustomerController {
     @Getter
     private final TokenService tokenService;
 
-    @GetMapping(value = "/getPastCommands", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getPastCommands(@CookieValue(value = "token", defaultValue = "") String tokenValue) {
+    @GetMapping(
+        value = "/getPastCommands",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<Object> getPastCommands(
+        @CookieValue(value = "token", defaultValue = "") String tokenValue
+    ) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(
-                            CommandService.getBean(customerService.getPastCommands(tokenService.getUserByTokenValue(tokenValue)))
-                    );
+                .status(HttpStatus.OK)
+                .body(
+                    CommandService.getBean(
+                        customerService.getPastCommands(
+                            tokenService.getUserByTokenValue(tokenValue)
+                        )
+                    )
+                );
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
-                    .body(
-                            new Exception(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT)
-                    );
+                .badRequest()
+                .body(
+                    new Exception(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT)
+                );
         }
     }
 }

@@ -40,24 +40,25 @@ public class CommandService {
     private final SellerService sellerService;
 
     @Transactional
-    public Command create(Command command, String cardNumber, User user) throws BusinessException {
+    public Command create(Command command, String cardNumber, User user)
+        throws BusinessException {
         final CardService cardService = new CardService(cardNumber);
-        if(!cardService.isCardNumberValid()) {
+        if (!cardService.isCardNumberValid()) {
             throw new BusinessException(
-                    MoneyDystopieConstants.WRONG_CART_NUMBER_ERROR
+                MoneyDystopieConstants.WRONG_CART_NUMBER_ERROR
             );
         }
 
-        if(command.getCustomer() == null){
+        if (command.getCustomer() == null) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
+                MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
             );
         }
         Customer customer = user.getCustomerAccount();
 
         if (customer == null) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
+                MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
             );
         }
         command.setCustomer(customer);
@@ -67,8 +68,10 @@ public class CommandService {
         this.valid(command);
 
         List<ItemCommand> itemCommandsSaved = new ArrayList<>();
-        for(int i = 0; i < command.getItemCommands().size(); i++){
-            itemCommandsSaved.add(itemCommandService.create(command.getItemCommands().get(i)));
+        for (int i = 0; i < command.getItemCommands().size(); i++) {
+            itemCommandsSaved.add(
+                itemCommandService.create(command.getItemCommands().get(i))
+            );
         }
         command.setItemCommands(itemCommandsSaved);
 
@@ -77,9 +80,11 @@ public class CommandService {
         command.getCustomer().addPastCommand(command);
         customerService.save(command.getCustomer());
 
-        for(ItemCommand itemCommand : command.getItemCommands()){
-            Seller seller = sellerService.findByStoreName(itemCommand.getItem().getSellerAccount().getStoreName());
-            if(seller.addCommand(command)){
+        for (ItemCommand itemCommand : command.getItemCommands()) {
+            Seller seller = sellerService.findByStoreName(
+                itemCommand.getItem().getSellerAccount().getStoreName()
+            );
+            if (seller.addCommand(command)) {
                 sellerService.save(seller);
             }
         }
@@ -107,7 +112,7 @@ public class CommandService {
         Validator validator = factory.getValidator();
 
         Set<ConstraintViolation<Command>> constraintViolations = validator.validate(
-                command
+            command
         );
 
         if (!constraintViolations.isEmpty()) {
@@ -120,17 +125,19 @@ public class CommandService {
         CommandBean commandBean = new CommandBean();
         BeanUtils.copyProperties(command, commandBean);
 
-        if(command.getItemCommands() != null){
-            for(ItemCommand itemCommand : command.getItemCommands()){
-                commandBean.addItemsCommand(ItemCommandService.getBean(itemCommand));
+        if (command.getItemCommands() != null) {
+            for (ItemCommand itemCommand : command.getItemCommands()) {
+                commandBean.addItemsCommand(
+                    ItemCommandService.getBean(itemCommand)
+                );
             }
         }
 
         if (command.getCustomer() != null) {
             commandBean.setCustomer(new CustomerBean());
             BeanUtils.copyProperties(
-                    command.getCustomer(),
-                    commandBean.getCustomer()
+                command.getCustomer(),
+                commandBean.getCustomer()
             );
         }
 
@@ -139,7 +146,7 @@ public class CommandService {
 
     public static List<CommandBean> getBean(List<Command> commands) {
         List<CommandBean> commandBeans = new ArrayList<>();
-        for (Command command: commands){
+        for (Command command : commands) {
             commandBeans.add(getBean(command));
         }
         return commandBeans;
@@ -149,17 +156,19 @@ public class CommandService {
         Command command = new Command();
         BeanUtils.copyProperties(commandBean, command);
 
-        if(commandBean.getItemCommands() != null){
-            for(ItemCommandBean itemCommandBean : commandBean.getItemCommands()){
-                command.addItemsCommand(ItemCommandService.getDto(itemCommandBean));
+        if (commandBean.getItemCommands() != null) {
+            for (ItemCommandBean itemCommandBean : commandBean.getItemCommands()) {
+                command.addItemsCommand(
+                    ItemCommandService.getDto(itemCommandBean)
+                );
             }
         }
 
         if (commandBean.getCustomer() != null) {
             command.setCustomer(new Customer());
             BeanUtils.copyProperties(
-                    commandBean.getCustomer(),
-                    command.getCustomer()
+                commandBean.getCustomer(),
+                command.getCustomer()
             );
         }
 

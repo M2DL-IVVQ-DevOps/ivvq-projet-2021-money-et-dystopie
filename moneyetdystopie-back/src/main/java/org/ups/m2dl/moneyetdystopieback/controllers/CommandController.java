@@ -25,13 +25,21 @@ public class CommandController {
     private final TokenService tokenService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(@Param("cardNumber") String cardNumber, @RequestBody CommandBean command, @CookieValue(value = "token", defaultValue = "") String tokenValue) {
+    public ResponseEntity<Object> create(
+        @Param("cardNumber") String cardNumber,
+        @RequestBody CommandBean command,
+        @CookieValue(value = "token", defaultValue = "") String tokenValue
+    ) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
                     CommandService.getBean(
-                        commandService.create(CommandService.getDto(command), cardNumber, tokenService.getUserByTokenValue(tokenValue))
+                        commandService.create(
+                            CommandService.getDto(command),
+                            cardNumber,
+                            tokenService.getUserByTokenValue(tokenValue)
+                        )
                     )
                 );
         } catch (BusinessException e) {

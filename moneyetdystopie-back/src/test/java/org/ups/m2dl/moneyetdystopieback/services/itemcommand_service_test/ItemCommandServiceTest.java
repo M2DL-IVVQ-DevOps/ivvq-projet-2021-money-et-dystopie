@@ -18,20 +18,29 @@ class ItemCommandServiceTest {
     @Autowired
     private ItemCommandService itemCommandService;
 
-
-
     @ParameterizedTest
-    @CsvSource(
-            {
-                    "5,5,0",
-                    "4,3,1",
-                    "5,0,5",
-            }
-    )
-    void decreaseStock_stockDecreased(Integer initialAmount, Integer quantityToDecrease, Integer expectedAmount) throws BusinessException {
-        Item item = new Item(null, "titre", "photo.mail.net", "description", initialAmount, 0f, null, null);
-        //item = itemService.create(item);
-        ItemCommand itemCommand = new ItemCommand(null, quantityToDecrease, item);
+    @CsvSource({ "5,5,0", "4,3,1", "5,0,5" })
+    void decreaseStock_stockDecreased(
+        Integer initialAmount,
+        Integer quantityToDecrease,
+        Integer expectedAmount
+    ) throws BusinessException {
+        Item item = new Item(
+            null,
+            "titre",
+            "photo.mail.net",
+            "description",
+            initialAmount,
+            0f,
+            null,
+            null
+        );
+        // item = itemService.create(item);
+        ItemCommand itemCommand = new ItemCommand(
+            null,
+            quantityToDecrease,
+            item
+        );
 
         // When
         itemCommandService.decreaseStock(itemCommand);

@@ -23,12 +23,12 @@ public class UserController {
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
         try {
             return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(
-                            UserService.getBean(
-                                    userService.create(UserService.getDto(user))
-                            )
-                    );
+                .status(HttpStatus.OK)
+                .body(
+                    UserService.getBean(
+                        userService.create(UserService.getDto(user))
+                    )
+                );
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

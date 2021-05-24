@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,8 +19,6 @@ import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
 import org.ups.m2dl.moneyetdystopieback.domain.*;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.*;
-
-import javax.servlet.http.Cookie;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
@@ -98,7 +97,6 @@ class CommandControllerCreateIntegrationTest {
                 userSellerTest.getSellerAccount()
             );
 
-
         userService.create(userTest);
         tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
@@ -114,23 +112,25 @@ class CommandControllerCreateIntegrationTest {
     void whenCreateCommand_thenCommandReturn() throws Exception {
         // GIVEN
         itemCommandTest = new ItemCommand(null, 4, itemTest);
-        String jsonInput = "{\n" +
-                "\"customer\": { \"pseudo\": \"" +
-                userTest.getCustomerAccount().getPseudo() +
-                "\"}," +
-                "\"itemCommands\": [{" +
-                "\"amount\": " +
-                itemCommandTest.getAmount() +
-                "," +
-                "\"item\": {\"id\": " +
-                itemCommandTest.getItem().getId() +
-                "}" +
-                "}]}";
+        String jsonInput =
+            "{\n" +
+            "\"customer\": { \"pseudo\": \"" +
+            userTest.getCustomerAccount().getPseudo() +
+            "\"}," +
+            "\"itemCommands\": [{" +
+            "\"amount\": " +
+            itemCommandTest.getAmount() +
+            "," +
+            "\"item\": {\"id\": " +
+            itemCommandTest.getItem().getId() +
+            "}" +
+            "}]}";
 
         // WHEN
         mockMvc
             .perform(
-                post("/command/create").cookie(cookieTest)
+                post("/command/create")
+                    .cookie(cookieTest)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonInput)
                     .queryParam("cardNumber", VALID_CARD_NUMBER)

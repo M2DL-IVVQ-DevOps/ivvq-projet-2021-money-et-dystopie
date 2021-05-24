@@ -2,13 +2,12 @@ package org.ups.m2dl.moneyetdystopieback.bean;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
-
-import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -35,8 +34,8 @@ public class CommandBean {
     @Setter
     private List<ItemCommandBean> itemCommands;
 
-    public void addItemsCommand(ItemCommandBean itemCommand){
-        if(this.itemCommands == null){
+    public void addItemsCommand(ItemCommandBean itemCommand) {
+        if (this.itemCommands == null) {
             this.itemCommands = new ArrayList<>();
         }
         this.itemCommands.add(itemCommand);

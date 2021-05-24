@@ -40,9 +40,7 @@ public class TokenController {
                 .status(HttpStatus.OK)
                 .body(UserService.getBean(token.getUser()));
         } catch (BusinessException e) {
-            return ResponseEntity
-                .badRequest()
-                .body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
