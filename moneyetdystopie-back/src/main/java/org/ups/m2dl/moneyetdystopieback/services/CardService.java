@@ -1,7 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
 import java.util.Arrays;
-import javax.validation.constraints.NotNull;
 
 public class CardService {
 

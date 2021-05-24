@@ -41,7 +41,7 @@ public class TokenController {
                 .body(UserService.getBean(token.getUser()));
         } catch (BusinessException e) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .badRequest()
                 .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
@@ -71,7 +71,7 @@ public class TokenController {
                 .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
@@ -89,7 +89,7 @@ public class TokenController {
                 .body(tokenService.removeTokenByValue(tokenValue));
         } catch (Exception e) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }

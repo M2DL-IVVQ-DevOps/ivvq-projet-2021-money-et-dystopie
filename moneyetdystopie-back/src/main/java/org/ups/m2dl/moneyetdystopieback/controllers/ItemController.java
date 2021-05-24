@@ -2,7 +2,6 @@ package org.ups.m2dl.moneyetdystopieback.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +28,8 @@ public class ItemController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    itemService.getBean(
-                        itemService.create(itemService.getDto(item), tokenValue)
+                    ItemService.getBean(
+                        itemService.create(ItemService.getDto(item), tokenValue)
                     )
                 );
         } catch (BusinessException e) {

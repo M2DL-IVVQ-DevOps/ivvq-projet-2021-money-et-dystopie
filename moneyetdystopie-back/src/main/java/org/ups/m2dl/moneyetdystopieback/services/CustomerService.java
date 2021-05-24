@@ -1,25 +1,21 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.stereotype.Service;
+import org.ups.m2dl.moneyetdystopieback.domain.Command;
+import org.ups.m2dl.moneyetdystopieback.domain.Customer;
+import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
+import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
-import org.ups.m2dl.moneyetdystopieback.bean.CustomerBean;
-import org.ups.m2dl.moneyetdystopieback.bean.ItemCommandBean;
-import org.ups.m2dl.moneyetdystopieback.domain.Command;
-import org.ups.m2dl.moneyetdystopieback.domain.Customer;
-import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
-import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
-import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
-import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @Service
