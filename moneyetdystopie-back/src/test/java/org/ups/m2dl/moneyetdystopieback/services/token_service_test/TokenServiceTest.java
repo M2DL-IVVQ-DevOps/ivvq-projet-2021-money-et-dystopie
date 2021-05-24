@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Calendar;
 import java.util.Date;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,7 +43,7 @@ class TokenServiceTest {
     }
 
     @Test
-    void whenUseSaveMethod_thenRepositoryTokenInvoked() {
+    void whenUseSaveTokenMethod_thenRepositoryTokenInvoked() {
         // when : un saveToken() est appelé sur un tokenService
         tokenService.saveToken(token);
         // then : saveToken() du dépôt associé au service est invoqué
@@ -50,7 +51,7 @@ class TokenServiceTest {
     }
 
     @Test
-    void whenUseRemoveMethod_thenRepositoryTokenInvoked() {
+    void whenUseRemoveTokenMethod_thenRepositoryTokenInvoked() {
         // when : un removeToken() est appelé sur un tokenService
         tokenService.removeToken(token);
         // then : removeToken() du dépôt associé au service est invoqué
@@ -104,7 +105,8 @@ class TokenServiceTest {
     }
 
     @Test
-    void whenGenerateToken_thenBothTokenAreDistinct() throws BusinessException {
+    void whenGenerateTokenTwice_thenBothTokenAreDistinct()
+        throws BusinessException {
         // when : deux tokens sont générés
         String tokenValue1 = tokenService.generateToken();
         String tokenValue2 = tokenService.generateToken();
@@ -179,7 +181,7 @@ class TokenServiceTest {
     @Test
     void givenCorrectTokenAndNullUser_whenIsTokenUserAssociationValid_thenFalseReturned() {
         // given : un token correct et un utilisateur null
-        Token token = new Token("token", new Date());
+        Token token = new Token(null,"token", new Date(),null);
         // when : on vérifie l'association token / utilisateur
         boolean response = tokenService.isTokenUserAssociationValid(
             token,
@@ -219,5 +221,22 @@ class TokenServiceTest {
         );
         // then : l'association est incorrecte
         assertTrue(response);
+    }
+
+    @Test
+    void whenCreateCookie_thenCookieIsValid() {
+        // given : un token
+        Token token = new Token();
+        token.setValue("5");
+
+        // when : on créé le cookie du token
+        Cookie cookie = tokenService.createTokenCookie(token);
+
+        // then le cookie est valide
+        assertTrue(cookie.isHttpOnly());
+        assertTrue(cookie.getSecure());
+        assertEquals("/", cookie.getPath());
+        assertEquals(token.getValue(), cookie.getValue());
+        assertEquals("token", cookie.getName());
     }
 }

@@ -41,7 +41,7 @@ public class CommandController {
             e.printStackTrace();
             return ResponseEntity
                 .badRequest()
-                .body(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT);
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

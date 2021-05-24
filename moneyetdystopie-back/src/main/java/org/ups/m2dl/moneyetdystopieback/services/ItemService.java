@@ -16,8 +16,10 @@ import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
@@ -29,24 +31,29 @@ public class ItemService {
     @Getter
     private final SellerService sellerService;
 
-    @Transactional
-    public Item create(Item item) throws BusinessException {
+    @Getter
+    private final TokenService tokenService;
 
-        if(item.getSellerAccount() == null){
+    @Transactional
+    public Item create(Item item, String tokenValue) throws BusinessException {
+        User dbUser = tokenService.getUserByTokenValue(tokenValue);
+        if (
+            dbUser.getSellerAccount() == null ||
+            dbUser.getSellerAccount().getStoreName().isBlank()
+        ) {
             throw new BusinessException(
-                    "La boutique n'est pas référencée."
+                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
             );
         }
         Seller seller = sellerService.findByStoreName(
-            item.getSellerAccount().getStoreName()
+            dbUser.getSellerAccount().getStoreName()
         );
         if (seller == null) {
             throw new BusinessException(
-                "La boutique référencée n'a pu être trouvée."
+                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
             );
         }
         item.setSellerAccount(seller);
-
         this.valid(item);
 
         item = this.save(item);
@@ -67,15 +74,14 @@ public class ItemService {
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
-                "Un article non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
             );
         }
         try {
             return itemRepository.save(item);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'article." +
-                (e.getMessage() == null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
             );
         }
     }
@@ -116,6 +122,7 @@ public class ItemService {
                 itemBean.getSellerAccount()
             );
         }
+
         return itemBean;
     }
 

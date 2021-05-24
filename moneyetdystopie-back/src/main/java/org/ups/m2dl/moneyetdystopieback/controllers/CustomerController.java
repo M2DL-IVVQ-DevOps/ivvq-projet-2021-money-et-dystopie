@@ -42,7 +42,7 @@ public class CustomerController {
             return ResponseEntity
                     .badRequest()
                     .body(
-                            new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
+                            new Exception(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT)
                     );
         }
     }

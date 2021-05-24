@@ -31,6 +31,11 @@ class CommandServiceCreateMethodIntegrationTest {
     @Autowired
     private CommandService commandService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ItemService itemService;
@@ -40,16 +45,17 @@ class CommandServiceCreateMethodIntegrationTest {
     private static final String VALID_CARD_NUMBER = "9999999999999995";
 
     private Item itemTest;
-
     private ItemCommand itemCommandTest;
-
     private Customer customerTest;
+    private Token tokenTest;
 
     @BeforeEach
     void setup() throws BusinessException {
         customerTest = new Customer("acheteur", "adresserueville", null, null, null);
 
         Seller sellerTest = new Seller("storeName54", null, null, null);
+
+        User userTest = new User("nom", "prenom", "mail@mail.net", "Password1", sellerTest, null, null);
 
         itemTest = new Item(
                 null,
@@ -62,9 +68,12 @@ class CommandServiceCreateMethodIntegrationTest {
                 sellerTest
         );
 
+        userService.create(userTest);
+        tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+
         customerService.create(customerTest);
-        sellerService.create(sellerTest);
-        itemService.create(itemTest);
+        itemService.create(itemTest, tokenTest.getValue());
     }
 
     @Test

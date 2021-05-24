@@ -17,7 +17,7 @@ function goToCart() {
     cy.get('.scene_nav')
         .get('.scene_nav_list')
         .get('.scene_nav_item')
-        .get('img').eq(2).click();
+        .get('.scene_nav_button').eq(1).click();
 }
 
 function mockCatalogue() {

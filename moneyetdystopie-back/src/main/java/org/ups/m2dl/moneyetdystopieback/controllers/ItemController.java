@@ -18,17 +18,19 @@ import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 public class ItemController {
 
     @Getter
-    @Setter
-    private ItemService itemService;
+    private final ItemService itemService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> create(@RequestBody ItemBean item) {
+    public ResponseEntity<Object> create(
+        @RequestBody ItemBean item,
+        @CookieValue(value = "token", defaultValue = "") String tokenValue
+    ) {
         try {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    ItemService.getBean(
-                        itemService.create(ItemService.getDto(item))
+                    itemService.getBean(
+                        itemService.create(itemService.getDto(item), tokenValue)
                     )
                 );
         } catch (BusinessException e) {
@@ -36,9 +38,7 @@ public class ItemController {
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 
@@ -51,9 +51,7 @@ public class ItemController {
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

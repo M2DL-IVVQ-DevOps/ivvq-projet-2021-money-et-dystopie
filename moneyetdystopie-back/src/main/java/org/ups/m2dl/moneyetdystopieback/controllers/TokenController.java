@@ -1,6 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.controllers;
 
-import java.nio.file.AccessDeniedException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
@@ -34,18 +34,19 @@ public class TokenController {
     ) {
         try {
             User user = UserService.getDto(userBean);
-            response.addCookie(
-                tokenService.createTokenCookie(user, tokenValue)
-            );
-            return ResponseEntity.status(HttpStatus.OK).body(true);
+            Token token = tokenService.performNewTokenRequest(user, tokenValue);
+            response.addCookie(tokenService.createTokenCookie(token));
+            return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(UserService.getBean(token.getUser()));
         } catch (BusinessException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 
@@ -67,13 +68,11 @@ public class TokenController {
         } catch (BusinessException e) {
             return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(new AccessDeniedException(e.getMessage()));
+                .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 
@@ -91,9 +90,7 @@ public class TokenController {
         } catch (Exception e) {
             return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

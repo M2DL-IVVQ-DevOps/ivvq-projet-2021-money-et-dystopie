@@ -104,12 +104,6 @@ class UserControllerCreateIntegrationTest {
             result.getEmail(),
             "The returned user does not comply."
         );
-        Assertions.assertTrue(
-            passwordEncoder.matches(
-                userTest.getPassword(),
-                result.getPassword()
-            )
-        );
         Assertions.assertEquals(
             userTest.getLastName(),
             result.getLastName(),

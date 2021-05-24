@@ -1,5 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
@@ -21,6 +22,7 @@ import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.UserRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
@@ -44,7 +46,7 @@ public class UserService {
             user.getCustomerAccount() == null && user.getSellerAccount() == null
         ) {
             throw new BusinessException(
-                "Le compte doit être acheteur ou commerçant."
+                MoneyDystopieConstants.USER_NOT_CUSTOMER_OR_SELLER_ERROR
             );
         }
 
@@ -98,13 +100,13 @@ public class UserService {
     public String checkPasswordSyntax(String password) {
         String retour = "";
         if (password.length() < 8) {
-            retour = "Votre mot de passe doit faire au moins 8 caractères.";
+            retour = MoneyDystopieConstants.PASSWORD_SIZE_ERROR;
         } else if (!password.matches("^.*[A-Z].*$")) {
-            retour = "Votre mot de passe doit contenir au moins une majuscule.";
+            retour = MoneyDystopieConstants.PASSWORD_UPPERCASE_ERROR;
         } else if (!password.matches("^.*[a-z].*$")) {
-            retour = "Votre mot de passe doit contenir au moins une minuscule.";
+            retour = MoneyDystopieConstants.PASSWORD_LOWERCASE_ERROR;
         } else if (!password.matches("^.*[0-9].*$")) {
-            retour = "Votre mot de passe doit contenir au moins un chiffre.";
+            retour = MoneyDystopieConstants.PASSWORD_DIGIT_ERROR;
         }
         return retour;
     }
@@ -112,15 +114,14 @@ public class UserService {
     public User save(User user) throws BusinessException {
         if (user == null) {
             throw new BusinessException(
-                "Un utilisateur non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.UNDEFINED_USER_ERROR
             );
         }
         try {
             return userRepository.save(user);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'utilisateur." +
-                (e.getMessage() == null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_USER_ERROR
             );
         }
     }
@@ -149,6 +150,7 @@ public class UserService {
     public static UserBean getBean(User user) {
         UserBean userBean = new UserBean();
         BeanUtils.copyProperties(user, userBean);
+        userBean.setPassword("");
 
         if (user.getCustomerAccount() != null) {
             userBean.setCustomerAccount(new CustomerBean());
@@ -209,6 +211,9 @@ public class UserService {
     public void addTokenToUser(User user, Token token)
         throws BusinessException {
         token.setUser(user);
+        if (user.getTokenList() == null) {
+            user.setTokenList(new ArrayList<>());
+        }
         user.getTokenList().add(token);
         save(user);
     }
@@ -217,5 +222,9 @@ public class UserService {
         throws BusinessException {
         user.getTokenList().remove(token);
         save(user);
+    }
+
+    public void deleteUser(User user) {
+        userRepository.delete(user);
     }
 }

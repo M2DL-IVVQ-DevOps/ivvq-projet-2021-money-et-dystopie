@@ -8,18 +8,17 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.SellerRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
 public class SellerService {
 
     @Getter
-    @Setter
     private final SellerRepository sellerRepository;
 
     public Seller create(Seller seller) throws BusinessException {
@@ -39,15 +38,14 @@ public class SellerService {
     public Seller save(Seller seller) throws BusinessException {
         if (seller == null) {
             throw new BusinessException(
-                "Une boutique non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.REGISTER_UNDEFINED_SHOP_ERROR
             );
         }
         try {
             return sellerRepository.save(seller);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de la boutique." +
-                (e.getMessage() != null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_SHOP_ERROR
             );
         }
     }

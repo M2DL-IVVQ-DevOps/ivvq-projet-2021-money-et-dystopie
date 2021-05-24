@@ -33,10 +33,8 @@ public class UserController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
-                    .body(
-                            new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                    );
+                .badRequest()
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

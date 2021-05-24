@@ -4,6 +4,8 @@ import java.security.SecureRandom;
 import java.util.Calendar;
 import java.util.Date;
 import javax.servlet.http.Cookie;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
@@ -12,18 +14,14 @@ import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @Service
+@AllArgsConstructor
 public class TokenService {
 
+    @Getter
     private final TokenRepository tokenRepository;
-    private final UserService userService;
 
-    public TokenService(
-        TokenRepository tokenRepository,
-        UserService userService
-    ) {
-        this.tokenRepository = tokenRepository;
-        this.userService = userService;
-    }
+    @Getter
+    private final UserService userService;
 
     public Token saveToken(Token token) {
         try {
@@ -49,7 +47,7 @@ public class TokenService {
             user = token.getUser();
         } else {
             throw new BusinessException(
-                "Votre session a expiré, veuillez vous reconnecter."
+                MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR
             );
         }
         return user;
@@ -111,29 +109,29 @@ public class TokenService {
 
     public Token performNewTokenRequest(User user, String ancientTokenValue)
         throws BusinessException {
-        Token newToken;
+        Token returnedToken;
         Token ancientToken = getTokenByValue(ancientTokenValue);
-        if (
-            (
-                isTokenValid(ancientToken) &&
-                isTokenUserAssociationValid(ancientToken, user)
-            ) ||
-            userService.checkUserPassword(user)
-        ) {
-            newToken = createNewTokenForUser(user);
-            saveToken(newToken);
+        if (userService.checkUserPassword(user)) {
+            user = userService.findByEmail(user.getEmail());
+            returnedToken = createNewTokenForUser(user);
+            saveToken(returnedToken);
             if (ancientToken != null) {
                 removeToken(ancientToken);
             }
+        } else if (
+            (user.getEmail() == null || user.getPassword() == null) &&
+            isTokenValid(ancientToken)
+        ) {
+            returnedToken = ancientToken;
         } else {
             if (ancientToken != null) {
                 removeToken(ancientToken);
             }
             throw new BusinessException(
-                "Impossible de vous connecter avec les identifiants renseignés."
+                MoneyDystopieConstants.INVALID_CONNEXION_ERROR
             );
         }
-        return newToken;
+        return returnedToken;
     }
 
     public boolean removeTokenByValue(String tokenValue)
@@ -144,13 +142,17 @@ public class TokenService {
         return true;
     }
 
-    public Cookie createTokenCookie(User user, String tokenValue)
-        throws BusinessException {
-        Token token = performNewTokenRequest(user, tokenValue);
-        Cookie cookie = new Cookie("token", token.getValue());
-        cookie.setMaxAge(MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES);
+    public Cookie createTokenCookie(Token token) {
+        Cookie cookie = new Cookie(
+            MoneyDystopieConstants.COOKIE_NAME,
+            token.getValue()
+        );
+        cookie.setMaxAge(
+            MoneyDystopieConstants.TOKEN_DURABILITY_IN_MINUTES * 60
+        );
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
+        cookie.setPath("/");
         return cookie;
     }
 }

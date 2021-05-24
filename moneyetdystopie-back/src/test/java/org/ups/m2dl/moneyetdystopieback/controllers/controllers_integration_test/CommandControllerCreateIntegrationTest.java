@@ -17,10 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.ups.m2dl.moneyetdystopieback.bean.CommandBean;
 import org.ups.m2dl.moneyetdystopieback.domain.*;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
-import org.ups.m2dl.moneyetdystopieback.services.CommandService;
-import org.ups.m2dl.moneyetdystopieback.services.ItemService;
-import org.ups.m2dl.moneyetdystopieback.services.SellerService;
-import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.services.*;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 @SpringBootTest
@@ -39,9 +36,13 @@ class CommandControllerCreateIntegrationTest {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private TokenService tokenService;
+
     private User userTest;
     private ItemCommand itemCommandTest;
     private Item itemTest;
+    private Token tokenTest;
 
     private String jsonResult;
     private ObjectMapper mapper;
@@ -93,9 +94,13 @@ class CommandControllerCreateIntegrationTest {
                 userSellerTest.getSellerAccount()
             );
 
+
         userService.create(userTest);
+
         userService.create(userSellerTest);
-        itemTest = itemService.create(itemTest);
+        tokenTest = tokenService.createNewTokenForUser(userSellerTest);
+        tokenService.saveToken(tokenTest);
+        itemTest = itemService.create(itemTest, tokenTest.getValue());
     }
 
     @Test

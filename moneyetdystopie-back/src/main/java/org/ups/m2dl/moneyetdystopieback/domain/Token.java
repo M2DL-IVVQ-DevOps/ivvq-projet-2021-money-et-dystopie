@@ -1,14 +1,14 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
-import java.util.Date;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -47,9 +47,11 @@ public class Token {
     @Setter
     private User user;
 
-    public Token(String value, Date expirationDate) {
+    public Token(Long id, String value, Date expirationDate, User user){
+        this.id = id;
         this.value = value;
         this.expirationDate = (Date) expirationDate.clone();
+        this.user = user;
     }
 
     public Date getExpirationDate() {

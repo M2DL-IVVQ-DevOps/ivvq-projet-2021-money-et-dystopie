@@ -1,5 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -77,9 +78,7 @@ public class User {
     /** Tokens (cookies) de connexion associés à l'utilisateur. * */
     @Getter
     @Setter
-    @OneToMany(
-        mappedBy = "user",
-        fetch = FetchType.LAZY
-    )
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Token> tokenList;
 }
