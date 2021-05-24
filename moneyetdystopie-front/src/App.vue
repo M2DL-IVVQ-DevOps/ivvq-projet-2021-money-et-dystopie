@@ -157,16 +157,16 @@
       getPastCommands(){
         axios.get("/customer/getPastCommands?pseudo=" + this.user.customer.pseudo).then(response => {
           this.user.customer.pastCommands = response.data;
-          for(let i=0; i<this.user.customer.pastCommands.length; i++){
+          for(let pastCommand of this.user.customer.pastCommands) {
             let listItemCommands = [];
-            for(let j=0; j<this.user.customer.pastCommands[i].itemCommands.length; j++) {
+            for(let itemCommand of pastCommand.itemCommands) {
               listItemCommands = [...listItemCommands,
                 {
-                  ...this.user.customer.pastCommands[i].itemCommands[j].item,
-                  'amount': this.user.customer.pastCommands[i].itemCommands[j].amount
+                  ...itemCommand.item,
+                  'amount': itemCommand.amount
                 }];
             }
-            this.user.customer.pastCommands[i].itemCommands = listItemCommands;
+            pastCommand.itemCommands = listItemCommands;
           }
         }).catch( error => {
           if(error!=null && error.response!=null && error.response.data!=null){
