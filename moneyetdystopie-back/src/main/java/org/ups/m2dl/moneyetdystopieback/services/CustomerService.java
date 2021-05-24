@@ -5,18 +5,17 @@ import java.util.Set;
 import javax.validation.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.stereotype.Service;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
 public class CustomerService {
 
     @Getter
-    @Setter
     private final CustomerRepository customerRepository;
 
     public Customer create(Customer customer) throws BusinessException {
@@ -37,15 +36,14 @@ public class CustomerService {
     public Customer save(Customer customer) throws BusinessException {
         if (customer == null) {
             throw new BusinessException(
-                "Un acheteur non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.UNDEFINED_CUSTOMER_ERROR
             );
         }
         try {
             return customerRepository.save(customer);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'acheteur." +
-                (e.getMessage() != null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_CUSTOMER_ERROR
             );
         }
     }

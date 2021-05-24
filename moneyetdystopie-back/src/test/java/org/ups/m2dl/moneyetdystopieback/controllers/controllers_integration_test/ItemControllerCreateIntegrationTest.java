@@ -199,7 +199,7 @@ class ItemControllerCreateIntegrationTest {
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-            MoneyDystopieConstants.NOT_CONNECTED_ERROR,
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
             new String(
                 jsonResult.getBytes(StandardCharsets.ISO_8859_1),
                 StandardCharsets.UTF_8
@@ -366,7 +366,7 @@ class ItemControllerCreateIntegrationTest {
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-            MoneyDystopieConstants.NOT_CONNECTED_ERROR,
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
             new String(
                 jsonResult.getBytes(StandardCharsets.ISO_8859_1),
                 StandardCharsets.UTF_8
