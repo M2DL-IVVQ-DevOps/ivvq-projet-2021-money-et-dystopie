@@ -24,31 +24,36 @@
                 maxScene: [
                     {
                         name:'Catalog',
-                        navigation: 'CATALOG'
+                        navigation: 'CATALOG',
+                        valid: 'customer'
                     },{
                         name:'Mon panier',
-                        navigation: 'CART'
+                        navigation: 'CART',
+                        valid: 'customer'
                     },{
                         name:'Ma boutique',
-                        navigation: 'SHOP'
+                        navigation: 'SHOP',
+                        valid: 'seller'
                     },{
                         name:'Mes achats',
-                        navigation: 'MY_COMMANDS'
+                        navigation: 'MY_COMMANDS',
+                        valid: 'customer'
                     }
                 ]
             }
         },
-        props: ['changeNavigation'],
+        props: ['changeNavigation', 'isSeller', 'isCustomer'],
         mounted () {
-            setTimeout(() => {
-                this.scene = this.maxScene - 3
-            }, 1000)
+            this.maxScene = this.maxScene.filter(scene => this.isValid(scene.valid));
         },
         methods: {
             selectionMenu(index, nav){
                 this.scene = index;
                 this.changeNavigation(nav);
-            }
+            },
+            isValid(validity){
+                return ((validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
+            },
         }
     }
 </script>

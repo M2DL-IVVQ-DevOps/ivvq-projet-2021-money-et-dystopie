@@ -16,7 +16,7 @@
 
             <md-field>
                 <label>Prénom</label>
-                <md-input id="firstname" v-model="firstname" type="text" name="firstname"/>
+                <md-input id="firstName" v-model="firstName" type="text" name="firstName"/>
             </md-field>
 
             <md-field>
@@ -44,8 +44,11 @@
             </md-field>
             <md-field v-if="customer">
                 <label>Adresse postale</label>
-                <md-input v-model="adress" type="text"></md-input>
+                <md-input v-model="address" type="text"></md-input>
             </md-field>
+            <div v-if="accountCreationError">
+                <label v-text="accountCreationErrorMessage"></label>
+            </div>
             <div v-if="customer || seller">
                 <md-button v-on:click="creationAccount()">Créer un compte</md-button>
             </div>
@@ -60,20 +63,45 @@
             return {
                 errors: [],
                 lastName: null,
-                firstname: null,
+                firstName: null,
                 password: null,
                 email: null,
                 storeName: null,
                 pseudo: null,
-                adress: null,
+                address: null,
                 seller: false,
-                customer: false
+                customer: false,
+                accountCreationError: false,
+                accountCreationErrorMessage: null
             };
         },
         props: ['creation'],
         methods: {
-            creationAccount(){
-                this.creation();
+            async creationAccount(){
+                this.checkForm();
+                if (this.errors.length){
+                    return;
+                }
+                let userCreation = {
+                    lastName: this.lastName,
+                    firstName: this.firstName,
+                    email: this.email,
+                    password: this.password
+                };
+                if (this.customer){
+                    userCreation.customerAccount = {
+                        pseudo: this.pseudo,
+                        address: this.address
+                    }
+                }
+                if (this.seller){
+                    userCreation.sellerAccount = {
+                        storeName: this.storeName
+                    }
+                }
+                if(await this.creation(userCreation)){
+                    this.purgeFieldsAccountCreation();
+                }
             },
             checkForm: function (e) {
                 this.errors = [];
@@ -81,7 +109,7 @@
                 if (!this.lastName) {
                     this.errors.push("Nom requis.");
                 }
-                if (!this.firstname) {
+                if (!this.firstName) {
                     this.errors.push("Prenom requis.");
                 }
                 if (!this.password) {
@@ -98,7 +126,7 @@
                 if (this.customer && !this.pseudo) {
                     this.errors.push("Pseudo requis.");
                 }
-                if (this.customer && !this.adress) {
+                if (this.customer && !this.address) {
                     this.errors.push("Adresse requise.");
                 }
 
@@ -111,6 +139,18 @@
             validEmail: function (email) {
                 var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
                 return re.test(email);
+            },
+            purgeFieldsAccountCreation: function () {
+                this.lastName = null;
+                this.firstName = null;
+                this.password = null;
+                this.email = null;
+                this.storeName = null;
+                this.pseudo = null;
+                this.address = null;
+                this.seller = false;
+                this.customer = false;
+                this.error = false;
             }
         }
     }

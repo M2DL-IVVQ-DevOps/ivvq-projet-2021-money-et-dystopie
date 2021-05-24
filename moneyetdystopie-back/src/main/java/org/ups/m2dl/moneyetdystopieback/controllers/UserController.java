@@ -2,7 +2,6 @@ package org.ups.m2dl.moneyetdystopieback.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +17,7 @@ import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 public class UserController {
 
     @Getter
-    @Setter
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
@@ -36,9 +34,7 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
-                .body(
-                    new Exception(MoneyDystopieConstants.CONTENUE_ERREUR_DEFAUT)
-                );
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }

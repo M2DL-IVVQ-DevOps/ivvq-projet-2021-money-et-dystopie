@@ -39,7 +39,11 @@
         props: ['connexion'],
         methods: {
             connexionAccount(){
-               this.connexion();
+                let userConnexion = {
+                    email: this.email,
+                    password: this.password
+                };
+               this.connexion(userConnexion);
             },
             checkForm: function (e) {
                 this.errors = [];

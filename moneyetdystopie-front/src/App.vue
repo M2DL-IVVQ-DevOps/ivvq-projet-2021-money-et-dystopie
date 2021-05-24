@@ -8,37 +8,37 @@
     <h1>Achète de l'argent avec ton argent !</h1>
 
     <section v-if="user">
-      <div v-if="user.customer != null && navigation === 'CATALOG'">
+      <div v-if="user.customerAccount != null && navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.customer != null &&  navigation === 'CART'">
+      <div v-if="user.customerAccount != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Items
                 :changeCart="changeInCart"
-                :itemsData="user.customer.cart.items"
+                :itemsData="user.customerAccount.cart.items"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.seller != null && navigation === 'SHOP'">
+      <div v-if="user.sellerAccount != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.seller"></AddItem>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :serveurErrorMessage="setErrorMessage" :serveurSuccessMessage="setSuccessMessage" :seller="user.sellerAccount"></AddItem>
         <Items
-                :itemsData="user.seller.items"
+                :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.customer != null && navigation === 'MY_COMMANDS'">
+      <div v-if="user.customerAccount != null && navigation === 'MY_COMMANDS'">
         <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
-        <Commands :commands="user.customer.pastCommands"></Commands>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <Commands :commands="user.customerAccount.pastCommands"></Commands>
       </div>
     </section>
 
@@ -46,8 +46,13 @@
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
 
-    <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="serveurErrorMessage" md-persistent>
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="serveurErrorMessage" md-persistent style="background-color: #BA240F">
       <span>{{serveurErrorMessage}}</span>
+      <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
+    </md-snackbar>
+
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="successMessage" md-persistent  style="background-color: #13650E">
+      <span>{{successMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
   </div>
@@ -79,120 +84,56 @@
       changeNavigation(nav){
         this.navigation = nav;
       },
-
-      connexionAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastCommands: [
-              {
-                id : 4,
-                state : 'IN_PROGRESS',
-                items : [
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  }
-                ]
-              },
-              {
-                id : 5,
-                state : 'IN_PROGRESS',
-                items : [
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  },
-                  {
-                    "id": 1,
-                    "title": "dsfdsfsd",
-                    "picture": "https://cdn.radiofrance.fr/s3/cruiser-production/2021/03/c4d31527-b59d-438f-905c-bdbc64ec4b3e/801x410_bob_leponge_patrick.jpg",
-                    "description": "description123",
-                    "sellerAccount" : {"storeName":"pop"},
-                    "amount": 10,
-                    "price": 5.0,
-                    "version": 0,
-                  }
-                ]
-              }
-            ],
-            pastOrder: null,
+      connexionAccount : async function(userConnexion){
+        await axios.post('/token/create/', userConnexion).then(response => {
+          this.user = response.data;
+          this.initUser();
+          this.initNavigation();
+          this.getAllItemsForCatalogue();
+        }).catch((error) =>{
+          if(error !== null && error.response !== null && error.response.date !== null){
+            this.setErrorMessage("Connexion impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Connexion impossible : Erreur serveur");
           }
-        };
-        this.getAllItemsForCatalogue();
+        });
       },
-
-      creationAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastOrder: null,
+      creationAccount : async function(userCreation){
+        try {
+          await axios.post('/user/create/', userCreation);
+          this.setSuccessMessage("Votre compte a bien été créé.");
+          return true;
+        }catch(error)  {
+          if(error !== null && error.response !== null && error.response.date !== null){
+            this.setErrorMessage("Impossible de créer le compte : " + error.response.data)
+          }else{
+            this.setErrorMessage("Impossible de créer le compte : Erreur serveur")
           }
-        };
-        this.getAllItemsForCatalogue();
+          return false;
+        }
       },
 
       addInCart(idElement, amountSelection) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id == idElement);
-        let elementSelect = this.catalogue.find(elt => elt.id == idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
+        let elementSelect = this.catalogue.find(elt => elt.id === idElement);
 
         if(elementInPanier != null){
            elementInPanier.amount += amountSelection;
         }else if(amountSelection>0){
-          this.user.customer.cart.items = [...this.user.customer.cart.items, {...elementSelect, amount: amountSelection}];
+          this.user.customerAccount.cart.items = [...this.user.customerAccount.cart.items, {...elementSelect, amount: amountSelection}];
         }
         elementSelect.amount -= amountSelection;
       },
 
       changeInCart(idElement, amountRestante) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
         let elementSelect = this.catalogue.find(elt => elt.id === idElement);
         let amountRetire, index;
         if (amountRestante === 0){
-          index = this.user.customer.cart.items.indexOf(elementInPanier);
+          index = this.user.customerAccount.cart.items.indexOf(elementInPanier);
           if(index!==-1){
             elementSelect.amount += elementInPanier.amount;
-            this.user.customer.cart.items.splice(index, 1);
+            this.user.customerAccount.cart.items.splice(index, 1);
           }
         }else{
           amountRetire = elementInPanier.amount - amountRestante;
@@ -203,23 +144,46 @@
 
       closeSnackBar(){
         this.serveurErrorMessage = null;
+        this.successMessage= null;
+      },
+
+      setErrorMessage(message){
+        this.serveurErrorMessage = message;
+      },
+
+      setSuccessMessage(message){
+        this.successMessage = message;
       },
 
       getAllItemsForCatalogue(){
+
         axios.get("/item/all").then(response => {
           this.catalogue = [...response.data];
-        }).catch(() => {
-            this.serveurErrorMessage = 'Impossible de récupérer le catalogue d\'article du serveur.';
+        }).catch(error => {
+          if(error !== null && error.response !== null && error.response.date !== null) {
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");
+          }
+
         });
       },
 
-      changeServeurErrorMessage(value){
-        this.serveurErrorMessage = value;
+      initUser(){
+        if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
+          this.user.customerAccount.cart = {
+            items: []
+          };
+          this.user.sellerAccount.items = [];
+        }
       },
-
-      isServeurErrorMessage(){
-        return this.serveurErrorMessage && this.serveurErrorMessage.length > 0;
-      }
+      initNavigation(){
+        if (this.user.sellerAccount !== null){
+          this.navigation = "SHOP";
+        }else{
+          this.navigation = "CATALOG";
+        }
+      },
     },
     data: function () {
       return {
@@ -227,6 +191,7 @@
         user: null,
         catalogue: [],
         serveurErrorMessage: null,
+        successMessage: null
       }
     },
   }
