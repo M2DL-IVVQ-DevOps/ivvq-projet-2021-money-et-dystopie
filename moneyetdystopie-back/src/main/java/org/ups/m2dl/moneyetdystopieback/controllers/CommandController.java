@@ -36,7 +36,6 @@ public class CommandController {
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity
                 .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
