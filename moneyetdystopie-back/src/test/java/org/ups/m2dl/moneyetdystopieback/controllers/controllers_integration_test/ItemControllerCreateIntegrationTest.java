@@ -20,12 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
+import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
@@ -34,6 +36,7 @@ import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ItemControllerCreateIntegrationTest {
 
     @Autowired
@@ -53,7 +56,7 @@ class ItemControllerCreateIntegrationTest {
 
     private String jsonResult;
     private Item itemTest;
-    private Seller sellerTest;
+    private Seller sellerTest, parameterizedSellerTest;
     private User userTest;
     private Token tokenTest;
     private ObjectMapper mapper;
@@ -64,43 +67,46 @@ class ItemControllerCreateIntegrationTest {
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype()
     );
+    private Cookie cookie;
 
     @BeforeEach
     void setup() {
         mapper = new ObjectMapper();
     }
-
-    @Test
-    void givenConnectedUser_whenSaveItem_thenItemReturn() throws Exception {
-        // GIVEN
-        sellerTest = new Seller("CreateItemstoreName391", null, null, null);
+    @BeforeEach
+    void initTestBeans() throws BusinessException {
+        sellerTest = new Seller("CreateItemstoreName", null, null, null);
         userTest =
-            new User(
-                "CreateItemlastName1",
-                "CreateItemfirstName1",
-                "CreateItememail1@email.com",
-                "CreateItemPassword1",
-                sellerTest,
-                null,
-                new ArrayList<>()
-            );
+                new User(
+                        "CreateItemlastName",
+                        "CreateItemfirstName",
+                        "CreateItememail1@email.com",
+                        "CreateItemPassword1",
+                        sellerTest,
+                        null,
+                        new ArrayList<>()
+                );
 
         userService.create(userTest);
         tokenTest = tokenService.createNewTokenForUser(userTest);
         tokenService.saveToken(tokenTest);
-        Cookie cookie = tokenService.createTokenCookie(tokenTest);
+        cookie = tokenService.createTokenCookie(tokenTest);
+    }
 
+    @Test
+    void givenConnectedUser_whenSaveItem_thenItemReturn() throws Exception {
+        // GIVEN
         itemTest =
-            new Item(
-                null,
-                "title39",
-                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                "description39",
-                10,
-                5.f,
-                null,
-                sellerTest
-            );
+                new Item(
+                        null,
+                        "title",
+                        "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                        "description",
+                        10,
+                        5.f,
+                        null,
+                        sellerTest
+                );
 
         jsonUserTest = new Gson().toJson(itemTest);
 
@@ -149,20 +155,6 @@ class ItemControllerCreateIntegrationTest {
     void givenNotConnectedUser_whenSaveItem_thenItemNotReturn()
         throws Exception {
         // GIVEN
-        sellerTest = new Seller("CreateItemstoreName392", null, null, null);
-        userTest =
-            new User(
-                "CreateItemlastName2",
-                "CreateItemfirstName2",
-                "CreateItememail12@email.com",
-                "CreateItemPassword2",
-                sellerTest,
-                null,
-                new ArrayList<>()
-            );
-
-        userService.create(userTest);
-
         itemTest =
             new Item(
                 null,
@@ -207,23 +199,6 @@ class ItemControllerCreateIntegrationTest {
     void givenConnectedUser_whenSaveUser_thenItemIsSavedSellerModified()
         throws Exception {
         // GIVEN
-        sellerTest = new Seller("CreateItemstoreName403", null, null, null);
-        userTest =
-            new User(
-                "CreateItemlastName3",
-                "CreateItemfirstNam3",
-                "CreateItememail2@email.com",
-                "CreateItemPassword3",
-                sellerTest,
-                null,
-                new ArrayList<>()
-            );
-
-        userService.create(userTest);
-        tokenTest = tokenService.createNewTokenForUser(userTest);
-        tokenService.saveToken(tokenTest);
-        Cookie cookie = tokenService.createTokenCookie(tokenTest);
-
         itemTest =
             new Item(
                 null,
@@ -302,20 +277,6 @@ class ItemControllerCreateIntegrationTest {
     void givenNotConnectedUser_whenSaveUser_thenItemIsSavedSellerNotModified()
         throws Exception {
         // GIVEN
-        sellerTest = new Seller("CreateItemstoreName404", null, null, null);
-        userTest =
-            new User(
-                "CreateItemlastName4",
-                "CreateItemfirstName4",
-                "CreateItememail4@email.com",
-                "CreateItemPassword4",
-                sellerTest,
-                null,
-                new ArrayList<>()
-            );
-
-        userService.create(userTest);
-
         itemTest =
             new Item(
                 null,
@@ -378,7 +339,6 @@ class ItemControllerCreateIntegrationTest {
         // GIVEN
         if (areSeller) {
             sellerTest = new Seller(storeName, null, null, null);
-            sellerService.save(sellerTest);
         }
         itemTest =
             new Item(
@@ -389,7 +349,7 @@ class ItemControllerCreateIntegrationTest {
                 amount,
                 price,
                 null,
-                areSeller ? sellerTest : null
+                areSeller ? parameterizedSellerTest : null
             );
 
         itemsNumber = itemService.findAll().size();
