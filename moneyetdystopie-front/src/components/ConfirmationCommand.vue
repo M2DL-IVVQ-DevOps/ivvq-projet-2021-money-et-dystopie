@@ -32,12 +32,12 @@
                     customer: { pseudo: this.customer.pseudo},
                     itemCommands: []
                 };
-                for(let i=0; i<this.customer.cart.items.length; i++){
+                for(let item of this.customer.cart.items) {
                     message.itemCommands = [
                         ...message.itemCommands,
                         {
-                            amount : this.customer.cart.items[i].amount,
-                            item: { id: this.customer.cart.items[i].id}
+                            amount : item.amount,
+                            item: { id: item.id}
                         }
                     ]
                 }
