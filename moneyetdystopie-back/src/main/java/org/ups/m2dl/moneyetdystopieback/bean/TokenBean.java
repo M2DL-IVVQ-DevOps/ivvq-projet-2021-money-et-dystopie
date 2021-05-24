@@ -1,13 +1,11 @@
 package org.ups.m2dl.moneyetdystopieback.bean;
 
 import java.util.Date;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 
-@AllArgsConstructor
 @NoArgsConstructor
 public class TokenBean {
 
@@ -25,12 +23,25 @@ public class TokenBean {
     private String value;
 
     /** Date après laquelle le token n'est plus valable. */
-    @Getter
-    @Setter
     private Date expirationDate;
 
     /** Utilisateur lié au token. */
     @Getter
     @Setter
     private User user;
+
+    public TokenBean(Long id, String value, Date expirationDate, User user){
+        this.id = id;
+        this.value = value;
+        this.expirationDate = (Date) expirationDate.clone();
+        this.user = user;
+    }
+
+    public Date getExpirationDate() {
+        return (Date) expirationDate.clone();
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = (Date) expirationDate.clone();
+    }
 }

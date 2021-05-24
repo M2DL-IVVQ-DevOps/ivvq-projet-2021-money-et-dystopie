@@ -4,14 +4,12 @@ import java.util.Date;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
 public class Token {
 
@@ -39,8 +37,6 @@ public class Token {
     /** Date après laquelle le token n'est plus valable. */
     @Temporal(TemporalType.TIMESTAMP)
     @NotNull
-    @Getter
-    @Setter
     private Date expirationDate;
 
     /** Utilisateur lié au token. */
@@ -49,6 +45,21 @@ public class Token {
     @Getter
     @Setter
     private User user;
+
+    public Token(Long id, String value, Date expirationDate, User user){
+        this.id = id;
+        this.value = value;
+        this.expirationDate = (Date) expirationDate.clone();
+        this.user = user;
+    }
+
+    public Date getExpirationDate() {
+        return (Date) expirationDate.clone();
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = (Date) expirationDate.clone();
+    }
 
     @Override
     public boolean equals(Object o) {
