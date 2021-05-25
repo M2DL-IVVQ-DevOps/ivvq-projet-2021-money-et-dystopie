@@ -108,7 +108,7 @@
           this.initUser();
           this.reloadAll()
         }).catch((error) =>{
-          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null){
             this.setErrorMessage("Connexion impossible : " + error.response.data);
           }else{
             this.setErrorMessage("Connexion impossible : Erreur serveur");
@@ -121,7 +121,7 @@
           this.setSuccessMessage("Votre compte a bien été créé.");
           return true;
         }catch(error)  {
-          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null){
             this.setErrorMessage("Impossible de créer le compte : " + error.response.data)
           }else{
             this.setErrorMessage("Impossible de créer le compte : Erreur serveur")
@@ -174,7 +174,7 @@
               pastCommand.itemCommands = listItemCommands;
             }
           }).catch(error => {
-            if (error != null && error.response != null && error.response.status != 404 && error.response.data != null) {
+            if (error != null && error.response != null && error.response.status !== 404 && error.response.data != null) {
               this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
             } else {
               this.setErrorMessage('Impossible de récupérer les commandes passées.');
@@ -184,7 +184,7 @@
       },
       getShopCommands(){
         if(this.user.sellerAccount !== null) {
-          axios.get('/user/sellerCommands/' + this.user.email).then(response => {
+          axios.get('/user/sellerCommands/').then(response => {
             this.user.sellerAccount.commands = response.data;
             for (let pastCommand of this.user.sellerAccount.commands) {
               let listItemCommands = [];
@@ -198,7 +198,7 @@
               pastCommand.itemCommands = listItemCommands;
             }
           }).catch(error => {
-            if (error != null && error.response != null && error.response.status != 404 && error.response.data != null) {
+            if (error != null && error.response != null && error.response.status !== 404 && error.response.data != null) {
               this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
             } else {
               this.setErrorMessage('Impossible de récupérer les commandes passées.');
@@ -230,7 +230,7 @@
         await axios.get('/item/all/').then(response => {
           this.catalogue = [...response.data];
         }).catch(error => {
-          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null) {
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null) {
             this.setErrorMessage("Récupération du catalogue d'articles impossible : " + error.response.data);
           }else{
             this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");

@@ -65,9 +65,11 @@ public class Seller {
     }
 
     public void addCommand(Command command) {
-        if (this.commands == null) {
-            this.commands = new ArrayList<>();
+        if (commands == null) {
+            commands = new ArrayList<>();
         }
-        commands.add(command);
+        if(!commands.contains(command)) {
+            commands.add(command);
+        }
     }
 }

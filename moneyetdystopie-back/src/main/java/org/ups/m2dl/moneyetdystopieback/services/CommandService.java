@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -144,11 +145,7 @@ public class CommandService {
     }
 
     public static List<CommandBean> getBean(List<Command> commands) {
-        List<CommandBean> commandBeans = new ArrayList<>();
-        for (Command command : commands) {
-            commandBeans.add(getBean(command));
-        }
-        return commandBeans;
+        return commands.stream().map(CommandService::getBean).collect(Collectors.toList());
     }
 
     public static Command getDto(CommandBean commandBean) {

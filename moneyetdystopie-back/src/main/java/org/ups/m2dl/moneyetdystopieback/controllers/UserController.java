@@ -52,7 +52,7 @@ public class UserController {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(commandService.getBean(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue))));
+                    .body(CommandService.getBean(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue))));
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
