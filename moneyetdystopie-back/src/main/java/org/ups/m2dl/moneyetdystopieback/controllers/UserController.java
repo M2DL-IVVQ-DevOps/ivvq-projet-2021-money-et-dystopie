@@ -44,8 +44,8 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/commands", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> getAllBySeller(@CookieValue(value = "token", defaultValue = "") String tokenValue) {
+    @GetMapping(value = "/sellerCommands", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAllCommandBySeller(@CookieValue(value = "token", defaultValue = "") String tokenValue) {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
