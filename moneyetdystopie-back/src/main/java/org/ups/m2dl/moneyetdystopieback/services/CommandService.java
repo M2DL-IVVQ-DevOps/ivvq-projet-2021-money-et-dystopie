@@ -63,7 +63,7 @@ public class CommandService {
         }
         command.setCustomer(customer);
 
-        command.setState(CommandState.WAITING_FOR_PAYMENT);
+        command.setState(CommandState.WAITING_FOR_SHIPMENT);
 
         this.valid(command);
 

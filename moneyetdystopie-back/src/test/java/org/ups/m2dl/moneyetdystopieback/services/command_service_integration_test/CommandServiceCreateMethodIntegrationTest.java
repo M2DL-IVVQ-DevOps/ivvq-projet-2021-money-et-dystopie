@@ -147,7 +147,7 @@ class CommandServiceCreateMethodIntegrationTest {
         commandTest =
             new Command(
                 null,
-                CommandState.WAITING_FOR_PAYMENT,
+                CommandState.WAITING_FOR_SHIPMENT,
                 customerTest,
                 List.of(itemCommandTest)
             );
