@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
+import org.ups.m2dl.moneyetdystopieback.services.CommandService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
@@ -22,6 +23,8 @@ public class UserController {
     private final UserService userService;
     @Getter
     private final SellerService sellerService;
+    @Getter
+    private final CommandService commandService;
     @Getter
     private final TokenService tokenService;
 
@@ -49,7 +52,7 @@ public class UserController {
         try {
             return ResponseEntity
                     .status(HttpStatus.OK)
-                    .body(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue)));
+                    .body(commandService.getBean(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue))));
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
