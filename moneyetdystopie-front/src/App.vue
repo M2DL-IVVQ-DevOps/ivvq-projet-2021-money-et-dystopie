@@ -3,10 +3,10 @@
           'catalog-background': user && navigation === 'CATALOG',
           'card-background': user && navigation === 'CART',
           'shop-background': user && navigation === 'SHOP',
-          'command-background': user && navigation === 'MY_COMMANDS',
+          'my-commands-background': user && navigation === 'MY_COMMANDS',
+          'shop-commands-background': user && navigation === 'SHOP_COMMANDS',
           'connexionCreationAccount-background': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
-
     <section v-if="user">
       <div v-if="navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
@@ -24,9 +24,9 @@
         <ConfirmationCommand
                 v-if="user.customerAccount.cart.items.length"
                 :customer="user.customerAccount"
-                :getAllItemsForCatalogue="getAllItemsForCatalogue"
-                :changeServeurErrorMessage="setErrorMessage"
-                :getPastCommands="getPastCommands"
+                :reloadAll="reloadAll"
+                :serveurErrorMessage="setErrorMessage"
+                :serveurSuccessMessage="setSuccessMessage"
         ></ConfirmationCommand>
         <Items
                 :changeCart="changeInCart"
@@ -41,12 +41,20 @@
         <Items
                 :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
+                :reloadAll="reloadAll"
+                :serveurErrorMessage="setErrorMessage"
+                :serveurSuccessMessage="setSuccessMessage"
         />
       </div>
       <div v-if="user.customerAccount != null && navigation === 'MY_COMMANDS'">
         <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
         <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Commands :commands="user.customerAccount.pastCommands"></Commands>
+      </div>
+      <div v-if="user.sellerAccount != null && navigation === 'SHOP_COMMANDS'">
+        <img src="https://cdn.dribbble.com/users/2082025/screenshots/9168555/media/61cdeb3350f8cf12e4007e8c1f832cd8.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <Commands :commands="user.sellerAccount.commands"></Commands>
       </div>
     </section>
 
@@ -98,8 +106,7 @@
         await axios.post('/token/create/', userConnexion).then(response => {
           this.user = response.data;
           this.initUser();
-          this.getAllItemsForCatalogue();
-          this.getPastCommands();
+          this.reloadAll()
         }).catch((error) =>{
           if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
             this.setErrorMessage("Connexion impossible : " + error.response.data);
@@ -151,30 +158,59 @@
           elementSelect.amount += amountRetire;
         }
       },
-
       getPastCommands(){
-        axios.get('/customer/getPastCommands/').then(response => {
-          this.user.customerAccount.pastCommands = response.data;
-          for(let pastCommand of this.user.customerAccount.pastCommands) {
-            let listItemCommands = [];
-            for(let itemCommand of pastCommand.itemCommands) {
-              listItemCommands = [...listItemCommands,
-                {
-                  ...itemCommand.item,
-                  'amount': itemCommand.amount
-                }];
+        if(this.user.customerAccount !== null) {
+          axios.get('/customer/getPastCommands/').then(response => {
+            this.user.customerAccount.pastCommands = response.data;
+            for (let pastCommand of this.user.customerAccount.pastCommands) {
+              let listItemCommands = [];
+              for (let itemCommand of pastCommand.itemCommands) {
+                listItemCommands = [...listItemCommands,
+                  {
+                    ...itemCommand.item,
+                    'amount': itemCommand.amount
+                  }];
+              }
+              pastCommand.itemCommands = listItemCommands;
             }
-            pastCommand.itemCommands = listItemCommands;
-          }
-        }).catch( error => {
-          if(error!=null && error.response!=null && error.response.status != 404 && error.response.data!=null){
-            this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
-          }else{
-            this.setErrorMessage('Impossible de récupérer les commandes passées.');
-          }
-        });
+          }).catch(error => {
+            if (error != null && error.response != null && error.response.status != 404 && error.response.data != null) {
+              this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+            } else {
+              this.setErrorMessage('Impossible de récupérer les commandes passées.');
+            }
+          });
+        }
       },
-
+      getShopCommands(){
+        if(this.user.sellerAccount !== null) {
+          axios.get('/user/sellerCommands/' + this.user.email).then(response => {
+            this.user.sellerAccount.commands = response.data;
+            for (let pastCommand of this.user.sellerAccount.commands) {
+              let listItemCommands = [];
+              for (let itemCommand of pastCommand.itemCommands) {
+                listItemCommands = [...listItemCommands,
+                  {
+                    ...itemCommand.item,
+                    'amount': itemCommand.amount
+                  }];
+              }
+              pastCommand.itemCommands = listItemCommands;
+            }
+          }).catch(error => {
+            if (error != null && error.response != null && error.response.status != 404 && error.response.data != null) {
+              this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+            } else {
+              this.setErrorMessage('Impossible de récupérer les commandes passées.');
+            }
+          });
+        }
+      },
+      reloadAll(){
+        this.getAllItemsForCatalogue();
+        this.getPastCommands();
+        this.getShopCommands();
+      },
       closeSnackBar(){
         this.showServeurErrorMessage = false;
         this.showSuccessMessage = false;
@@ -191,7 +227,7 @@
       },
 
       async getAllItemsForCatalogue(){
-        await axios.get('/item/all').then(response => {
+        await axios.get('/item/all/').then(response => {
           this.catalogue = [...response.data];
         }).catch(error => {
           if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null) {
@@ -252,8 +288,11 @@
   .card-background{
     background-color: #f8cedc;
   }
-  .command-background{
+  .my-commands-background{
     background-color: #c5c6ff;
+  }
+  .shop-commands-background{
+    background-color: #feebef;
   }
   h1{
     color: white;

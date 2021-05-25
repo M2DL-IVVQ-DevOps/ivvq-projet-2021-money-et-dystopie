@@ -27,9 +27,10 @@
                 cardNumber: ""
             };
         },
-        props: ['customer','getAllItemsForCatalogue','changeServeurErrorMessage','getPastCommands'],
+        props: ['customer','reloadAll','serveurErrorMessage','serveurSuccessMessage'],
         methods:{
-            onConfirm () {
+            async onConfirm () {
+                let ok = false;
                 let message ={
                     customer: { pseudo: this.customer.pseudo},
                     itemCommands: []
@@ -43,17 +44,20 @@
                         }
                     ]
                 }
-                axios.post("/command/create?cardNumber="+this.cardNumber.replace(/ /g,""), message).then(() => {
-                    this.customer.cart.items = [];
-                    this.getAllItemsForCatalogue();
-                    this.getPastCommands();
+                await axios.post("/command/create?cardNumber="+this.cardNumber.replace(/ /g,""), message).then(() => {
+                    ok = true;
                 }).catch(error => {
                     if(error!=null && error.response!=null && error.response.status != 404 && error.response.data!=null){
-                        this.changeServeurErrorMessage('Impossible de confirmer l\'achat : ' + error.response.data);
+                        this.serveurErrorMessage('Impossible de confirmer l\'achat : ' + error.response.data);
                     }else{
-                        this.changeServeurErrorMessage('Impossible de confirmer l\'achat.');
+                        this.serveurErrorMessage('Impossible de confirmer l\'achat.');
                     }
                 });
+                if(ok){
+                    this.customer.cart.items = [];
+                    this.reloadAll();
+                    this.serveurSuccessMessage("Commande validée.");
+                }
             },
             onCancel () {
                 this.value = 'Disagreed'

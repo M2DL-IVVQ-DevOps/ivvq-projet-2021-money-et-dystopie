@@ -38,6 +38,10 @@
                         name:'Mes achats',
                         navigation: 'MY_COMMANDS',
                         valid: 'customer'
+                    },{
+                        name:'Commandes',
+                        navigation: 'SHOP_COMMANDS',
+                        valid: 'seller'
                     }
                 ]
             }
