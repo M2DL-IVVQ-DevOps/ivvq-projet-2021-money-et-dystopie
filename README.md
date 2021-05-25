@@ -40,13 +40,11 @@ docker-compose up --build
 ```
 
 Le serveur est alors accessible ici :
-```console
-http://localhost:43000/index.html
-```
+`http://localhost:43000/index.html`
 
 # Développement front-end
 
-La partie front-end est développée à l'aide de l'IDE **WebStorm** de JetBrains. L'application fonctionne avec [**Vue.js**](https://vuejs.org/) et la librairie [**Vue Material**](https://vuematerial.io/).
+La partie front-end est développée à l'aide de l'IDE **WebStorm** de JetBrains. L'application fonctionne grâce à [**Vue.js**](https://vuejs.org/) et la librairie [**Vue Material**](https://vuematerial.io/).
 
 ## Commandes de base
 
@@ -94,7 +92,7 @@ Afin de s'assurer du bon fonctionnement E2E de l'application, [**Cypress**](http
     ```console
     npm run test-novid
     ```
-S'il s'avère qu'au moins un test échoue durant l'exécution d'une Github Action, les vidéos générées peuvent être retrouvées sous forme d'archive liée à la Pull Request.
+S'il s'avère qu'au moins un test échoue durant l'exécution d'une Github Action, les vidéos générées peuvent être retrouvées sous forme d'archive liée à l'exécution de la Github Action.
 
 ## Couverture de code
 
@@ -102,7 +100,7 @@ La couverture de code est évaluée par le plugin [**Cypress Code Coverage**](ht
 
 ## Sonar et SonarQube
 
-Toutes les informations générées précédemment sont transmises à [**SonarQube**](https://sonarqube.homefox.ovh/) afin de déterminer la qualité de code, et de vérifier la validation des Quality Gates. Tout cela s'effectue automatiquement lors des Github Actions afin de valider une Pull Request.
+Toutes les informations de qualité de code générées précédemment sont transmises à [**SonarQube**](https://sonarqube.homefox.ovh/) afin de vérifier la validation des Quality Gates. Tout cela s'effectue automatiquement lors des Github Actions afin de valider une Pull Request.
 
 # Développement back-end
 
@@ -130,7 +128,7 @@ Spotbugs affichera sur le terminal le résultat de l'analyse.
 
 ## Lombok
 
-Afin de se séparer des lignes de codes superflues, nous avons décidé d'utiliser le plugin [**Lumbok**](https://projectlombok.org/) pour ne plus avoir à écrire les constructeurs, getters et setters.
+Afin de se séparer des lignes de codes superflues, nous avons décidé d'utiliser le plugin [**Lombok**](https://projectlombok.org/) pour ne plus avoir à écrire les constructeurs, getters et setters.
 
 ## Jacoco
 
@@ -138,7 +136,7 @@ Il est possible de visualiser la couverture de code via les tests du back-end à
 ```console
 mvn test
 ```
-Vous pourrez alors retrouver le rapport généré via le fichier suivant : `moneyetdystopie-back/target/site/jacoco/index.html`
+Vous pourrez alors retrouver le rapport généré à partir du fichier suivant : `moneyetdystopie-back/target/site/jacoco/index.html`
 
 ## Sonar et SonarQube
 
@@ -155,7 +153,7 @@ Le résultat est publié sur le serveur hébergeant Sonar. Il est visible à tra
 
 # Déploiement Heroku
 
-Les déploiements Heroku sont effectués lors de la publication d'une release. Ils sont faits automatiquement via les Github Actions.
+Les déploiements Heroku sont effectués lors de la publication d'une release. Ils sont réalisés automatiquement via les Github Actions.
 
 # La base de données
 
