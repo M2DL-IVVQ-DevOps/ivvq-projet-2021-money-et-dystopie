@@ -24,9 +24,6 @@ class ItemServiceCreateMethodIntegrationTest {
     private ItemService itemService;
 
     @Autowired
-    private SellerService sellerService;
-
-    @Autowired
     private TokenService tokenService;
 
     @Autowired

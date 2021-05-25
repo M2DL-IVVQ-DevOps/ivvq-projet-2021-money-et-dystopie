@@ -25,13 +25,17 @@ public class MoneyDystopieConstants {
     public static final String REGISTER_SHOP_ERROR =
         "Une erreur est survenue lors de l'enregistrement de la boutique.";
     public static final String REGISTER_UNDEFINED_SHOP_ERROR =
-        "Une boutique non défini ne peut être sauvegardé.";
+        "Une boutique non défini ne peut être sauvegardée.";
 
     // ITEM ERRORS
     public static final String UNDEFINED_ITEM_ERROR =
         "Un article non défini ne peut être sauvegardé.";
     public static final String REGISTER_ITEM_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'article.";
+    public static final String INCORRECT_ITEM_SELLER =
+        "Vous n'êtes pas le vendeur de l'article que vous souhaitez modifier.";
+    public static final String UNREFERENCED_ITEM_ERROR =
+            "L'article n'est pas référencé.";
 
     // CUSTOMER ERRORS
     public static final String REGISTER_CUSTOMER_ERROR =
@@ -61,7 +65,7 @@ public class MoneyDystopieConstants {
     public static final String WRONG_CART_NUMBER_ERROR =
         "Le numéro de carte bleue renseigné est incorrect. Paiement refusé.";
     public static final String UNDEFINED_COMMAND_ERROR =
-        "Une commande non définie ne peut être sauvegardé.";
+        "Une commande non définie ne peut être sauvegardée.";
     public static final String REGISTER_COMMAND_ERROR =
         "Une erreur est survenue lors de l'enregistrement de la commande.";
 }
