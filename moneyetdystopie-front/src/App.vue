@@ -8,7 +8,7 @@
     <h1>Achète de l'argent avec ton argent !</h1>
 
     <section v-if="user">
-      <div v-if="user.customerAccount != null && navigation === 'CATALOG'">
+      <div v-if="navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <div class="div-button-rafraichir-catalogue">
@@ -18,6 +18,7 @@
                 :changeCart="addInCart"
                 :itemsData="catalogue"
                 :navigation="navigation"
+                :isOnlySeller="user.sellerAccount !== null && user.customerAccount === null"
         />
       </div>
       <div v-if="user.customerAccount != null &&  navigation === 'CART'">
@@ -27,7 +28,7 @@
                 v-if="user.customerAccount.cart.items.length"
                 :customer="user.customerAccount"
                 :getAllItemsForCatalogue="getAllItemsForCatalogue"
-                :changeServeurErrorMessage="changeServeurErrorMessage"
+                :changeServeurErrorMessage="setErrorMessage"
                 :getPastCommands="getPastCommands"
         ></ConfirmationCommand>
         <Items
@@ -56,12 +57,12 @@
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
 
-    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="serveurErrorMessage" md-persistent style="background-color: #BA240F">
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="showServeurErrorMessage" md-persistent style="background-color: #BA240F">
       <span>{{serveurErrorMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
 
-    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="successMessage" md-persistent  style="background-color: #13650E">
+    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="showSuccessMessage" md-persistent  style="background-color: #13650E">
       <span>{{successMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
@@ -100,7 +101,6 @@
         await axios.post('/token/create/', userConnexion).then(response => {
           this.user = response.data;
           this.initUser();
-          this.initNavigation();
           this.getAllItemsForCatalogue();
         }).catch((error) =>{
           if(error.response.status != 404 && error !== null && error.response !== null && error.response.date !== null){
@@ -170,28 +170,30 @@
           }
         }).catch( error => {
           if(error!=null && error.response!=null && error.response.data!=null){
-            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+            this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
           }else{
-            this.changeServeurErrorMessage('Impossible de récupérer les commandes passées.');
+            this.setErrorMessage('Impossible de récupérer les commandes passées.');
           }
         });
       },
 
       closeSnackBar(){
-        this.serveurErrorMessage = null;
-        this.successMessage= null;
+        this.showServeurErrorMessage = false;
+        this.showSuccessMessage = false;
       },
 
       setErrorMessage(message){
+        this.showServeurErrorMessage = true;
         this.serveurErrorMessage = message;
       },
 
       setSuccessMessage(message){
+        this.showSuccessMessage = true;
         this.successMessage = message;
       },
 
-      getAllItemsForCatalogue(){
-        axios.get("/item/all").then(response => {
+      async getAllItemsForCatalogue(){
+        await axios.get("/item/all").then(response => {
           this.catalogue = [...response.data];
         }).catch(error => {
           if(error.response.status != 404 && error !== null && error.response !== null && error.response.date !== null) {
@@ -199,8 +201,15 @@
           }else{
             this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");
           }
-
         });
+        if(this.user.sellerAccount !== null){
+          this.user.sellerAccount.items = [];
+          for(let item of this.catalogue){
+            if(item.sellerAccount.storeName === this.user.sellerAccount.storeName){
+              this.user.sellerAccount.items = [...this.user.sellerAccount.items, item];
+            }
+          }
+        }
       },
 
 
@@ -209,32 +218,18 @@
           this.user.customerAccount.cart = {
             items: []
           };
-          this.user.sellerAccount.items = [];
         }
-      },
-      initNavigation(){
-        if (this.user.sellerAccount !== null){
-          this.navigation = "SHOP";
-        }else{
-          this.navigation = "CATALOG";
-        }
-      },
-    },
-      changeServeurErrorMessage(value){
-        this.serveurErrorMessage = value;
-      },
-
-      isServeurErrorMessage(){
-        return this.serveurErrorMessage && this.serveurErrorMessage.length > 0;
-
+      }
     },
     data: function () {
       return {
         navigation: 'CATALOG',
         user: null,
         catalogue: [],
-        serveurErrorMessage: null,
-        successMessage: null
+        serveurErrorMessage: "",
+        successMessage: "",
+        showServeurErrorMessage: false,
+        showSuccessMessage: false,
       }
     },
   }

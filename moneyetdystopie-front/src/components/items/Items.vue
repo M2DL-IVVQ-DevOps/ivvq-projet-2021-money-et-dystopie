@@ -1,7 +1,7 @@
 <template>
     <div class="items">
         <div v-for="item in itemsData" :key="item.id">
-            <div v-if="navigation ==='CATALOG'">
+            <div v-if="navigation ==='CATALOG' && !isOnlySeller">
                 <ItemCatalog :selectionItem="changeCart" :itemData="item"></ItemCatalog>
             </div>
             <span v-else>
@@ -31,7 +31,7 @@
             ItemCart,
             ItemBasic
         },
-        props:['changeCart', 'itemsData', 'navigation'],
+        props:['changeCart', 'itemsData', 'navigation', 'isOnlySeller'],
         methods: {
             noitem(){
                 return this.itemsData === null || this.itemsData.length === 0;
