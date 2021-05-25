@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
+import org.ups.m2dl.moneyetdystopieback.services.SellerService;
+import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
@@ -18,6 +20,10 @@ public class UserController {
 
     @Getter
     private final UserService userService;
+    @Getter
+    private final SellerService sellerService;
+    @Getter
+    private final TokenService tokenService;
 
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(@RequestBody UserBean user) {
@@ -35,6 +41,19 @@ public class UserController {
             return ResponseEntity
                 .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
+        }
+    }
+
+    @GetMapping(value = "/commands", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> getAllBySeller(@CookieValue(value = "token", defaultValue = "") String tokenValue) {
+        try {
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue)));
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 }
