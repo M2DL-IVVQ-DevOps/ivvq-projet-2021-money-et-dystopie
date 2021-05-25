@@ -14,7 +14,7 @@
 </template>
 
 <script>
-    import Items from "./Items";
+    import Items from "../items/Items";
 
     export default {
         name: 'CommandItems',
@@ -23,7 +23,6 @@
     }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
     .card{
         min-width: 100%;

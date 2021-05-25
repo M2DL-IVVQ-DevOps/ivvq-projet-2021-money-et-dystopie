@@ -4,7 +4,7 @@
             <CommandItems :command="command"></CommandItems>
         </div>
         <div v-if="noitem()" class="no" >
-            Aucun article
+            Aucune commande
         </div>
     </div>
 </template>
@@ -19,7 +19,7 @@
         props:['commands'],
         methods: {
             noitem(){
-                return this.commands.length == 0;
+                return this.commands === null || this.commands.length == 0;
             }
         }
     }

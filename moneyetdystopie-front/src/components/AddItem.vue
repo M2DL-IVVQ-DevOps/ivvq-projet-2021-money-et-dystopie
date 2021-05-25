@@ -109,7 +109,7 @@
                         }];
                     ok = true;
                 }).catch(error => {
-                    if(error !== null && error.response !== null && error.response.date !== null){
+                    if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
                         this.serveurErrorMessage("Impossible d'enregistrer l'article : " + error.response.data);
                     }else{
                         this.serveurErrorMessage("Impossible d'enregistrer l'article : Erreur serveur");

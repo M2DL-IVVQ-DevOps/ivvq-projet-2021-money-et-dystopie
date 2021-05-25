@@ -11,9 +11,6 @@
       <div v-if="navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
         <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
-        <div class="div-button-rafraichir-catalogue">
-          <md-button v-on:click="getAllItemsForCatalogue()" class="md-primary md-raised" >Rafraîchir</md-button>
-        </div>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
@@ -74,7 +71,7 @@
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
-  import Commands from "./components/items/Commands";
+  import Commands from "./components/commands/Commands";
   import ConfirmationCommand from "./components/ConfirmationCommand";
   import axios from "axios";
 
@@ -102,8 +99,9 @@
           this.user = response.data;
           this.initUser();
           this.getAllItemsForCatalogue();
+          this.getPastCommands();
         }).catch((error) =>{
-          if(error.response.status != 404 && error !== null && error.response !== null && error.response.date !== null){
+          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
             this.setErrorMessage("Connexion impossible : " + error.response.data);
           }else{
             this.setErrorMessage("Connexion impossible : Erreur serveur");
@@ -116,7 +114,7 @@
           this.setSuccessMessage("Votre compte a bien été créé.");
           return true;
         }catch(error)  {
-          if(error.response.status != 404 && error !== null && error.response !== null && error.response.date !== null){
+          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
             this.setErrorMessage("Impossible de créer le compte : " + error.response.data)
           }else{
             this.setErrorMessage("Impossible de créer le compte : Erreur serveur")
@@ -155,7 +153,7 @@
       },
 
       getPastCommands(){
-        axios.get("/customer/getPastCommands?pseudo=" + this.user.customerAccount.pseudo).then(response => {
+        axios.get('/customer/getPastCommands/').then(response => {
           this.user.customerAccount.pastCommands = response.data;
           for(let pastCommand of this.user.customerAccount.pastCommands) {
             let listItemCommands = [];
@@ -169,7 +167,7 @@
             pastCommand.itemCommands = listItemCommands;
           }
         }).catch( error => {
-          if(error!=null && error.response!=null && error.response.data!=null){
+          if(error!=null && error.response!=null && error.response.status != 404 && error.response.data!=null){
             this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
           }else{
             this.setErrorMessage('Impossible de récupérer les commandes passées.');
@@ -193,10 +191,10 @@
       },
 
       async getAllItemsForCatalogue(){
-        await axios.get("/item/all").then(response => {
+        await axios.get('/item/all').then(response => {
           this.catalogue = [...response.data];
         }).catch(error => {
-          if(error.response.status != 404 && error !== null && error.response !== null && error.response.date !== null) {
+          if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null) {
             this.setErrorMessage("Récupération du catalogue d'articles impossible : " + error.response.data);
           }else{
             this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");
@@ -211,8 +209,6 @@
           }
         }
       },
-
-
       initUser(){
         if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
           this.user.customerAccount.cart = {
@@ -284,9 +280,5 @@
   .button-action:hover {
     background: #ffd246;
     color: black;
-  }
-  .div-button-rafraichir-catalogue{
-    text-align: right;
-    margin: 0 10% 0 0;
   }
 </style>

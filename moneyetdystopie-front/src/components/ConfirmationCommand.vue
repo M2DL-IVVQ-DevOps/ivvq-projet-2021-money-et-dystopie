@@ -5,6 +5,7 @@
                 md-title="Je confirme mes achats !"
                 md-content="Entrez votre numéro de carte bleu."
                 md-input-placeholder="0123456789"
+                v-model="cardNumber"
                 md-confirm-text="J'achète"
                 md-cancel-text="Non"
                 @md-cancel="onCancel"
@@ -23,6 +24,7 @@
         data: function () {
             return {
                 active: false,
+                cardNumber: ""
             };
         },
         props: ['customer','getAllItemsForCatalogue','changeServeurErrorMessage','getPastCommands'],
@@ -41,12 +43,12 @@
                         }
                     ]
                 }
-                axios.post("/command/create", message).then(() => {
+                axios.post("/command/create?cardNumber="+this.cardNumber.replace(/ /g,""), message).then(() => {
                     this.customer.cart.items = [];
                     this.getAllItemsForCatalogue();
                     this.getPastCommands();
                 }).catch(error => {
-                    if(error!=null && error.response!=null && error.response.data!=null){
+                    if(error!=null && error.response!=null && error.response.status != 404 && error.response.data!=null){
                         this.changeServeurErrorMessage('Impossible de confirmer l\'achat : ' + error.response.data);
                     }else{
                         this.changeServeurErrorMessage('Impossible de confirmer l\'achat.');
