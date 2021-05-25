@@ -84,9 +84,8 @@ public class CommandService {
             Seller seller = sellerService.findByStoreName(
                 itemCommand.getItem().getSellerAccount().getStoreName()
             );
-            if (seller.addCommand(command)) {
-                sellerService.save(seller);
-            }
+            seller.addCommand(command);
+            sellerService.save(seller);
         }
 
         return command;

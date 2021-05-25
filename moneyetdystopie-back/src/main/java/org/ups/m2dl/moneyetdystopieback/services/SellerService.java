@@ -1,5 +1,6 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -61,17 +62,22 @@ public class SellerService {
     }
 
     public List<Command> getAllCommands(User user) throws BusinessException {
-        if (user == null) {
+        if (user == null || user.getEmail() == null || user.getEmail().isBlank()) {
             throw new BusinessException(
                     MoneyDystopieConstants.UNDEFINED_USER_ERROR
             );
         }
-        if(user.getSellerAccount() == null) {
+        final Seller sellerAccount = user.getSellerAccount();
+        if(sellerAccount == null) {
             throw new BusinessException(
                     MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
             );
         }
-        return user.getSellerAccount().getCommands();
+        List<Command> commands = sellerAccount.getCommands();
+        if(commands == null) {
+            commands = new ArrayList<>();
+        }
+        return commands;
     }
 
     public void valid(Seller seller) throws BusinessException {

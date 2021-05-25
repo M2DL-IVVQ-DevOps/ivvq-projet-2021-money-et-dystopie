@@ -64,23 +64,10 @@ public class Seller {
         items.remove(item);
     }
 
-    public boolean addCommand(Command command) {
-        int i = 0;
+    public void addCommand(Command command) {
         if (this.commands == null) {
             this.commands = new ArrayList<>();
         }
-
-        while (
-            i < this.commands.size() &&
-            this.commands.get(i).getId().equals(command.getId())
-        ) {
-            i++;
-        }
-
-        if (i == this.commands.size()) {
-            this.commands.add(command);
-            return true;
-        }
-        return false;
+        commands.add(command);
     }
 }
