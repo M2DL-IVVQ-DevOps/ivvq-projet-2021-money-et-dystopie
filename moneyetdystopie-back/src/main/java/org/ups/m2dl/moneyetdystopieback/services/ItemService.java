@@ -112,32 +112,37 @@ public class ItemService {
     }
 
     @Transactional
-    public void updateAmount(Item itemToUpdate, User user) throws BusinessException {
+    public void updateAmount(Item itemToUpdate, User user)
+        throws BusinessException {
         if (
-                user == null ||
-                        user.getSellerAccount() == null ||
-                        user.getSellerAccount().getStoreName().isBlank()
+            user == null ||
+            user.getSellerAccount() == null ||
+            user.getSellerAccount().getStoreName().isBlank()
         ) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
             );
         }
         if (itemToUpdate == null) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
             );
         }
-        if(
-                itemToUpdate.getSellerAccount() == null ||
-                        !itemToUpdate.getSellerAccount().getStoreName().equals(user.getSellerAccount().getStoreName())) {
+        if (
+            itemToUpdate.getSellerAccount() == null ||
+            !itemToUpdate
+                .getSellerAccount()
+                .getStoreName()
+                .equals(user.getSellerAccount().getStoreName())
+        ) {
             throw new BusinessException(
-                    MoneyDystopieConstants.INCORRECT_ITEM_SELLER
+                MoneyDystopieConstants.INCORRECT_ITEM_SELLER
             );
         }
         Item item = itemRepository.findById(itemToUpdate.getId()).orElse(null);
-        if(item == null) {
+        if (item == null) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNREFERENCED_ITEM_ERROR
+                MoneyDystopieConstants.UNREFERENCED_ITEM_ERROR
             );
         }
         item.setAmount(itemToUpdate.getAmount());

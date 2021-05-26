@@ -1,5 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.services.seller_service_integration_test;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,13 +15,11 @@ import org.ups.m2dl.moneyetdystopieback.enums.CommandState;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class SellerServiceGetAllCommandsMethodIntegrationTest {
+
     @Autowired
     private ItemService itemService;
 
@@ -36,7 +36,7 @@ class SellerServiceGetAllCommandsMethodIntegrationTest {
     private CommandService commandService;
 
     @Autowired
-    private ItemCommandService  itemCommandService;
+    private ItemCommandService itemCommandService;
 
     private User userTest;
     private Seller sellerTest;
@@ -48,8 +48,16 @@ class SellerServiceGetAllCommandsMethodIntegrationTest {
     @BeforeEach
     void initBeans() throws BusinessException {
         sellerTest = new Seller("storeName", null, null, new ArrayList<>());
-        customerTest = new Customer("pseudo", "adresse, rue, ville", null, new Command(), new ArrayList<>());
-        userTest = new User(
+        customerTest =
+            new Customer(
+                "pseudo",
+                "adresse, rue, ville",
+                null,
+                new Command(),
+                new ArrayList<>()
+            );
+        userTest =
+            new User(
                 "lastName1",
                 "firstName1",
                 "email1@email.com",
@@ -57,7 +65,7 @@ class SellerServiceGetAllCommandsMethodIntegrationTest {
                 sellerTest,
                 customerTest,
                 new ArrayList<>()
-        );
+            );
         userTest = userService.create(userTest);
         sellerTest = userTest.getSellerAccount();
         customerTest = userTest.getCustomerAccount();
@@ -66,24 +74,32 @@ class SellerServiceGetAllCommandsMethodIntegrationTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 1, 3})
-    void givenConnectedUser_whenGetAllCommands_thenAllCommandsAreReturned(int amount)
-            throws BusinessException {
+    @ValueSource(ints = { 0, 1, 3 })
+    void givenConnectedUser_whenGetAllCommands_thenAllCommandsAreReturned(
+        int amount
+    ) throws BusinessException {
         // GIVEN
         for (int i = 0; i < amount; i++) {
             Item itemTest = new Item(
-                    null,
-                    "title" + i,
-                    "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                    "description" + i,
-                    10 + amount,
-                    5.f,
-                    null,
-                    sellerTest
+                null,
+                "title" + i,
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description" + i,
+                10 + amount,
+                5.f,
+                null,
+                sellerTest
             );
             itemTest = itemService.create(itemTest, userTest);
-            ItemCommand itemCommand = itemCommandService.create(new ItemCommand(null, 1, itemTest));
-            Command command = new Command(null, CommandState.WAITING_FOR_SHIPMENT, customerTest, List.of(itemCommand));
+            ItemCommand itemCommand = itemCommandService.create(
+                new ItemCommand(null, 1, itemTest)
+            );
+            Command command = new Command(
+                null,
+                CommandState.WAITING_FOR_SHIPMENT,
+                customerTest,
+                List.of(itemCommand)
+            );
             commandService.create(command, EXPECTED_CARD_NUMBER, userTest);
         }
 
@@ -96,9 +112,9 @@ class SellerServiceGetAllCommandsMethodIntegrationTest {
 
         // THEN
         Assertions.assertEquals(
-                amount,
-                actual.size(),
-                "All the expected items have not been retrieved."
+            amount,
+            actual.size(),
+            "All the expected items have not been retrieved."
         );
     }
 }

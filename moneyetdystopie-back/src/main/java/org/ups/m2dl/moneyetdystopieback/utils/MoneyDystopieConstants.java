@@ -35,7 +35,7 @@ public class MoneyDystopieConstants {
     public static final String INCORRECT_ITEM_SELLER =
         "Vous n'êtes pas le vendeur de l'article que vous souhaitez modifier.";
     public static final String UNREFERENCED_ITEM_ERROR =
-            "L'article n'est pas référencé.";
+        "L'article n'est pas référencé.";
 
     // CUSTOMER ERRORS
     public static final String REGISTER_CUSTOMER_ERROR =

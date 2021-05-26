@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import java.nio.charset.StandardCharsets;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -21,9 +23,6 @@ import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
 import org.ups.m2dl.moneyetdystopieback.domain.*;
 import org.ups.m2dl.moneyetdystopieback.services.*;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
-
-import javax.servlet.http.Cookie;
-import java.nio.charset.StandardCharsets;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
@@ -70,20 +69,20 @@ class UserControllerCreateIntegrationTest {
     }
 
     @BeforeEach
-    void setupBeforeEach(){
+    void setupBeforeEach() {
         userTest =
-                new User(
-                        "lastName",
-                        "firstName",
-                        "email@email.email",
-                        "Passwordpassword1",
-                        null,
-                        null,
-                        null
-                );
+            new User(
+                "lastName",
+                "firstName",
+                "email@email.email",
+                "Passwordpassword1",
+                null,
+                null,
+                null
+            );
         sellerTest = new Seller("storeName1", null, null, null);
         customerTest =
-                new Customer("pseudo1", "numberCityCountry1", null, null, null);
+            new Customer("pseudo1", "numberCityCountry1", null, null, null);
         userTest.setCustomerAccount(customerTest);
         userTest.setSellerAccount(sellerTest);
     }
@@ -477,9 +476,9 @@ class UserControllerCreateIntegrationTest {
         Assertions.assertNull(resultSeller, "The saved seller was found.");
     }
 
-
     @Test
-    void givenValidSeller_whenSellerCommands_thenReturnCommands() throws Exception {
+    void givenValidSeller_whenSellerCommands_thenReturnCommands()
+        throws Exception {
         // GIVEN
         userService.create(userTest);
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
@@ -488,25 +487,26 @@ class UserControllerCreateIntegrationTest {
 
         // WHEN
         mockMvc
-                .perform(
-                        get("/user/sellerCommands")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .cookie(cookie)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
     }
 
     @Test
-    void givenUserNotSeller_whenSellerCommands_thenNotReturnError() throws Exception {
+    void givenUserNotSeller_whenSellerCommands_thenNotReturnError()
+        throws Exception {
         // GIVEN
         userTest.setSellerAccount(null);
         userService.create(userTest);
@@ -516,32 +516,33 @@ class UserControllerCreateIntegrationTest {
 
         // WHEN
         mockMvc
-                .perform(
-                        get("/user/sellerCommands")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .cookie(cookie)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR,
-                new String(
-                        jsonResult.getBytes(StandardCharsets.ISO_8859_1),
-                        StandardCharsets.UTF_8
-                )
+            MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
         );
     }
 
     @Test
-    void givenNotValidToken_whenSellerCommands_thenReturnError() throws Exception {
+    void givenNotValidToken_whenSellerCommands_thenReturnError()
+        throws Exception {
         // GIVEN
         userService.create(userTest);
         Token tokenTest = tokenService.createNewTokenForUser(userTest);
@@ -551,27 +552,27 @@ class UserControllerCreateIntegrationTest {
 
         // WHEN
         mockMvc
-                .perform(
-                        get("/user/sellerCommands")
-                                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                                .cookie(cookie)
-                )
-                .andExpect(status().isBadRequest())
-                .andExpect(content().contentType(contentType))
-                .andDo(
-                        mvcResult -> {
-                            jsonResult = mvcResult.getResponse().getContentAsString();
-                        }
-                );
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
 
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-                MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
-                new String(
-                        jsonResult.getBytes(StandardCharsets.ISO_8859_1),
-                        StandardCharsets.UTF_8
-                )
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
         );
     }
 }

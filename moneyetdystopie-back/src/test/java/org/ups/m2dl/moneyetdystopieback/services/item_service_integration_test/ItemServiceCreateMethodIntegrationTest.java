@@ -13,7 +13,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
-import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 

@@ -68,7 +68,7 @@ public class Seller {
         if (commands == null) {
             commands = new ArrayList<>();
         }
-        if(!commands.contains(command)) {
+        if (!commands.contains(command)) {
             commands.add(command);
         }
     }

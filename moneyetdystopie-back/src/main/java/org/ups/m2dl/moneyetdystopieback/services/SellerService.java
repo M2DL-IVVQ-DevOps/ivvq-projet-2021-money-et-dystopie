@@ -62,19 +62,21 @@ public class SellerService {
     }
 
     public List<Command> getAllCommands(User user) throws BusinessException {
-        if (user == null || user.getEmail() == null || user.getEmail().isBlank()) {
+        if (
+            user == null || user.getEmail() == null || user.getEmail().isBlank()
+        ) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNDEFINED_USER_ERROR
+                MoneyDystopieConstants.UNDEFINED_USER_ERROR
             );
         }
         final Seller sellerAccount = user.getSellerAccount();
-        if(sellerAccount == null) {
+        if (sellerAccount == null) {
             throw new BusinessException(
-                    MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
             );
         }
         List<Command> commands = sellerAccount.getCommands();
-        if(commands == null) {
+        if (commands == null) {
             commands = new ArrayList<>();
         }
         return commands;

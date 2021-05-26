@@ -59,29 +59,28 @@ class TokenControllerCreateIntegrationTest {
     }
 
     @BeforeEach
-    public void setupBeforeEach(){
+    public void setupBeforeEach() {
         userTest =
-                new User(
-                        "TokenlastName",
-                        "TokenfirstName",
-                        "Tokenemail@email.email",
-                        "TokenPasswordpassword1",
-                        null,
-                        null,
-                        null
-                );
+            new User(
+                "TokenlastName",
+                "TokenfirstName",
+                "Tokenemail@email.email",
+                "TokenPasswordpassword1",
+                null,
+                null,
+                null
+            );
         sellerTest = new Seller("TokenstoreName", null, null, null);
         customerTest =
-                new Customer(
-                        "Tokenpseudo",
-                        "TokennumberCityCountry",
-                        null,
-                        null,
-                        null
-                );
+            new Customer(
+                "Tokenpseudo",
+                "TokennumberCityCountry",
+                null,
+                null,
+                null
+            );
         userTest.setCustomerAccount(customerTest);
         userTest.setSellerAccount(sellerTest);
-
     }
 
     @Test
@@ -91,12 +90,12 @@ class TokenControllerCreateIntegrationTest {
         userService.create(userTest);
 
         UserBean userBeanTest = new UserBean(
-                null,
-                null,
-                "Tokenemail@email.email",
-                "TokenPasswordpassword1",
-                null,
-                null
+            null,
+            null,
+            "Tokenemail@email.email",
+            "TokenPasswordpassword1",
+            null,
+            null
         );
         jsonUserBeanTest = new Gson().toJson(userBeanTest);
         // WHEN

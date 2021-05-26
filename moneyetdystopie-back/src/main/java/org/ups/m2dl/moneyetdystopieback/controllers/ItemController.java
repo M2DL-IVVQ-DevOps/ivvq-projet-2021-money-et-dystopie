@@ -50,22 +50,21 @@ public class ItemController {
 
     @PostMapping(value = "/amount", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> updateAmount(
-            @RequestBody ItemBean item,
-            @CookieValue(value = "token", defaultValue = "") String tokenValue
+        @RequestBody ItemBean item,
+        @CookieValue(value = "token", defaultValue = "") String tokenValue
     ) {
         try {
             itemService.updateAmount(
-                    ItemService.getDto(item),
-                    tokenService.getUserByTokenValue(tokenValue)
+                ItemService.getDto(item),
+                tokenService.getUserByTokenValue(tokenValue)
             );
             return ResponseEntity.status(HttpStatus.OK).build();
-
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                    .badRequest()
-                    .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
+                .badRequest()
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
 

@@ -145,7 +145,10 @@ public class CommandService {
     }
 
     public static List<CommandBean> getBean(List<Command> commands) {
-        return commands.stream().map(CommandService::getBean).collect(Collectors.toList());
+        return commands
+            .stream()
+            .map(CommandService::getBean)
+            .collect(Collectors.toList());
     }
 
     public static Command getDto(CommandBean commandBean) {
