@@ -8,6 +8,7 @@ const CARD_ACTIONS = ".cardAction";
 
 beforeEach(() => {
     mockCatalogue();
+    mockConnexion();
     cy.visit('http://localhost:8080/index.html');
     cy.get('[id=connection-button]').click();
     cy.wait('@mockCatalogue');
@@ -17,11 +18,11 @@ function goToCart() {
     cy.get('.scene_nav')
         .get('.scene_nav_list')
         .get('.scene_nav_item')
-        .get('img').eq(2).click();
+        .get('.scene_nav_button').eq(1).click();
 }
 
 function mockCatalogue() {
-    cy.intercept('GET','http://localhost:8080/item/all', [
+    cy.intercept('GET','/item/all', [
         {
             "id": 1,
             "title": "Titre1",
@@ -56,6 +57,29 @@ function mockCatalogue() {
     ]).as('mockCatalogue');
 }
 
+
+function mockConnexion() {
+    cy.intercept('POST','/token/create/',
+            {
+                "lastName": "FRANZESE",
+                "firstName": "Alessandra",
+                "email": "2monMail2@efef.gr",
+                "password": "",
+                "sellerAccount": {
+                    "storeName": "Lecrochet1",
+                    "items": null,
+                    "commands": null
+                },
+                "customerAccount": {
+                    "pseudo": "dsfdsfsd2",
+                    "address": "54ruejenesaisou",
+                    "cart": null,
+                    "pastCommands": null
+                }
+            }
+        ).as('mockConnexion');
+}
+
 Given(/^an empty cart$/, function () {
     // This is intentional
 });
@@ -76,13 +100,14 @@ When(/^I add (\d+) items number (\d+) to the cart$/, function (quantity, number)
 
 When(/^I delete the item from the cart$/, function () {
     goToCart();
-    cy.get('.items')
+    cy.get('div.items')
         .get('.md-card.card')
         .get(CARD_ACTIONS)
         .get('select')
         .select('0');
     cy.get('.items')
-        .get('.md-button-content')
+        .get('.md-card')
+        .get('.cardAction.md-button')
         .click();
 });
 

@@ -1,15 +1,25 @@
 <template>
     <div class="items">
         <div v-for="item in itemsData" :key="item.id">
-            <div v-if="navigation ==='CATALOG'">
+            <div v-if="navigation ==='CATALOG' && !isOnlySeller">
                 <ItemCatalog :selectionItem="changeCart" :itemData="item"></ItemCatalog>
             </div>
-            <div v-if="navigation ==='CART'">
-                <ItemCart :selectionItem="changeCart" :itemData="item"></ItemCart>
-            </div>
-            <div v-if="navigation ==='SHOP'">
-                <ItemBoutique :selectionItem="changeCart" :itemData="item"></ItemBoutique>
-            </div>
+            <span v-else>
+                <div v-if="navigation ==='CART'">
+                    <ItemCart :selectionItem="changeCart" :itemData="item"></ItemCart>
+                </div>
+                <span v-else>
+                     <div v-if="navigation ==='SHOP'">
+                        <ItemShop :itemData="item"
+                                  :serveurErrorMessage="serveurErrorMessage"
+                                  :serveurSuccessMessage="serveurSuccessMessage"
+                                  :reloadAll="reloadAll"></ItemShop>
+                     </div>
+                     <div v-else>
+                        <ItemBasic :selectionItem="changeCart" :itemData="item"></ItemBasic>
+                     </div>
+                </span>
+            </span>
         </div>
         <div v-if="noitem()" class="no" >
             Aucun article
@@ -20,19 +30,21 @@
 <script>
     import ItemCatalog from './ItemCatalog.vue';
     import ItemCart from './ItemCart.vue';
-    import ItemBoutique from './ItemBoutique.vue';
+    import ItemBasic from './ItemBasic.vue';
+    import ItemShop from "./ItemShop.vue";
 
     export default {
         name: "Items",
         components: {
+            ItemShop,
             ItemCatalog,
             ItemCart,
-            ItemBoutique
+            ItemBasic
         },
-        props:['changeCart', 'itemsData', 'navigation'],
+        props:['changeCart', 'itemsData', 'navigation', 'isOnlySeller', 'serveurErrorMessage', 'serveurSuccessMessage', 'reloadAll'],
         methods: {
             noitem(){
-                return this.itemsData.length == 0;
+                return this.itemsData === null || this.itemsData.length === 0;
             }
         }
     }

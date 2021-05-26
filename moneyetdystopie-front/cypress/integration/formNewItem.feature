@@ -23,7 +23,6 @@ Feature: Form New Item tests
     When I fill the price with "1,02" in item form
     When I submit valid form
     Then no see 'add item' form
-    Then one item added in my shop
 
   Scenario: Submit a incomplete (title) item
 

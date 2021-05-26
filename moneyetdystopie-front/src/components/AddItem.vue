@@ -1,6 +1,6 @@
 <template id="app">
     <div v-if="!itemInCreation" class="div-button-action-new-item">
-        <md-button class="button-action-open" v-on:click="beginCreation()">Ajouter un article à ma boutique</md-button>
+        <md-button v-on:click="beginCreation()" class="md-primary md-raised " >Ajouter un article à ma boutique</md-button>
     </div>
     <div v-else class="base">
         <div class="div-button-action-new-item">
@@ -62,28 +62,29 @@
                 amount: null,
             };
         },
-        props: ['seller', 'changeServeurErrorMessage', 'getAllItemsForCatalogue'],
+        props: ['seller', 'serveurErrorMessage', 'serveurSuccessMessage', 'getAllItemsForCatalogue'],
         methods: {
             checkForm: function () {
                 this.errors = [];
 
                 if (!this.title || this.title.length < 2 || this.title.length > 100) {
-                    this.errors.push('Le titre doit faire entre 2 et 100 caractère.');
+                    this.errors.push("Le titre doit comporter entre 2 et 100 caractères.");
                 }
                 if (!this.picture) {
-                    this.errors.push('Image requise.');
+                    this.errors.push("Vous devez saisir l'URL d'une image.");
                 }
                 if (!this.description || this.description.length < 2 || this.description.length > 200) {
-                    this.errors.push("La description doit faire entre 10 et 200 caractère.");
+                    this.errors.push("La description doit faire entre 10 et 200 caractères.");
                 }
                 if (!this.amount || this.amount<0) {
-                    this.errors.push("La quantité doit être renseignée.");
+                    this.errors.push("Vous devez saisir une quantité positif.");
                 }
                 if (!this.price || this.price<0) {
-                    this.errors.push("Le prix doit être renseignée.");
+                    this.errors.push("Vous devez saisir un prix positif.");
                 }
             },
-            addItem: function () {
+            addItem: async function () {
+                let ok = false;
                 this.checkForm();
                 if(this.errors.length){
                     return;
@@ -96,34 +97,44 @@
                     description: this.description,
                     sellerAccount: {"storeName": this.seller.storeName}
                 };
-                axios.post(
-                    "/item/create", message).then(response => {
-                    this.seller.items = [...this.seller.items,
-                            {
-                                id: response.data.id,
-                                amount: response.data.amount,
-                                description: response.data.description,
-                                picture: response.data.picture,
-                                price: response.data.price,
-                                title: response.data.title,
-                                sellerAccount:{storeName: response.data.sellerAccount.storeName}
-                            }];
-                        this.getAllItemsForCatalogue();
-                        this.endCreation();
-                    })
-                    .catch(error => {
-                        if(error!=null && error.response!=null){
-                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur  : ' + error.response);
-                        }else{
-                            this.changeServeurErrorMessage('Impossible d\'enregistrer l\'article du côté du serveur.');
-                        }
-                    });
+                await axios.post('/item/create/', message).then(response => {
+                    this.seller.items = [...this.seller.items, {
+                            id: response.data.id,
+                            amount: response.data.amount,
+                            description: response.data.description,
+                            picture: response.data.picture,
+                            price: response.data.price,
+                            title: response.data.title,
+                            sellerAccount:{storeName: response.data.sellerAccount.storeName}
+                        }];
+                    ok = true;
+                }).catch(error => {
+                    if(error !== null && error.response !== null && error.response.status != 404 && error.response.data !== null){
+                        this.serveurErrorMessage("Impossible d'enregistrer l'article : " + error.response.data);
+                    }else{
+                        this.serveurErrorMessage("Impossible d'enregistrer l'article : Erreur serveur");
+                    }
+                });
+                if(ok){
+                    this.serveurSuccessMessage("Le nouvel objet '" + this.title + "' a été créé.");
+                    this.getAllItemsForCatalogue();
+                    this.purgeFieldsItemCreation();
+                    this.endCreation();
+                }
             },
             beginCreation(){
                 this.itemInCreation = true;
             },
             endCreation(){
                 this.itemInCreation = false;
+            },
+            purgeFieldsItemCreation: function () {
+                this.errors = [];
+                this.description = null;
+                this.title = null;
+                this.picture = null;
+                this.price = null;
+                this.amount = null;
             }
         }
     }
