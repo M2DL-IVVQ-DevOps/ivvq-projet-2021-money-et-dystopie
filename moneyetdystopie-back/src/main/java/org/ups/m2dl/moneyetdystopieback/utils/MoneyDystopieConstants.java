@@ -37,7 +37,6 @@ public class MoneyDystopieConstants {
     public static final String UNREFERENCED_ITEM_ERROR =
         "L'article n'est pas référencé.";
 
-
     // CUSTOMER ERRORS
     public static final String REGISTER_CUSTOMER_ERROR =
         "Une erreur est survenue lors de l'enregistrement du client.";
@@ -51,7 +50,7 @@ public class MoneyDystopieConstants {
         "Un utilisateur non défini ne peut être sauvegardé.";
     public static final String REGISTER_USER_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'utilisateur.";
-
+  
     // PASSWORD ERRORS
     public static final String PASSWORD_SIZE_ERROR =
         "Votre mot de passe doit faire au moins 8 caractères.";
