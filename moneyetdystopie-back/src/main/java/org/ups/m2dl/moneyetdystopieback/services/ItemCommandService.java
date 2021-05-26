@@ -1,11 +1,5 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
-import java.util.Iterator;
-import java.util.Set;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -18,6 +12,16 @@ import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemCommandRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.Iterator;
+import java.util.Set;
+
+import static org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants.ITEM_COMMAND_AMOUNT_ERROR;
 
 @AllArgsConstructor
 @Service
@@ -33,7 +37,7 @@ public class ItemCommandService {
     public ItemCommand create(ItemCommand itemCommand)
         throws BusinessException {
         if (itemCommand.getItem() == null) {
-            throw new BusinessException("L'item référencé n'a pu être trouvé.");
+            throw new BusinessException(MoneyDystopieConstants.UNREFERENCED_ITEM_COMMAND_ERROR);
         }
         itemCommand.setItem(
             itemService.findById(itemCommand.getItem().getId())
@@ -50,17 +54,12 @@ public class ItemCommandService {
     @Transactional
     public ItemCommand save(ItemCommand itemCommand) throws BusinessException {
         if (itemCommand == null) {
-            throw new BusinessException(
-                "Un ItemCommand non défini ne peut être sauvegardé."
-            );
+            throw new BusinessException(MoneyDystopieConstants.UNDEFINED_ITEM_COMMAND_ERROR);
         }
         try {
             return itemCommandRepository.save(itemCommand);
         } catch (Exception e) {
-            throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'article." +
-                (e.getMessage() == null ? e.getMessage() : "")
-            );
+            throw new BusinessException(MoneyDystopieConstants.REGISTER_ITEM_ERROR);
         }
     }
 
@@ -84,9 +83,7 @@ public class ItemCommandService {
 
         // Décrémente la quantité d'item de la boutique en question
         if (item.getAmount() < itemCommand.getAmount()) {
-            throw new BusinessException(
-                "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie."
-            );
+            throw new BusinessException(ITEM_COMMAND_AMOUNT_ERROR);
         }
         item.setAmount(item.getAmount() - itemCommand.getAmount());
     }
