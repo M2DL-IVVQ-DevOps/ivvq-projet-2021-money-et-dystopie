@@ -50,7 +50,7 @@ public class MoneyDystopieConstants {
         "Un utilisateur non défini ne peut être sauvegardé.";
     public static final String REGISTER_USER_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'utilisateur.";
-
+  
     // PASSWORD ERRORS
     public static final String PASSWORD_SIZE_ERROR =
         "Votre mot de passe doit faire au moins 8 caractères.";
@@ -60,6 +60,14 @@ public class MoneyDystopieConstants {
         "Votre mot de passe doit contenir au moins une minuscule.";
     public static final String PASSWORD_DIGIT_ERROR =
         "Votre mot de passe doit contenir au moins un chiffre.";
+
+    // ITEM COMMAND ERRORS
+    public static final String UNREFERENCED_ITEM_COMMAND_ERROR =
+            "L'item référencé n'a pu être trouvé.";
+    public static final String UNDEFINED_ITEM_COMMAND_ERROR =
+            "Un ItemCommand non défini ne peut être sauvegardé.";
+    public static final String ITEM_COMMAND_AMOUNT_ERROR =
+            "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie.";
 
     // COMMAND ERRORS
     public static final String WRONG_CART_NUMBER_ERROR =

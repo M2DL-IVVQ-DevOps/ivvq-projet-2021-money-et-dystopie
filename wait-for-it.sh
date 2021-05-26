@@ -3,8 +3,18 @@
 # Source : https://github.com/vishnubob/wait-for-it
 
 # Specific adaptation for money-et-dystopie project :
-WAITFORIT_HOST=$POSTGRES_URL
 WAITFORIT_PORT=5432
+
+if [[ $DATABASE_URL =~ "@" ]]; then
+    WAITFORIT_HOST=$(echo $DATABASE_URL | cut -d'@' -f 2 | cut -d':' -f 1)
+    # Export database-specific environment variables
+    export POSTGRES_URL=$WAITFORIT_HOST
+    export POSTGRES_DB=$(echo $DATABASE_URL | cut -d'/' -f 4)
+    export POSTGRES_USER=$(echo $DATABASE_URL | cut -d'/' -f 3 | cut -d':' -f 1)
+    export POSTGRES_PASSWORD=$(echo $DATABASE_URL | cut -d':' -f 3 | cut -d'@' -f 1)
+else
+    WAITFORIT_HOST=$DATABASE_URL
+fi
 # End of specific adaptation
 
 WAITFORIT_cmdname=${0##*/}
