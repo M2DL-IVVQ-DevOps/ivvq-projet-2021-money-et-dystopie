@@ -1,5 +1,13 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
+import static org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants.ITEM_COMMAND_AMOUNT_ERROR;
+
+import java.util.Iterator;
+import java.util.Set;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.beans.BeanUtils;
@@ -13,15 +21,6 @@ import org.ups.m2dl.moneyetdystopieback.domain.ItemCommand;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemCommandRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
-import java.util.Iterator;
-import java.util.Set;
-
-import static org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants.ITEM_COMMAND_AMOUNT_ERROR;
 
 @AllArgsConstructor
 @Service
@@ -37,7 +36,9 @@ public class ItemCommandService {
     public ItemCommand create(ItemCommand itemCommand)
         throws BusinessException {
         if (itemCommand.getItem() == null) {
-            throw new BusinessException(MoneyDystopieConstants.UNREFERENCED_ITEM_COMMAND_ERROR);
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_ITEM_COMMAND_ERROR
+            );
         }
         itemCommand.setItem(
             itemService.findById(itemCommand.getItem().getId())
@@ -54,12 +55,16 @@ public class ItemCommandService {
     @Transactional
     public ItemCommand save(ItemCommand itemCommand) throws BusinessException {
         if (itemCommand == null) {
-            throw new BusinessException(MoneyDystopieConstants.UNDEFINED_ITEM_COMMAND_ERROR);
+            throw new BusinessException(
+                MoneyDystopieConstants.REGISTER_ITEM_COMMAND_ERROR
+            );
         }
         try {
             return itemCommandRepository.save(itemCommand);
         } catch (Exception e) {
-            throw new BusinessException(MoneyDystopieConstants.REGISTER_ITEM_ERROR);
+            throw new BusinessException(
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
+            );
         }
     }
 

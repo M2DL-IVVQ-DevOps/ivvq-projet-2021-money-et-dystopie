@@ -114,7 +114,7 @@ public class UserService {
     public User save(User user) throws BusinessException {
         if (user == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNDEFINED_USER_ERROR
+                MoneyDystopieConstants.REGISTER_USER_ERROR
             );
         }
         try {

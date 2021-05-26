@@ -532,7 +532,7 @@ class UserControllerCreateIntegrationTest {
         // THEN
         Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-            MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR,
+            MoneyDystopieConstants.UNDEFINED_SHOP_ERROR,
             new String(
                 jsonResult.getBytes(StandardCharsets.ISO_8859_1),
                 StandardCharsets.UTF_8
