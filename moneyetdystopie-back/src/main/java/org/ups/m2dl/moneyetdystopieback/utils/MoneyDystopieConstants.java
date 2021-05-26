@@ -25,13 +25,17 @@ public class MoneyDystopieConstants {
     public static final String REGISTER_SHOP_ERROR =
         "Une erreur est survenue lors de l'enregistrement de la boutique.";
     public static final String REGISTER_UNDEFINED_SHOP_ERROR =
-        "Une boutique non défini ne peut être sauvegardé.";
+        "Une boutique non défini ne peut être sauvegardée.";
 
     // ITEM ERRORS
     public static final String UNDEFINED_ITEM_ERROR =
         "Un article non défini ne peut être sauvegardé.";
     public static final String REGISTER_ITEM_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'article.";
+    public static final String INCORRECT_ITEM_SELLER =
+        "Vous n'êtes pas le vendeur de l'article que vous souhaitez modifier.";
+    public static final String UNREFERENCED_ITEM_ERROR =
+        "L'article n'est pas référencé.";
 
     // CUSTOMER ERRORS
     public static final String REGISTER_CUSTOMER_ERROR =
@@ -46,8 +50,7 @@ public class MoneyDystopieConstants {
         "Un utilisateur non défini ne peut être sauvegardé.";
     public static final String REGISTER_USER_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'utilisateur.";
-
-
+  
     // PASSWORD ERRORS
     public static final String PASSWORD_SIZE_ERROR =
         "Votre mot de passe doit faire au moins 8 caractères.";
@@ -57,6 +60,14 @@ public class MoneyDystopieConstants {
         "Votre mot de passe doit contenir au moins une minuscule.";
     public static final String PASSWORD_DIGIT_ERROR =
         "Votre mot de passe doit contenir au moins un chiffre.";
+
+    // ITEM COMMAND ERRORS
+    public static final String UNREFERENCED_ITEM_COMMAND_ERROR =
+            "L'item référencé n'a pu être trouvé.";
+    public static final String UNDEFINED_ITEM_COMMAND_ERROR =
+            "Un ItemCommand non défini ne peut être sauvegardé.";
+    public static final String ITEM_COMMAND_AMOUNT_ERROR =
+            "La quantité d'item demandé pour la commande est supérieure à celle-ci pouvant être fournie.";
 
     // COMMAND ERRORS
     public static final String WRONG_CART_NUMBER_ERROR =

@@ -30,7 +30,7 @@ public class TokenBean {
     @Setter
     private User user;
 
-    public TokenBean(Long id, String value, Date expirationDate, User user){
+    public TokenBean(Long id, String value, Date expirationDate, User user) {
         this.id = id;
         this.value = value;
         this.expirationDate = (Date) expirationDate.clone();

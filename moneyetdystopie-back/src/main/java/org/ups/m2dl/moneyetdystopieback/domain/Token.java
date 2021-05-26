@@ -46,7 +46,7 @@ public class Token {
     @Setter
     private User user;
 
-    public Token(Long id, String value, Date expirationDate, User user){
+    public Token(Long id, String value, Date expirationDate, User user) {
         this.id = id;
         this.value = value;
         this.expirationDate = (Date) expirationDate.clone();

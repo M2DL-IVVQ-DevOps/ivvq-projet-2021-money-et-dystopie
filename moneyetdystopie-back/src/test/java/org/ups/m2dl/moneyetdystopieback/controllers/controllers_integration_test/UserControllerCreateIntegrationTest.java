@@ -1,14 +1,15 @@
 package org.ups.m2dl.moneyetdystopieback.controllers.controllers_integration_test;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import java.nio.charset.StandardCharsets;
+import javax.servlet.http.Cookie;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.ups.m2dl.moneyetdystopieback.bean.UserBean;
-import org.ups.m2dl.moneyetdystopieback.domain.Customer;
-import org.ups.m2dl.moneyetdystopieback.domain.Seller;
-import org.ups.m2dl.moneyetdystopieback.domain.User;
-import org.ups.m2dl.moneyetdystopieback.services.CustomerService;
-import org.ups.m2dl.moneyetdystopieback.services.SellerService;
-import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.domain.*;
+import org.ups.m2dl.moneyetdystopieback.services.*;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserControllerCreateIntegrationTest {
 
     @Autowired
@@ -44,6 +45,12 @@ class UserControllerCreateIntegrationTest {
     @Autowired
     private SellerService sellerService;
 
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private CommandService commandService;
+
     private String jsonResult;
     private User userTest;
     private Seller sellerTest;
@@ -56,19 +63,18 @@ class UserControllerCreateIntegrationTest {
         MediaType.APPLICATION_JSON.getSubtype()
     );
 
-    @BeforeEach
+    @BeforeAll
     void setup() {
         mapper = new ObjectMapper();
     }
 
-    @Test
-    void whenSaveUser_thenUserReturn() throws Exception {
-        // GIVEN
+    @BeforeEach
+    void setupBeforeEach() {
         userTest =
             new User(
-                "lastName1",
-                "firstName1",
-                "email1@email.email",
+                "lastName",
+                "firstName",
+                "email@email.email",
                 "Passwordpassword1",
                 null,
                 null,
@@ -79,7 +85,11 @@ class UserControllerCreateIntegrationTest {
             new Customer("pseudo1", "numberCityCountry1", null, null, null);
         userTest.setCustomerAccount(customerTest);
         userTest.setSellerAccount(sellerTest);
+    }
 
+    @Test
+    void whenSaveUser_thenUserReturn() throws Exception {
+        // GIVEN
         jsonUserTest = new Gson().toJson(userTest);
 
         // WHEN
@@ -137,22 +147,6 @@ class UserControllerCreateIntegrationTest {
     @Test
     void whenSaveUser_thenUserIsSaved() throws Exception {
         // GIVEN
-        userTest =
-            new User(
-                "lastName2",
-                "firstName2",
-                "email2@email.email",
-                "Passwordpassword2",
-                null,
-                null,
-                null
-            );
-        sellerTest = new Seller("storeName2", null, null, null);
-        customerTest =
-            new Customer("pseudo2", "numberCityCountry2", null, null, null);
-        userTest.setCustomerAccount(customerTest);
-        userTest.setSellerAccount(sellerTest);
-
         jsonUserTest = new Gson().toJson(userTest);
 
         // WHEN
@@ -233,18 +227,7 @@ class UserControllerCreateIntegrationTest {
     @Test
     void whenSaveUserWithoutCustomer_thenUserIsSaved() throws Exception {
         // GIVEN
-        userTest =
-            new User(
-                "lastName36",
-                "firstName36",
-                "email36@email.email",
-                "Passwordpassword36",
-                null,
-                null,
-                null
-            );
-        sellerTest = new Seller("storeName36", null, null, null);
-        userTest.setSellerAccount(sellerTest);
+        userTest.setCustomerAccount(null);
 
         jsonUserTest = new Gson().toJson(userTest);
 
@@ -312,20 +295,7 @@ class UserControllerCreateIntegrationTest {
     @Test
     void whenSaveUserWithoutSeller_thenUserIsSaved() throws Exception {
         // GIVEN
-        userTest =
-            new User(
-                "lastName37",
-                "firstName37",
-                "email37@email.email",
-                "Passwordpassword37",
-                null,
-                null,
-                null
-            );
-        customerTest =
-            new Customer("pseudo37", "numberCityCountry37", null, null, null);
-        userTest.setCustomerAccount(customerTest);
-
+        userTest.setSellerAccount(null);
         jsonUserTest = new Gson().toJson(userTest);
 
         // WHEN
@@ -504,5 +474,105 @@ class UserControllerCreateIntegrationTest {
             userTest.getSellerAccount().getStoreName()
         );
         Assertions.assertNull(resultSeller, "The saved seller was found.");
+    }
+
+    @Test
+    void givenValidSeller_whenSellerCommands_thenReturnCommands()
+        throws Exception {
+        // GIVEN
+        userService.create(userTest);
+        Token tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        Cookie cookie = tokenService.createTokenCookie(tokenTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+    }
+
+    @Test
+    void givenUserNotSeller_whenSellerCommands_thenNotReturnError()
+        throws Exception {
+        // GIVEN
+        userTest.setSellerAccount(null);
+        userService.create(userTest);
+        Token tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        Cookie cookie = tokenService.createTokenCookie(tokenTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(
+            MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
+    }
+
+    @Test
+    void givenNotValidToken_whenSellerCommands_thenReturnError()
+        throws Exception {
+        // GIVEN
+        userService.create(userTest);
+        Token tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        Cookie cookie = tokenService.createTokenCookie(tokenTest);
+        cookie.setValue("2");
+
+        // WHEN
+        mockMvc
+            .perform(
+                get("/user/sellerCommands")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .cookie(cookie)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
     }
 }

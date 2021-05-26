@@ -1,12 +1,18 @@
 package org.ups.m2dl.moneyetdystopieback.services;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.stereotype.Service;
+import org.ups.m2dl.moneyetdystopieback.domain.Command;
 import org.ups.m2dl.moneyetdystopieback.domain.Customer;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.CustomerRepository;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
@@ -67,5 +73,15 @@ public class CustomerService {
             Iterator<ConstraintViolation<Customer>> iterator = constraintViolations.iterator();
             throw new BusinessException(iterator.next().getMessage());
         }
+    }
+
+    public List<Command> getPastCommands(User user) throws BusinessException {
+        Customer customer = user.getCustomerAccount();
+        if (customer == null) {
+            throw new BusinessException(
+                MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR
+            );
+        }
+        return customer.getPastCommands();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
+import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
@@ -19,6 +20,9 @@ public class ItemController {
     @Getter
     private final ItemService itemService;
 
+    @Getter
+    private final TokenService tokenService;
+
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> create(
         @RequestBody ItemBean item,
@@ -28,10 +32,33 @@ public class ItemController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    itemService.getBean(
-                        itemService.create(itemService.getDto(item), tokenValue)
+                    ItemService.getBean(
+                        itemService.create(
+                            ItemService.getDto(item),
+                            tokenService.getUserByTokenValue(tokenValue)
+                        )
                     )
                 );
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity
+                .badRequest()
+                .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
+        }
+    }
+
+    @PostMapping(value = "/amount", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> updateAmount(
+        @RequestBody ItemBean item,
+        @CookieValue(value = "token", defaultValue = "") String tokenValue
+    ) {
+        try {
+            itemService.updateAmount(
+                ItemService.getDto(item),
+                tokenService.getUserByTokenValue(tokenValue)
+            );
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

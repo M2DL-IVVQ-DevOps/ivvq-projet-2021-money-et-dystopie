@@ -75,6 +75,7 @@ public class User {
     @OneToOne
     private Customer customerAccount;
 
+    /** Tokens (cookies) de connexion associés à l'utilisateur. * */
     @Getter
     @Setter
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)

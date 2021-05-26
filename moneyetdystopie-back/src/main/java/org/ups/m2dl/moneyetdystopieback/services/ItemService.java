@@ -35,9 +35,9 @@ public class ItemService {
     private final TokenService tokenService;
 
     @Transactional
-    public Item create(Item item, String tokenValue) throws BusinessException {
-        User dbUser = tokenService.getUserByTokenValue(tokenValue);
+    public Item create(Item item, User dbUser) throws BusinessException {
         if (
+            dbUser == null ||
             dbUser.getSellerAccount() == null ||
             dbUser.getSellerAccount().getStoreName().isBlank()
         ) {
@@ -53,7 +53,6 @@ public class ItemService {
                 MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
             );
         }
-
         item.setSellerAccount(seller);
         this.valid(item);
 
@@ -71,6 +70,7 @@ public class ItemService {
         }
     }
 
+    @Transactional
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
@@ -111,7 +111,48 @@ public class ItemService {
         }
     }
 
-    public ItemBean getBean(Item item) {
+    @Transactional
+    public void updateAmount(Item itemToUpdate, User user)
+        throws BusinessException {
+        if (
+            user == null ||
+            user.getSellerAccount() == null ||
+            user.getSellerAccount().getStoreName().isBlank()
+        ) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
+            );
+        }
+        if (itemToUpdate == null) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
+            );
+        }
+        if (
+            itemToUpdate.getSellerAccount() == null ||
+            !itemToUpdate
+                .getSellerAccount()
+                .getStoreName()
+                .equals(user.getSellerAccount().getStoreName())
+        ) {
+            throw new BusinessException(
+                MoneyDystopieConstants.INCORRECT_ITEM_SELLER
+            );
+        }
+        Item item = itemRepository.findById(itemToUpdate.getId()).orElse(null);
+        if (item == null) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNREFERENCED_ITEM_ERROR
+            );
+        }
+        item.setAmount(itemToUpdate.getAmount());
+
+        this.valid(item);
+
+        this.save(item);
+    }
+
+    public static ItemBean getBean(Item item) {
         ItemBean itemBean = new ItemBean();
         BeanUtils.copyProperties(item, itemBean);
 
@@ -126,7 +167,7 @@ public class ItemService {
         return itemBean;
     }
 
-    public Item getDto(ItemBean itemBean) {
+    public static Item getDto(ItemBean itemBean) {
         Item item = new Item();
         BeanUtils.copyProperties(itemBean, item);
 

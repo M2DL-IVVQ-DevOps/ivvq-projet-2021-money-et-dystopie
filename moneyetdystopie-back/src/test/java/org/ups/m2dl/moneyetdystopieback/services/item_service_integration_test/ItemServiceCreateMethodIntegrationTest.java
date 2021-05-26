@@ -6,25 +6,23 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
 import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
-import org.ups.m2dl.moneyetdystopieback.services.SellerService;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ItemServiceCreateMethodIntegrationTest {
 
     @Autowired
     private ItemService itemService;
-
-    @Autowired
-    private SellerService sellerService;
 
     @Autowired
     private TokenService tokenService;
@@ -88,8 +86,8 @@ class ItemServiceCreateMethodIntegrationTest {
         itemsNumber = itemService.findAll().size();
 
         // WHEN
-        itemService.create(itemTestTwinA, tokenTest.getValue());
-        itemService.create(itemTestTwinB, tokenTest.getValue());
+        itemService.create(itemTestTwinA, tokenTest.getUser());
+        itemService.create(itemTestTwinB, tokenTest.getUser());
 
         // THEN
         Assertions.assertEquals(
@@ -134,7 +132,7 @@ class ItemServiceCreateMethodIntegrationTest {
             BusinessException.class,
             () -> {
                 // WHEN
-                itemService.create(itemTestTwinA, "");
+                itemService.create(itemTestTwinA, new User());
             }
         );
     }
@@ -159,7 +157,7 @@ class ItemServiceCreateMethodIntegrationTest {
             BusinessException.class,
             () -> {
                 // WHEN
-                itemService.create(itemTest, "");
+                itemService.create(itemTest, new User());
             }
         );
     }

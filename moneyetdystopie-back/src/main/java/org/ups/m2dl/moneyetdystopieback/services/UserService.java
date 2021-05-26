@@ -147,7 +147,7 @@ public class UserService {
         }
     }
 
-    public UserBean getBean(User user) {
+    public static UserBean getBean(User user) {
         UserBean userBean = new UserBean();
         BeanUtils.copyProperties(user, userBean);
         userBean.setPassword("");
@@ -171,7 +171,7 @@ public class UserService {
         return userBean;
     }
 
-    public User getDto(UserBean userBean) {
+    public static User getDto(UserBean userBean) {
         User user = new User();
         BeanUtils.copyProperties(userBean, user);
 

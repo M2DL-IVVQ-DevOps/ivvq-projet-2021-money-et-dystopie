@@ -23,9 +23,6 @@ public class TokenController {
     @Getter
     private final TokenService tokenService;
 
-    @Getter
-    private final UserService userService;
-
     @PostMapping(
         value = "/create",
         produces = { MediaType.APPLICATION_JSON_VALUE }
@@ -36,16 +33,14 @@ public class TokenController {
         @CookieValue(value = "token", defaultValue = "none") String tokenValue
     ) {
         try {
-            User user = userService.getDto(userBean);
+            User user = UserService.getDto(userBean);
             Token token = tokenService.performNewTokenRequest(user, tokenValue);
             response.addCookie(tokenService.createTokenCookie(token));
             return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(userService.getBean(token.getUser()));
+                .body(UserService.getBean(token.getUser()));
         } catch (BusinessException e) {
-            return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                 .badRequest()
@@ -64,7 +59,7 @@ public class TokenController {
             return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(
-                    userService.getBean(
+                    UserService.getBean(
                         tokenService.getUserByTokenValue(tokenValue)
                     )
                 );
@@ -74,7 +69,7 @@ public class TokenController {
                 .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
@@ -92,7 +87,7 @@ public class TokenController {
                 .body(tokenService.removeTokenByValue(tokenValue));
         } catch (Exception e) {
             return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .badRequest()
                 .body(MoneyDystopieConstants.DEFAULT_ERROR_CONTENT);
         }
     }
