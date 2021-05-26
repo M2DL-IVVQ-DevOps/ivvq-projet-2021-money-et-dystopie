@@ -50,7 +50,7 @@ public class Seller {
     @Setter
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany
+    @ManyToMany
     private List<Command> commands;
 
     public void addItem(Item item) {
@@ -68,8 +68,17 @@ public class Seller {
         if (commands == null) {
             commands = new ArrayList<>();
         }
-        if (!commands.contains(command)) {
+        if (!containsCommand(command)) {
             commands.add(command);
         }
+    }
+
+    private boolean containsCommand(Command command) {
+        for(Command c : commands) {
+            if(c.getId().equals(command.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
