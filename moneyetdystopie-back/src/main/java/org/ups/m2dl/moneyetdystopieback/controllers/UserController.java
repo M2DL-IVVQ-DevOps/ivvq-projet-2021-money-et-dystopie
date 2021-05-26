@@ -53,6 +53,8 @@ public class UserController {
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(CommandService.getBean(sellerService.getAllCommands(tokenService.getUserByTokenValue(tokenValue))));
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
