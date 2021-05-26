@@ -199,9 +199,9 @@
             }
           }).catch(error => {
             if (error != null && error.response != null && error.response.status !== 404 && error.response.data != null) {
-              this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+              this.setErrorMessage('Impossible de récupérer les commandes du magasin : ' + error.response.data);
             } else {
-              this.setErrorMessage('Impossible de récupérer les commandes passées.');
+              this.setErrorMessage('Impossible de récupérer les commandes du magasin.');
             }
           });
         }
