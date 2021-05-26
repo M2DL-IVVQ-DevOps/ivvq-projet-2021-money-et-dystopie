@@ -42,7 +42,7 @@ public class SellerService {
     public Seller save(Seller seller) throws BusinessException {
         if (seller == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.REGISTER_UNDEFINED_SHOP_ERROR
+                MoneyDystopieConstants.REGISTER_SHOP_ERROR
             );
         }
         try {
@@ -72,7 +72,7 @@ public class SellerService {
         final Seller sellerAccount = user.getSellerAccount();
         if (sellerAccount == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
             );
         }
         List<Command> commands = sellerAccount.getCommands();
