@@ -30,7 +30,7 @@ Le projet consiste en un site marchant sur lequel il est possible d'acheter de l
 [Nicolas ANDRÉ](https://github.com/iomega11) **·**
 [Romain GOYHENEIX](https://github.com/vandorz)
 
-# Lancement du projet
+# Lancement du projet local
 
 Le projet est conteneurisé avec Docker, et peut-être lancé à l'aide de Docker-compose.
 Pour lancer le serveur :
@@ -66,7 +66,6 @@ npm run build
 ## ESlint
 
 A des fins de qualité, le projet embarque [**ESLint**](https://eslint.org/). Il permet d'analyser le code et d'identifier les problèmes associés.
-Il est possible de l'appeler au travers du terminal.
 Pour cela, il faut d'abord se positionner à la racine du projet front, puis taper la commande suivante :
 ```console
 npm run eslint
