@@ -59,7 +59,7 @@ function mockCatalogue() {
 
 
 function mockConnexion() {
-    cy.intercept('POST','/user/create/',
+    cy.intercept('POST','/token/create/',
             {
                 "lastName": "FRANZESE",
                 "firstName": "Alessandra",
@@ -100,13 +100,14 @@ When(/^I add (\d+) items number (\d+) to the cart$/, function (quantity, number)
 
 When(/^I delete the item from the cart$/, function () {
     goToCart();
-    cy.get('.items')
+    cy.get('div.items')
         .get('.md-card.card')
         .get(CARD_ACTIONS)
         .get('select')
         .select('0');
     cy.get('.items')
-        .get('.md-button-content')
+        .get('.md-card')
+        .get('.cardAction.md-button')
         .click();
 });
 
