@@ -187,6 +187,14 @@ class TokenServiceTest {
     }
 
     @Test
+    void whenGenerateAlreadyExistingTokenValue_thenExceptionThrown(){
+        Mockito.when(tokenRepositoryMock.findTokenByValue(Mockito.any())).thenReturn(Optional.of(testToken));
+        // when : on génère un token dont la valeur existe déjà
+        // then : une exception est levée
+        assertThrows(BusinessException.class, () -> tokenService.generateToken());
+    }
+
+    @Test
     void givenValidToken_whenIsValidToken_thenTrueReturned() {
         // given : un token invalide avec une date dépassée
         Token tokenTest = new Token();
