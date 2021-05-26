@@ -13,7 +13,7 @@ function goToShop() {
     cy.get('.scene_nav')
         .get('.scene_nav_list')
         .get('.scene_nav_item')
-        .get('img').eq(3).click();
+        .get('.scene_nav_button').eq(2).click();
 }
 
 Given(/^the 'add item' form$/, function () {

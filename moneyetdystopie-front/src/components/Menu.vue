@@ -25,7 +25,7 @@
                     {
                         name:'Catalog',
                         navigation: 'CATALOG',
-                        valid: 'customer'
+                        valid: 'all'
                     },{
                         name:'Mon panier',
                         navigation: 'CART',
@@ -52,7 +52,7 @@
                 this.changeNavigation(nav);
             },
             isValid(validity){
-                return ((validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
+                return ((validity === 'all') || (validity === 'customer' && this.isCustomer) || (validity === 'seller' && this.isSeller));
             },
         }
     }

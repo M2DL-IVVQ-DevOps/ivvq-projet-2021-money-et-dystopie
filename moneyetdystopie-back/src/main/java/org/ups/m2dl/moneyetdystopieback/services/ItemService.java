@@ -9,7 +9,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +16,10 @@ import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
-import org.ups.m2dl.moneyetdystopieback.domain.Token;
 import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
@@ -35,22 +34,23 @@ public class ItemService {
     @Getter
     private final TokenService tokenService;
 
-        @Transactional
-        public Item create(Item item, String tokenValue) throws BusinessException {
-        Token token = tokenService.getTokenByValue(tokenValue);
-        if (!tokenService.isTokenValid(token)){
+    @Transactional
+    public Item create(Item item, String tokenValue) throws BusinessException {
+        User dbUser = tokenService.getUserByTokenValue(tokenValue);
+        if (
+            dbUser.getSellerAccount() == null ||
+            dbUser.getSellerAccount().getStoreName().isBlank()
+        ) {
             throw new BusinessException(
-                    "Vous devez être connecté pour effectuer cette action."
+                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
             );
         }
-        User dbUser = token.getUser();
-        if (dbUser.getSellerAccount() == null || dbUser.getSellerAccount().getStoreName().isBlank()) {
-            throw new BusinessException("La boutique n'est pas référencée.");
-        }
-        Seller seller = sellerService.findByStoreName(dbUser.getSellerAccount().getStoreName());
+        Seller seller = sellerService.findByStoreName(
+            dbUser.getSellerAccount().getStoreName()
+        );
         if (seller == null) {
             throw new BusinessException(
-                    "La boutique référencée n'a pu être trouvée."
+                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
             );
         }
 
@@ -74,15 +74,14 @@ public class ItemService {
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
-                "Un article non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
             );
         }
         try {
             return itemRepository.save(item);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'article." +
-                (e.getMessage() == null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
             );
         }
     }

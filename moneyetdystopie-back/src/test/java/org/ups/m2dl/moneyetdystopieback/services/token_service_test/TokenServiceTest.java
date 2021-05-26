@@ -5,8 +5,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import org.junit.jupiter.api.Assertions;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -19,8 +18,6 @@ import org.ups.m2dl.moneyetdystopieback.repositories.TokenRepository;
 import org.ups.m2dl.moneyetdystopieback.services.TokenService;
 import org.ups.m2dl.moneyetdystopieback.services.UserService;
 import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
-
-import javax.servlet.http.Cookie;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -108,7 +105,8 @@ class TokenServiceTest {
     }
 
     @Test
-    void whenGenerateTokenTwice_thenBothTokenAreDistinct() throws BusinessException {
+    void whenGenerateTokenTwice_thenBothTokenAreDistinct()
+        throws BusinessException {
         // when : deux tokens sont générés
         String tokenValue1 = tokenService.generateToken();
         String tokenValue2 = tokenService.generateToken();
@@ -183,7 +181,7 @@ class TokenServiceTest {
     @Test
     void givenCorrectTokenAndNullUser_whenIsTokenUserAssociationValid_thenFalseReturned() {
         // given : un token correct et un utilisateur null
-        Token token = new Token("token", new Date());
+        Token token = new Token(null,"token", new Date(),null);
         // when : on vérifie l'association token / utilisateur
         boolean response = tokenService.isTokenUserAssociationValid(
             token,
@@ -226,19 +224,19 @@ class TokenServiceTest {
     }
 
     @Test
-    void whenCreateCookie_thenCookieIsValid(){
-        //given : un token
+    void whenCreateCookie_thenCookieIsValid() {
+        // given : un token
         Token token = new Token();
         token.setValue("5");
 
-        //when : on créé le cookie du token
+        // when : on créé le cookie du token
         Cookie cookie = tokenService.createTokenCookie(token);
 
-        //then le cookie est valide
+        // then le cookie est valide
         assertTrue(cookie.isHttpOnly());
         assertTrue(cookie.getSecure());
-        assertEquals("/",cookie.getPath());
+        assertEquals("/", cookie.getPath());
         assertEquals(token.getValue(), cookie.getValue());
-        assertEquals("token",cookie.getName());
+        assertEquals("token", cookie.getName());
     }
 }

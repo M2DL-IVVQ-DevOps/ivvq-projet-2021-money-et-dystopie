@@ -38,7 +38,8 @@ class ItemServiceTest {
 
     @BeforeEach
     void setup() {
-        itemService = new ItemService(itemRepository, sellerService, tokenService);
+        itemService =
+            new ItemService(itemRepository, sellerService, tokenService);
     }
 
     @Test

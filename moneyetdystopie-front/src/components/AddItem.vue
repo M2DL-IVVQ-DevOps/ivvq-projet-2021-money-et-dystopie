@@ -83,7 +83,8 @@
                     this.errors.push("Vous devez saisir un prix positif.");
                 }
             },
-            addItem: function () {
+            addItem: async function () {
+                let ok = false;
                 this.checkForm();
                 if(this.errors.length){
                     return;
@@ -96,9 +97,8 @@
                     description: this.description,
                     sellerAccount: {"storeName": this.seller.storeName}
                 };
-                axios.post(
-                    "/item/create", message).then(response => {
-                        this.seller.items = [...this.seller.items, {
+                await axios.post('/item/create/', message).then(response => {
+                    this.seller.items = [...this.seller.items, {
                             id: response.data.id,
                             amount: response.data.amount,
                             description: response.data.description,
@@ -107,18 +107,20 @@
                             title: response.data.title,
                             sellerAccount:{storeName: response.data.sellerAccount.storeName}
                         }];
-                        this.getAllItemsForCatalogue();
-                        this.serveurSuccessMessage("Le nouvel objet '" + this.title + "' a été créé.");
-                        this.purgeFieldsItemCreation();
-                        this.endCreation();
-                    })
-                    .catch(error => {
-                        if(error !== null && error.response !== null && error.response.date !== null){
-                            this.serveurErrorMessage("Impossible d'enregistrer l'article : " + error.response.data);
-                        }else{
-                            this.serveurErrorMessage("Impossible d'enregistrer l'article : Erreur serveur");
-                        }
-                    });
+                    ok = true;
+                }).catch(error => {
+                    if(error !== null && error.response !== null && error.response.date !== null){
+                        this.serveurErrorMessage("Impossible d'enregistrer l'article : " + error.response.data);
+                    }else{
+                        this.serveurErrorMessage("Impossible d'enregistrer l'article : Erreur serveur");
+                    }
+                });
+                if(ok){
+                    this.serveurSuccessMessage("Le nouvel objet '" + this.title + "' a été créé.");
+                    this.getAllItemsForCatalogue();
+                    this.purgeFieldsItemCreation();
+                    this.endCreation();
+                }
             },
             beginCreation(){
                 this.itemInCreation = true;
