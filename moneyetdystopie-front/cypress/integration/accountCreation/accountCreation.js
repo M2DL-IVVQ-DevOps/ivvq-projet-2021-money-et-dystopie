@@ -4,32 +4,82 @@ const {
     Then,
 } = require("cypress-cucumber-preprocessor/steps");
 
-beforeEach(() => {
+Given (/^the account creation form$/, function () {
     cy.visit('http://localhost:8080/index.html');
 });
 
-When(/^I fill the last name with "([^"]*)" in account creation form$/, function (lastName) {
-    cy.get('.form').get('.lastName').type(lastName);
+When(/^i fill the lastName with "([^"]*)" in account creation form$/, function (lastName) {
+    cy.get('#accountCreationForm').get('#lastNameCreation').type(lastName);
 });
 
-When(/^I fill the first name with "([^"]*)" in account creation form$/, function (firstName) {
-    cy.get('.form').get('.lastName').type(firstName);
+When(/^i fill the firstName with "([^"]*)" in account creation form$/, function (firstName) {
+    cy.get('#accountCreationForm').get('#firstNameCreation').type(firstName);
 });
 
-When(/^I fill the email with "([^"]*)" in account creation form$/, function (email) {
-    cy.get('.form').get('.lastName').type(email);
+When(/^i fill the email with "([^"]*)" in account creation form$/, function (email) {
+    cy.get('#accountCreationForm').get('#emailCreation').type(email);
 });
 
-When(/^I fill the password with "([^"]*)" in account creation form$/, function (password) {
-    cy.get('.form').get('.lastName').type(password);
+When(/^i fill the password with "([^"]*)" in account creation form$/, function (password) {
+    cy.get('#accountCreationForm').get('#passwordCreation').type(password);
 });
-When(/^I select customerAccount$/, function () {
-    mockItem();
-    cy.get('.form').get('.md-checkbox-7h4kwgasx').click();
-    cy.wait('@mockItem');
+
+When(/^i select seller account$/, function () {
+    cy.get('#accountCreationForm').get('.sellerCheckBox').click();
 });
-When(/^I select sellerAccount$/, function () {
-    mockItem();
-    cy.get('.form').get('.md-checkbox-kmbeyxvj').click();
-    cy.wait('@mockItem');
+
+When(/^i fill the shop with "([^"]*)" in account creation form$/, function (shop) {
+    cy.get('#accountCreationForm').get('#shopCreation').type(shop);
 });
+
+When(/^i select customer account$/, function () {
+    cy.get('#accountCreationForm').get('.customerCheckBox').click();
+});
+
+When(/^i fill the nickName with "([^"]*)" in account creation form$/, function (nickName) {
+    cy.get('#accountCreationForm').get('#nickNameCreation').type(nickName);
+});
+
+When(/^i fill the address with "([^"]*)" in account creation form$/, function (address) {
+    cy.get('#accountCreationForm').get('#addressCreation').type(address);
+});
+
+When(/^i submit account creation form$/, function () {
+    cy.get('#accountCreationForm').get('#creationAccountSubmit').click();
+});
+
+When(/^i submit valid account creation form$/, function () {
+    mockAccountCreation();
+    cy.get('#accountCreationForm').get('#creationAccountSubmit').click();
+    cy.wait('@mockAccountCreation');
+});
+
+Then(/^an error should be displayed on the account creation form$/, function () {
+    cy.get('#accountCreationForm').get('.error').should('be.visible');
+});
+
+Then(/^no error should be displayed on the account creation form$/, function () {
+    cy.get('#accountCreationForm').get('.error').should('not.exist');
+});
+
+Then(/^success popup visible$/, function () {
+    cy.get('#serverSuccessMessage').should('be.visible');
+});
+
+Then(/^success popup not visible$/, function () {
+    cy.get('#serverSuccessMessage').should('not.exist');
+});
+
+function mockAccountCreation() {
+    cy.intercept('POST','/user/create', {
+        "id": 4,
+        "title": "Bitcoin",
+        "picture": "https://cdn.dribbble.com/users/791530/screenshots/15336558/media/02b09bcee2c72083607b40f5e9beadc7.png?compress=1&resize=1000x750",
+        "description": "...",
+        "amount": 12,
+        "price": 1004.4,
+        "sellerAccount": {
+            "storeName": "WHo?"
+        }
+    }).as('mockAccountCreation');
+}

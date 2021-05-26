@@ -45,13 +45,11 @@
     <section v-else>
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
-
-    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="serveurErrorMessage" md-persistent style="background-color: #BA240F">
+    <md-snackbar id="serverErrorMessage" md-position="center" :md-duration="8000" :md-active.sync="showServeurErrorMessage" md-persistent style="background-color: #BA240F">
       <span>{{serveurErrorMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
-
-    <md-snackbar md-position="center" :md-duration="8000" :md-active.sync="successMessage" md-persistent  style="background-color: #13650E">
+    <md-snackbar id="serverSuccessMessage" md-position="center" :md-duration="8000" :md-active.sync="showSuccessMessage" md-persistent  style="background-color: #13650E">
       <span>{{successMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
