@@ -79,7 +79,7 @@ public class CommandService {
         command = this.save(command);
 
         command.getCustomer().addPastCommand(command);
-        customerService.save(command.getCustomer());
+        command.setCustomer(customerService.save(command.getCustomer()));
 
         for (ItemCommand itemCommand : command.getItemCommands()) {
             Seller seller = sellerService.findByStoreName(

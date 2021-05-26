@@ -48,7 +48,7 @@ public class ItemCommandService {
 
         decreaseStock(itemCommand);
 
-        itemService.save(itemCommand.getItem());
+        itemCommand.setItem(itemService.save(itemCommand.getItem()));
         return save(itemCommand);
     }
 
