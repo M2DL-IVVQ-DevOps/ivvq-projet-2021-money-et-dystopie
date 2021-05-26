@@ -71,3 +71,4 @@ jobs:
             -Dsonar.qualitygate.wait=true
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
             -Dsonar.projectBaseDir=moneyetdystopie-front
+            -Dsonar.exclusions=cypress/integration/**
