@@ -20,31 +20,55 @@ jobs:
 
   sonar-checks-back:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+          working-directory: ./moneyetdystopie-back
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v2
       - name: Check Sonar report for backend
-        run: cd moneyetdystopie-back && mvn clean install spotbugs:check sonar:sonar -Dspring.profiles.active=dev -Dsonar.projectBaseDir=moneyetdystopie-back -Dsonar.projectKey=${{secrets.SONAR_PROJECT_BACK}} -Dsonar.host.url=${{secrets.SONAR_URL_BACK}} -Dsonar.login=${{secrets.SONAR_LOGIN_BACK}} -Dsonar.qualitygate.wait=true
+        run: mvn clean install spotbugs:check sonar:sonar -Dspring.profiles.active=dev -Dsonar.projectBaseDir=moneyetdystopie-back -Dsonar.projectKey=${{secrets.SONAR_PROJECT_BACK}} -Dsonar.host.url=${{secrets.SONAR_URL_BACK}} -Dsonar.login=${{secrets.SONAR_LOGIN_BACK}} -Dsonar.qualitygate.wait=true
 
   sonar-checks-front:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+          working-directory: ./moneyetdystopie-front
     steps:
       - name: Fetch Repository
         uses: actions/checkout@v2
       - name: Install modules
-        run: cd moneyetdystopie-front && npm install
+        run: npm install
       - name: Generate ESLint report
-        run: cd moneyetdystopie-front && npm run eslint
+        run: npm run eslint
       - name: Correct paths referenced in report
-        run: cd moneyetdystopie-front && sed -i 's+/home/runner/work/ivvq-projet-2021-money-et-dystopie/ivvq-projet-2021-money-et-dystopie+/github/workspace+g' target/report.json
+        run: sed -i 's+/home/runner/work/ivvq-projet-2021-money-et-dystopie/ivvq-projet-2021-money-et-dystopie+/github/workspace+g' target/report.json
+      - name: Build front
+        run: npm run build
+      - name: Launch Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: ./moneyetdystopie-front
+          start: npm run serve
+          wait-on: 'http://localhost:8080'
+          command: npm run test --config videoUploadOnPasses=false
+      - name: Upload artifacts
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: failed-test-videos
+          path: ./moneyetdystopie-front/cypress/videos
+          retention-days: 1
       - name: Check Sonar report for frontend
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{secrets.SONAR_LOGIN_FRONT}}
         with:
-          projectBaseDir: moneyetdystopie-front
           args: >
             -Dsonar.projectKey=${{secrets.SONAR_PROJECT_FRONT}}
             -Dsonar.host.url=${{secrets.SONAR_URL_FRONT}}
             -Dsonar.login=${{secrets.SONAR_LOGIN_FRONT}}
             -Dsonar.qualitygate.wait=true
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+            -Dsonar.projectBaseDir=moneyetdystopie-front
+            -Dsonar.exclusions=**/*.js

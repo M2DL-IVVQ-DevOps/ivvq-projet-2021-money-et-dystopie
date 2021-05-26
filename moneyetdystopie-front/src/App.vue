@@ -3,36 +3,58 @@
           'catalog-background': user && navigation === 'CATALOG',
           'card-background': user && navigation === 'CART',
           'shop-background': user && navigation === 'SHOP',
+          'my-commands-background': user && navigation === 'MY_COMMANDS',
+          'shop-commands-background': user && navigation === 'SHOP_COMMANDS',
           'connexionCreationAccount-background': !user}">
     <h1>Achète de l'argent avec ton argent !</h1>
-
     <section v-if="user">
-      <div v-if="user.customer != null && navigation === 'CATALOG'">
+      <div v-if="navigation === 'CATALOG'">
         <img src="https://cdn.dribbble.com/users/427368/screenshots/10846214/slot-r.gif" alt="Image de roulette d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
         <Items
                 :changeCart="addInCart"
                 :itemsData="catalogue"
                 :navigation="navigation"
+                :isOnlySeller="user.sellerAccount !== null && user.customerAccount === null"
         />
       </div>
-      <div v-if="user.customer != null &&  navigation === 'CART'">
+      <div v-if="user.customerAccount != null &&  navigation === 'CART'">
         <img src="https://cdn.dribbble.com/users/4228/screenshots/12480182/media/f53ab0258be8992e124d9b9a62c9107d.jpg?compress=1&resize=1000x750" alt="Image de livraison d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <ConfirmationCommand
+                v-if="user.customerAccount.cart.items.length"
+                :customer="user.customerAccount"
+                :reloadAll="reloadAll"
+                :serveurErrorMessage="setErrorMessage"
+                :serveurSuccessMessage="setSuccessMessage"
+        ></ConfirmationCommand>
         <Items
                 :changeCart="changeInCart"
-                :itemsData="user.customer.cart.items"
+                :itemsData="user.customerAccount.cart.items"
                 :navigation="navigation"
         />
       </div>
-      <div v-if="user.seller != null && navigation === 'SHOP'">
+      <div v-if="user.sellerAccount != null && navigation === 'SHOP'">
         <img src="https://cdn.dribbble.com/users/673247/screenshots/9066054/media/b20471249151a406ecc4ef44481ad8ae.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
-        <Menu :changeNavigation="changeNavigation"></Menu>
-        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :changeServeurErrorMessage="changeServeurErrorMessage" :seller="user.seller"></AddItem>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <AddItem :getAllItemsForCatalogue="getAllItemsForCatalogue" :serveurErrorMessage="setErrorMessage" :serveurSuccessMessage="setSuccessMessage" :seller="user.sellerAccount"></AddItem>
         <Items
-                :itemsData="user.seller.items"
+                :itemsData="user.sellerAccount.items"
                 :navigation="navigation"
+                :reloadAll="reloadAll"
+                :serveurErrorMessage="setErrorMessage"
+                :serveurSuccessMessage="setSuccessMessage"
         />
+      </div>
+      <div v-if="user.customerAccount != null && navigation === 'MY_COMMANDS'">
+        <img src="https://cdn.dribbble.com/users/175166/screenshots/15251076/media/e7a79bca2405cafe3ea4155a87098073.jpg?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <Commands :commands="user.customerAccount.pastCommands"></Commands>
+      </div>
+      <div v-if="user.sellerAccount != null && navigation === 'SHOP_COMMANDS'">
+        <img src="https://cdn.dribbble.com/users/2082025/screenshots/9168555/media/61cdeb3350f8cf12e4007e8c1f832cd8.png?compress=1&resize=1000x750" alt="Image de sélection d'argent"/>
+        <Menu :changeNavigation="changeNavigation" :isSeller="user.sellerAccount !== null" :isCustomer="user.customerAccount !== null"></Menu>
+        <Commands :commands="user.sellerAccount.commands"></Commands>
       </div>
     </section>
 
@@ -40,8 +62,13 @@
       <ConnexionCreationAccount :connexion="connexionAccount" :creation="creationAccount"></ConnexionCreationAccount>
     </section>
 
-    <md-snackbar md-position="center" :md-duration="5000" :md-active.sync="serveurErrorMessage" md-persistent>
+    <md-snackbar id="serverErrorMessage" md-position="center" :md-duration="8000" :md-active.sync="showServeurErrorMessage" md-persistent style="background-color: #BA240F">
       <span>{{serveurErrorMessage}}</span>
+      <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
+    </md-snackbar>
+
+    <md-snackbar id="serverSuccessMessage" md-position="center" :md-duration="8000" :md-active.sync="showSuccessMessage" md-persistent  style="background-color: #13650E">
+      <span>{{successMessage}}</span>
       <md-button class="button-action" v-on:click="closeSnackBar()">X</md-button>
     </md-snackbar>
   </div>
@@ -52,11 +79,15 @@
   import Menu from './components/Menu.vue';
   import AddItem from './components/AddItem.vue';
   import ConnexionCreationAccount from "./components/connexionCreationCompte/ConnexionCreationAccount";
+  import Commands from "./components/commands/Commands";
+  import ConfirmationCommand from "./components/ConfirmationCommand";
   import axios from "axios";
 
   export default {
     name: 'App',
     components: {
+      ConfirmationCommand,
+      Commands,
       ConnexionCreationAccount,
       Items,
       Menu,
@@ -71,76 +102,55 @@
       changeNavigation(nav){
         this.navigation = nav;
       },
-
-      connexionAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastOrder: null,
+      connexionAccount : async function(userConnexion){
+        await axios.post('/token/create/', userConnexion).then(response => {
+          this.user = response.data;
+          this.initUser();
+          this.reloadAll()
+        }).catch((error) =>{
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null){
+            this.setErrorMessage("Connexion impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Connexion impossible : Erreur serveur");
           }
-        };
-        this.getAllItemsForCatalogue();
+        });
       },
-
-      creationAccount(){
-        this.user = {
-          email: 'monMail',
-          password: 'azert',
-          lastName: 'FRANZESE',
-          firstName: 'Alessandra',
-          seller: {
-            storeName: 'Le crochet de Nina',
-            items: []
-          },
-          customer:{
-            pseudo: 'Rozen',
-            adress: '54 rue jenesaisou, TOULOUSE',
-            cart: {
-              id: '2152',
-              state: 'IN_PROGRESS',
-              items: []
-            },
-            pastOrder: null,
+      creationAccount : async function(userCreation){
+        try {
+          await axios.post('/user/create/', userCreation);
+          this.setSuccessMessage("Votre compte a bien été créé.");
+          return true;
+        }catch(error)  {
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null){
+            this.setErrorMessage("Impossible de créer le compte : " + error.response.data)
+          }else{
+            this.setErrorMessage("Impossible de créer le compte : Erreur serveur")
           }
-        };
-        this.getAllItemsForCatalogue();
+          return false;
+        }
       },
 
       addInCart(idElement, amountSelection) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id == idElement);
-        let elementSelect = this.catalogue.find(elt => elt.id == idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
+        let elementSelect = this.catalogue.find(elt => elt.id === idElement);
 
         if(elementInPanier != null){
            elementInPanier.amount += amountSelection;
         }else if(amountSelection>0){
-          this.user.customer.cart.items = [...this.user.customer.cart.items, {...elementSelect, amount: amountSelection}];
+          this.user.customerAccount.cart.items = [...this.user.customerAccount.cart.items, {...elementSelect, amount: amountSelection}];
         }
         elementSelect.amount -= amountSelection;
       },
 
       changeInCart(idElement, amountRestante) {
-        let elementInPanier = this.user.customer.cart.items.find(elt => elt.id === idElement);
+        let elementInPanier = this.user.customerAccount.cart.items.find(elt => elt.id === idElement);
         let elementSelect = this.catalogue.find(elt => elt.id === idElement);
         let amountRetire, index;
         if (amountRestante === 0){
-          index = this.user.customer.cart.items.indexOf(elementInPanier);
+          index = this.user.customerAccount.cart.items.indexOf(elementInPanier);
           if(index!==-1){
             elementSelect.amount += elementInPanier.amount;
-            this.user.customer.cart.items.splice(index, 1);
+            this.user.customerAccount.cart.items.splice(index, 1);
           }
         }else{
           amountRetire = elementInPanier.amount - amountRestante;
@@ -148,25 +158,99 @@
           elementSelect.amount += amountRetire;
         }
       },
-
+      getPastCommands(){
+        if(this.user.customerAccount !== null) {
+          axios.get('/customer/getPastCommands/').then(response => {
+            this.user.customerAccount.pastCommands = response.data;
+            for (let pastCommand of this.user.customerAccount.pastCommands) {
+              let listItemCommands = [];
+              for (let itemCommand of pastCommand.itemCommands) {
+                listItemCommands = [...listItemCommands,
+                  {
+                    ...itemCommand.item,
+                    'amount': itemCommand.amount
+                  }];
+              }
+              pastCommand.itemCommands = listItemCommands;
+            }
+          }).catch(error => {
+            if (error != null && error.response != null && error.response.status !== 404 && error.response.data != null) {
+              this.setErrorMessage('Impossible de récupérer les commandes passées : ' + error.response.data);
+            } else {
+              this.setErrorMessage('Impossible de récupérer les commandes passées.');
+            }
+          });
+        }
+      },
+      getShopCommands(){
+        if(this.user.sellerAccount !== null) {
+          axios.get('/user/sellerCommands/').then(response => {
+            this.user.sellerAccount.commands = response.data;
+            for (let pastCommand of this.user.sellerAccount.commands) {
+              let listItemCommands = [];
+              for (let itemCommand of pastCommand.itemCommands) {
+                listItemCommands = [...listItemCommands,
+                  {
+                    ...itemCommand.item,
+                    'amount': itemCommand.amount
+                  }];
+              }
+              pastCommand.itemCommands = listItemCommands;
+            }
+          }).catch(error => {
+            if (error != null && error.response != null && error.response.status !== 404 && error.response.data != null) {
+              this.setErrorMessage('Impossible de récupérer les commandes du magasin : ' + error.response.data);
+            } else {
+              this.setErrorMessage('Impossible de récupérer les commandes du magasin.');
+            }
+          });
+        }
+      },
+      reloadAll(){
+        this.getAllItemsForCatalogue();
+        this.getPastCommands();
+        this.getShopCommands();
+      },
       closeSnackBar(){
-        this.serveurErrorMessage = null;
+        this.showServeurErrorMessage = false;
+        this.showSuccessMessage = false;
       },
 
-      getAllItemsForCatalogue(){
-        axios.get("/item/all").then(response => {
+      setErrorMessage(message){
+        this.showServeurErrorMessage = true;
+        this.serveurErrorMessage = message;
+      },
+
+      setSuccessMessage(message){
+        this.showSuccessMessage = true;
+        this.successMessage = message;
+      },
+
+      async getAllItemsForCatalogue(){
+        await axios.get('/item/all/').then(response => {
           this.catalogue = [...response.data];
-        }).catch(() => {
-            this.serveurErrorMessage = 'Impossible de récupérer le catalogue d\'article du serveur.';
+        }).catch(error => {
+          if(error !== null && error.response !== null && error.response.status !== 404 && error.response.data !== null) {
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : " + error.response.data);
+          }else{
+            this.setErrorMessage("Récupération du catalogue d'articles impossible : Erreur serveur");
+          }
         });
+        if(this.user.sellerAccount !== null){
+          this.user.sellerAccount.items = [];
+          for(let item of this.catalogue){
+            if(item.sellerAccount.storeName === this.user.sellerAccount.storeName){
+              this.user.sellerAccount.items = [...this.user.sellerAccount.items, item];
+            }
+          }
+        }
       },
-
-      changeServeurErrorMessage(value){
-        this.serveurErrorMessage = value;
-      },
-
-      isServeurErrorMessage(){
-        return this.serveurErrorMessage && this.serveurErrorMessage.length > 0;
+      initUser(){
+        if (this.user !== null && this.user.customerAccount !== null && this.user.customerAccount.cart === null){
+          this.user.customerAccount.cart = {
+            items: []
+          };
+        }
       }
     },
     data: function () {
@@ -174,7 +258,10 @@
         navigation: 'CATALOG',
         user: null,
         catalogue: [],
-        serveurErrorMessage: null,
+        serveurErrorMessage: "",
+        successMessage: "",
+        showServeurErrorMessage: false,
+        showSuccessMessage: false,
       }
     },
   }
@@ -200,6 +287,12 @@
   }
   .card-background{
     background-color: #f8cedc;
+  }
+  .my-commands-background{
+    background-color: #c5c6ff;
+  }
+  .shop-commands-background{
+    background-color: #feebef;
   }
   h1{
     color: white;

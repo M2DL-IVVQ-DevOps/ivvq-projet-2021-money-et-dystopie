@@ -9,7 +9,6 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,35 +16,41 @@ import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.bean.SellerBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
 import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.repositories.ItemRepository;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @AllArgsConstructor
 @Service
 public class ItemService {
 
     @Getter
-    @Setter
     private final ItemRepository itemRepository;
 
     @Getter
-    @Setter
     private final SellerService sellerService;
 
+    @Getter
+    private final TokenService tokenService;
+
     @Transactional
-    public Item create(Item item) throws BusinessException {
+    public Item create(Item item, User dbUser) throws BusinessException {
         if (
-            item.getSellerAccount() == null ||
-            item.getSellerAccount().getStoreName().isBlank()
+            dbUser == null ||
+            dbUser.getSellerAccount() == null ||
+            dbUser.getSellerAccount().getStoreName().isBlank()
         ) {
-            throw new BusinessException("La boutique n'est pas référencée.");
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
+            );
         }
         Seller seller = sellerService.findByStoreName(
-            item.getSellerAccount().getStoreName()
+            dbUser.getSellerAccount().getStoreName()
         );
         if (seller == null) {
             throw new BusinessException(
-                "La boutique référencée n'a pu être trouvée."
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
             );
         }
         item.setSellerAccount(seller);
@@ -65,18 +70,18 @@ public class ItemService {
         }
     }
 
+    @Transactional
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
-                "Un article non défini ne peut être sauvegardé."
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
             );
         }
         try {
             return itemRepository.save(item);
         } catch (Exception e) {
             throw new BusinessException(
-                "Une erreur est survenue lors de l'enregistrement de l'article." +
-                (e.getMessage() == null ? e.getMessage() : "")
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
             );
         }
     }
@@ -106,7 +111,48 @@ public class ItemService {
         }
     }
 
-    public ItemBean getBean(Item item) {
+    @Transactional
+    public void updateAmount(Item itemToUpdate, User user)
+        throws BusinessException {
+        if (
+            user == null ||
+            user.getSellerAccount() == null ||
+            user.getSellerAccount().getStoreName().isBlank()
+        ) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
+            );
+        }
+        if (itemToUpdate == null) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
+            );
+        }
+        if (
+            itemToUpdate.getSellerAccount() == null ||
+            !itemToUpdate
+                .getSellerAccount()
+                .getStoreName()
+                .equals(user.getSellerAccount().getStoreName())
+        ) {
+            throw new BusinessException(
+                MoneyDystopieConstants.INCORRECT_ITEM_SELLER
+            );
+        }
+        Item item = itemRepository.findById(itemToUpdate.getId()).orElse(null);
+        if (item == null) {
+            throw new BusinessException(
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
+            );
+        }
+        item.setAmount(itemToUpdate.getAmount());
+
+        this.valid(item);
+
+        this.save(item);
+    }
+
+    public static ItemBean getBean(Item item) {
         ItemBean itemBean = new ItemBean();
         BeanUtils.copyProperties(item, itemBean);
 
@@ -121,7 +167,7 @@ public class ItemService {
         return itemBean;
     }
 
-    public Item getDto(ItemBean itemBean) {
+    public static Item getDto(ItemBean itemBean) {
         Item item = new Item();
         BeanUtils.copyProperties(itemBean, item);
 

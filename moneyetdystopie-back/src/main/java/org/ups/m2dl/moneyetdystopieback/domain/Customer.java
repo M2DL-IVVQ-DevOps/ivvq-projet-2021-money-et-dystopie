@@ -1,6 +1,7 @@
 package org.ups.m2dl.moneyetdystopieback.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -57,6 +58,13 @@ public class Customer {
     @Getter
     @Setter
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany
+    @OneToMany(mappedBy = "customer")
     private List<Command> pastCommands;
+
+    public void addPastCommand(Command command) {
+        if (pastCommands == null) {
+            pastCommands = new ArrayList<>();
+        }
+        pastCommands.add(command);
+    }
 }

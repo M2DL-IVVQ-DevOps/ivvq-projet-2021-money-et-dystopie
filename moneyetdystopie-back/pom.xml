@@ -12,7 +12,7 @@
     <artifactId>moneyetdystopie-back</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>moneyetdystopie-back</name>
-    <description>Back-end - Money et dystopie !</description>
+    <description>Partie serveur de Money et dystopie !</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -125,6 +125,9 @@
                     <java>
                         <removeUnusedImports />
                         <googleJavaFormat />
+                        <importOrder>
+                            <order>lombok,org,javax,java,com,</order>
+                        </importOrder>
                         <prettier>
                             <devDependencies>
                                 <prettier>2.2.1</prettier>

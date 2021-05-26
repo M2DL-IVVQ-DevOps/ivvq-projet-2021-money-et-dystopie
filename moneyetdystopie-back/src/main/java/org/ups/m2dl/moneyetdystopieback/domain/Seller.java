@@ -42,7 +42,7 @@ public class Seller {
     @Setter
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany
+    @OneToMany(mappedBy = "sellerAccount")
     private List<Item> items;
 
     /** Liste des produits en vente. */
@@ -50,17 +50,35 @@ public class Seller {
     @Setter
     @JsonIgnore
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany
+    @ManyToMany
     private List<Command> commands;
 
     public void addItem(Item item) {
-        if (items == null) {
-            items = new ArrayList<>();
+        if (this.items == null) {
+            this.items = new ArrayList<>();
         }
-        items.add(item);
+        this.items.add(item);
     }
 
     public void removeItem(Item item) {
         items.remove(item);
+    }
+
+    public void addCommand(Command command) {
+        if (commands == null) {
+            commands = new ArrayList<>();
+        }
+        if (!containsCommand(command)) {
+            commands.add(command);
+        }
+    }
+
+    private boolean containsCommand(Command command) {
+        for(Command c : commands) {
+            if(c.getId().equals(command.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,11 +1,17 @@
 package org.ups.m2dl.moneyetdystopieback.controllers.controllers_integration_test;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import javax.servlet.http.Cookie;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,15 +21,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.ups.m2dl.moneyetdystopieback.bean.ItemBean;
 import org.ups.m2dl.moneyetdystopieback.domain.Item;
 import org.ups.m2dl.moneyetdystopieback.domain.Seller;
+import org.ups.m2dl.moneyetdystopieback.domain.Token;
+import org.ups.m2dl.moneyetdystopieback.domain.User;
+import org.ups.m2dl.moneyetdystopieback.exceptions.BusinessException;
 import org.ups.m2dl.moneyetdystopieback.services.ItemService;
 import org.ups.m2dl.moneyetdystopieback.services.SellerService;
+import org.ups.m2dl.moneyetdystopieback.services.TokenService;
+import org.ups.m2dl.moneyetdystopieback.services.UserService;
+import org.ups.m2dl.moneyetdystopieback.utils.MoneyDystopieConstants;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ItemControllerCreateIntegrationTest {
 
     @Autowired
@@ -35,9 +49,17 @@ class ItemControllerCreateIntegrationTest {
     @Autowired
     private SellerService sellerService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private TokenService tokenService;
+
     private String jsonResult;
     private Item itemTest;
-    private Seller sellerTest;
+    private Seller sellerTest, parameterizedSellerTest;
+    private User userTest;
+    private Token tokenTest;
     private ObjectMapper mapper;
     private String jsonUserTest;
     private int itemsNumber;
@@ -46,28 +68,47 @@ class ItemControllerCreateIntegrationTest {
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype()
     );
+    private Cookie cookie;
 
     @BeforeEach
     void setup() {
         mapper = new ObjectMapper();
     }
 
+    @BeforeEach
+    void initTestBeans() throws BusinessException {
+        sellerTest = new Seller("CreateItemstoreName", null, null, null);
+        userTest =
+            new User(
+                "CreateItemlastName",
+                "CreateItemfirstName",
+                "CreateItememail1@email.com",
+                "CreateItemPassword1",
+                sellerTest,
+                null,
+                new ArrayList<>()
+            );
+
+        userService.create(userTest);
+        tokenTest = tokenService.createNewTokenForUser(userTest);
+        tokenService.saveToken(tokenTest);
+        cookie = tokenService.createTokenCookie(tokenTest);
+    }
+
     @Test
-    void whenSaveItem_thenItemReturn() throws Exception {
+    void givenConnectedUser_whenSaveItem_thenItemReturn() throws Exception {
         // GIVEN
-        sellerTest = new Seller("storeName39", null, null, null);
         itemTest =
             new Item(
                 null,
-                "title39",
+                "title",
                 "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
-                "description39",
+                "description",
                 10,
                 5.f,
                 null,
                 sellerTest
             );
-        sellerService.save(sellerTest);
 
         jsonUserTest = new Gson().toJson(itemTest);
 
@@ -75,6 +116,7 @@ class ItemControllerCreateIntegrationTest {
         mockMvc
             .perform(
                 post("/item/create")
+                    .cookie(cookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonUserTest)
             )
@@ -89,38 +131,76 @@ class ItemControllerCreateIntegrationTest {
         ItemBean resultFromJson = mapper.readValue(jsonResult, ItemBean.class);
 
         // THEN
-        Assertions.assertEquals(
-            itemTest.getTitle(),
-            resultFromJson.getTitle(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPicture(),
-            resultFromJson.getPicture(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getAmount(),
-            resultFromJson.getAmount(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPrice(),
-            resultFromJson.getPrice(),
-            "The returned item does not comply."
+        assertAll(
+            "The returned item does not comply.",
+            () -> assertEquals(itemTest.getTitle(), resultFromJson.getTitle()),
+            () ->
+                assertEquals(
+                    itemTest.getPicture(),
+                    resultFromJson.getPicture()
+                ),
+            () ->
+                assertEquals(itemTest.getAmount(), resultFromJson.getAmount()),
+            () -> assertEquals(itemTest.getPrice(), resultFromJson.getPrice()),
+            () ->
+                assertEquals(
+                    itemTest.getSellerAccount().getStoreName(),
+                    resultFromJson.getSellerAccount().getStoreName()
+                )
         );
 
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+    }
+
+    @Test
+    void givenNotConnectedUser_whenSaveItem_thenItemNotReturn()
+        throws Exception {
+        // GIVEN
+        itemTest =
+            new Item(
+                null,
+                "title39",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description39",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+
+        jsonUserTest = new Gson().toJson(itemTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                post("/item/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
         Assertions.assertEquals(
-            itemTest.getSellerAccount().getStoreName(),
-            resultFromJson.getSellerAccount().getStoreName(),
-            "The returned item does not comply."
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
         );
     }
 
     @Test
-    void whenSaveUser_thenItemIsSavedSellerModified() throws Exception {
+    void givenConnectedUser_whenSaveUser_thenItemIsSavedSellerModified()
+        throws Exception {
         // GIVEN
-        sellerTest = new Seller("storeName40", null, null, null);
         itemTest =
             new Item(
                 null,
@@ -132,7 +212,6 @@ class ItemControllerCreateIntegrationTest {
                 null,
                 sellerTest
             );
-        sellerService.save(sellerTest);
         itemsNumber = itemService.findAll().size();
 
         jsonUserTest = new Gson().toJson(itemTest);
@@ -141,6 +220,7 @@ class ItemControllerCreateIntegrationTest {
         mockMvc
             .perform(
                 post("/item/create")
+                    .cookie(cookie)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(jsonUserTest)
             )
@@ -165,25 +245,12 @@ class ItemControllerCreateIntegrationTest {
             "The saved item exist."
         );
 
-        Assertions.assertEquals(
-            itemTest.getTitle(),
-            resultItem.getTitle(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPicture(),
-            resultItem.getPicture(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getAmount(),
-            resultItem.getAmount(),
-            "The returned item does not comply."
-        );
-        Assertions.assertEquals(
-            itemTest.getPrice(),
-            resultItem.getPrice(),
-            "The returned item does not comply."
+        assertAll(
+            "The returned item does not comply.",
+            () -> assertEquals(itemTest.getTitle(), resultItem.getTitle()),
+            () -> assertEquals(itemTest.getPicture(), resultItem.getPicture()),
+            () -> assertEquals(itemTest.getAmount(), resultItem.getAmount()),
+            () -> assertEquals(itemTest.getPrice(), resultItem.getPrice())
         );
 
         // THEN
@@ -208,6 +275,51 @@ class ItemControllerCreateIntegrationTest {
         );
     }
 
+    @Test
+    void givenNotConnectedUser_whenSaveUser_thenItemIsSavedSellerNotModified()
+        throws Exception {
+        // GIVEN
+        itemTest =
+            new Item(
+                null,
+                "title40",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description40",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+        itemsNumber = itemService.findAll().size();
+
+        jsonUserTest = new Gson().toJson(itemTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                post("/item/create")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(
+            MoneyDystopieConstants.EXPIRED_CONNEXION_ERROR,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
+    }
+
     @ParameterizedTest
     @CsvSource(
         {
@@ -229,7 +341,6 @@ class ItemControllerCreateIntegrationTest {
         // GIVEN
         if (areSeller) {
             sellerTest = new Seller(storeName, null, null, null);
-            sellerService.save(sellerTest);
         }
         itemTest =
             new Item(
@@ -240,7 +351,7 @@ class ItemControllerCreateIntegrationTest {
                 amount,
                 price,
                 null,
-                areSeller ? sellerTest : null
+                areSeller ? parameterizedSellerTest : null
             );
 
         itemsNumber = itemService.findAll().size();
@@ -348,5 +459,67 @@ class ItemControllerCreateIntegrationTest {
                 "The item is add in seller."
             );
         }
+    }
+
+    @Test
+    void givenItemWithoutId_whenAmount_thenErrorReturned() throws Exception {
+        // GIVEN
+        itemTest =
+            new Item(
+                null,
+                "title",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+        jsonUserTest = new Gson().toJson(itemTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                post("/item/amount")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(
+            MoneyDystopieConstants.DEFAULT_ERROR_CONTENT,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
+    }
+
+    @Test
+    void givenConnectedUser_whenAll_thenAuthorized() throws Exception {
+        // GIVEN
+
+        // WHEN
+        mockMvc
+            .perform(get("/item/all").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
     }
 }
