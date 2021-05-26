@@ -72,12 +72,10 @@ Then(/^success popup not visible$/, function () {
 
 function mockAccountCreation() {
     cy.intercept('POST','/user/create', {
-        "id": 4,
-        "title": "Bitcoin",
-        "picture": "https://cdn.dribbble.com/users/791530/screenshots/15336558/media/02b09bcee2c72083607b40f5e9beadc7.png?compress=1&resize=1000x750",
-        "description": "...",
-        "amount": 12,
-        "price": 1004.4,
+        "lastName": "4",
+        "firstName": "Bitcoin",
+        "password": "Password1",
+        "email": "email@mail.com",
         "sellerAccount": {
             "storeName": "WHo?"
         }
