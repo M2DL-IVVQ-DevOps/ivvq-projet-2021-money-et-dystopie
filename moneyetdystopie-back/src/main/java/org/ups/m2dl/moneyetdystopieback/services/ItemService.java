@@ -42,7 +42,7 @@ public class ItemService {
             dbUser.getSellerAccount().getStoreName().isBlank()
         ) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
             );
         }
         Seller seller = sellerService.findByStoreName(
@@ -50,7 +50,7 @@ public class ItemService {
         );
         if (seller == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNFOUND_REFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
             );
         }
         item.setSellerAccount(seller);
@@ -74,7 +74,7 @@ public class ItemService {
     public Item save(Item item) throws BusinessException {
         if (item == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
+                MoneyDystopieConstants.REGISTER_ITEM_ERROR
             );
         }
         try {
@@ -120,7 +120,7 @@ public class ItemService {
             user.getSellerAccount().getStoreName().isBlank()
         ) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNREFERENCED_SHOP_ERROR
+                MoneyDystopieConstants.UNDEFINED_SHOP_ERROR
             );
         }
         if (itemToUpdate == null) {
@@ -142,7 +142,7 @@ public class ItemService {
         Item item = itemRepository.findById(itemToUpdate.getId()).orElse(null);
         if (item == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNREFERENCED_ITEM_ERROR
+                MoneyDystopieConstants.UNDEFINED_ITEM_ERROR
             );
         }
         item.setAmount(itemToUpdate.getAmount());

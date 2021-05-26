@@ -46,7 +46,7 @@ public class CommandService {
         final CardService cardService = new CardService(cardNumber);
         if (!cardService.isCardNumberValid()) {
             throw new BusinessException(
-                MoneyDystopieConstants.WRONG_CART_NUMBER_ERROR
+                MoneyDystopieConstants.WRONG_CARD_NUMBER_ERROR
             );
         }
 
@@ -95,7 +95,7 @@ public class CommandService {
     public Command save(Command command) throws BusinessException {
         if (command == null) {
             throw new BusinessException(
-                MoneyDystopieConstants.UNDEFINED_COMMAND_ERROR
+                MoneyDystopieConstants.REGISTER_COMMAND_ERROR
             );
         }
         try {
