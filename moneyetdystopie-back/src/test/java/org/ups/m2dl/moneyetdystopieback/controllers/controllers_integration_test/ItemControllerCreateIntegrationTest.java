@@ -2,6 +2,7 @@ package org.ups.m2dl.moneyetdystopieback.controllers.controllers_integration_tes
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -458,5 +459,67 @@ class ItemControllerCreateIntegrationTest {
                 "The item is add in seller."
             );
         }
+    }
+
+    @Test
+    void givenItemWithoutId_whenAmount_thenErrorReturned() throws Exception {
+        // GIVEN
+        itemTest =
+            new Item(
+                null,
+                "title",
+                "https://www.master-developpement-logiciel.fr/assets/images/logo-master-dl.png",
+                "description",
+                10,
+                5.f,
+                null,
+                sellerTest
+            );
+        jsonUserTest = new Gson().toJson(itemTest);
+
+        // WHEN
+        mockMvc
+            .perform(
+                post("/item/amount")
+                    .cookie(cookie)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(jsonUserTest)
+            )
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
+        Assertions.assertEquals(
+            MoneyDystopieConstants.DEFAULT_ERROR_CONTENT,
+            new String(
+                jsonResult.getBytes(StandardCharsets.ISO_8859_1),
+                StandardCharsets.UTF_8
+            )
+        );
+    }
+
+    @Test
+    void givenConnectedUser_whenAll_thenAuthorized() throws Exception {
+        // GIVEN
+
+        // WHEN
+        mockMvc
+            .perform(get("/item/all").contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andDo(
+                mvcResult -> {
+                    jsonResult = mvcResult.getResponse().getContentAsString();
+                }
+            );
+
+        // THEN
+        Assertions.assertFalse(jsonResult.isBlank());
     }
 }
