@@ -19,13 +19,16 @@ Le projet consiste en un site marchant sur lequel il est possible d'acheter de l
 
 # Contributeurs
 
-[Alessandra FRANZESE](https://github.com/NinaNekonoran)
-[Aymeric PINEL](https://github.com/amplul)
-[Nicolas ANDRÉ](https://github.com/iomega11)
+[Alessandra FRANZESE](https://github.com/NinaNekonoran),
+[Aymeric PINEL](https://github.com/amplul),
+[Nicolas ANDRÉ](https://github.com/iomega11),
 [Romain GOYHENEIX](https://github.com/vandorz)
 
 # Développement front-end
+
 La partie front-end est développée à l'aide de l'IDE **WebStorm** de JetBrains.
+
+## ESlint
 
 A des fins de qualité, le projet embarque entre autres [**ESLint**](https://eslint.org/). Il permet d'analyser le code et d'identifier les problèmes associés.
 Il est possible de l'appeler au travers du terminal.
@@ -33,6 +36,36 @@ Pour cela, il faut d'abord se positionner à la racine du projet front, puis tap
 ```console
 npm run eslint
 ```
+
+## Cypress
+
+Afin de s'assurer du bon fonctionnement E2E de l'application, [**Cypress**](https://www.cypress.io/) est utilisé avec le [**Cypress Cucumber Preprocessor**](https://github.com/TheBrainFamily/cypress-cucumber-preprocessor). Afin de lancer les tests en local, il est possible d'utiliser les commandes suivantes :
+
+* Pour lancer le front et les tests, avec sauvegarde des vidéos :
+    ```
+    npm run serve-and-test
+    ```
+* Pour lancer le front et les tests, sans sauvegarde des vidéos :
+    ```
+    npm run serve-and-test-novid
+    ```
+* Pour lancer uniquement les tests, avec sauvegarde des vidéos :
+    ```
+    npm run test
+    ```
+* Pour lancer uniquement les tests, sans sauvegarde des vidéos :
+    ```
+    npm run test-novid
+    ```
+S'il s'avère qu'au moins un test échoue durant l'exécution d'une Github Action, les vidéos générées peuvent être retrouvées sous forme d'archive liée à la Pull Request.
+
+## Couverture de code
+
+La couverture de code est évaluée par le plugin [**Cypress Code Coverage**](https://github.com/cypress-io/code-coverage) sur un code instrumentalisé par [**Babel Istanbul**](https://github.com/istanbuljs/babel-plugin-istanbul) à chaque lancement des tests. Vous pouvez retrouver le rapport correspondant dans `moneyetdystopie-front/coverage/lcov-report/index.html` après avoir lancé les tests en local.
+
+## SonarQube
+
+Toutes les informations générées précédemment sont transmises à [**SonarQube**](https://sonarqube.homefox.ovh/) afin de déterminer la qualité de code, et de vérifier la validation des Quality Gates. Tout cela s'effectue lors des Github Actions afin de valider une Pull Request.
 
 # Développement back-end
 La partie back-end est développée à l'aide de l'IDE **IntelliJ** de JetBrains.
