@@ -10,7 +10,7 @@
     </parent>
     <groupId>org.ups.m2dl</groupId>
     <artifactId>moneyetdystopie-back</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>moneyetdystopie-back</name>
     <description>Partie serveur de Money et dystopie !</description>
     <properties>
