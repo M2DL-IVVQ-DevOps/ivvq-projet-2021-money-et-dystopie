@@ -32,7 +32,8 @@ public class CustomerService {
 
         if (this.findByPseudo(customer.getPseudo()) != null) {
             throw new BusinessException(
-                "Un acheteur '" + customer.getPseudo() + "' existe déjà."
+                    String.format(MoneyDystopieConstants.PSEUDO_ALREADY_EXISTS_ERROR,customer.getPseudo())
+
             );
         }
 

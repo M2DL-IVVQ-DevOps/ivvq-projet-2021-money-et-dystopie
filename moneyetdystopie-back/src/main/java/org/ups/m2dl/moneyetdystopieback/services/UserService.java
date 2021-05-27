@@ -52,7 +52,7 @@ public class UserService {
 
         if (this.findByEmail(user.getEmail()) != null) {
             throw new BusinessException(
-                "Un utilisateur '" + user.getEmail() + "' existe déjà."
+                    String.format(MoneyDystopieConstants.USER_ALREADY_EXISTS_ERROR,user.getEmail())
             );
         }
 

@@ -21,6 +21,8 @@ public class MoneyDystopieConstants {
         "Une erreur est survenue lors de la récupération de la boutique.";
     public static final String REGISTER_SHOP_ERROR =
         "Une erreur est survenue lors de l'enregistrement de la boutique.";
+    public static final String SHOP_ALREADY_EXISTS_ERROR =
+            "Le nom de boutique '%s' est déjà utilisé par un autre utilisateur. Veuillez en choisir un autre.";
 
     // ITEM ERRORS
     public static final String UNDEFINED_ITEM_ERROR =
@@ -35,6 +37,8 @@ public class MoneyDystopieConstants {
         "Une erreur est survenue lors de la récupération du client.";
     public static final String REGISTER_CUSTOMER_ERROR =
         "Une erreur est survenue lors de l'enregistrement du client.";
+    public static final String PSEUDO_ALREADY_EXISTS_ERROR =
+            "Le pseudo '%s' est déjà utilisé par un autre utilisateur. Veuillez en choisir un autre.";
 
     // USER ERRORS
     public static final String USER_NOT_CUSTOMER_OR_SELLER_ERROR =
@@ -43,6 +47,8 @@ public class MoneyDystopieConstants {
         "Une erreur est survenue lors de la récupération de l'utilisateur.";
     public static final String REGISTER_USER_ERROR =
         "Une erreur est survenue lors de l'enregistrement de l'utilisateur.";
+    public static final String USER_ALREADY_EXISTS_ERROR =
+            "L'email '%s' est déjà utilisé par un autre utilisateur. Veuillez en choisir un autre.";
 
     // PASSWORD ERRORS
     public static final String PASSWORD_SIZE_ERROR =
