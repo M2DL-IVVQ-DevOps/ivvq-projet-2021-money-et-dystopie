@@ -32,7 +32,7 @@ public class SellerService {
 
         if (this.findByStoreName(seller.getStoreName()) != null) {
             throw new BusinessException(
-                "Une boutique '" + seller.getStoreName() + "' existe déjà."
+                    String.format(MoneyDystopieConstants.SHOP_ALREADY_EXISTS_ERROR,seller.getStoreName())
             );
         }
 
